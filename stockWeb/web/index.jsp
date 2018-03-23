@@ -8,9 +8,10 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <html>
   <head>
-    <title>$Title$</title>
+    <title>Welcome to Stock Portfolio Management System</title>
   </head>
   <body>
-  Hello
+    <h1>Hello</h1>
+
   </body>
 </html>
