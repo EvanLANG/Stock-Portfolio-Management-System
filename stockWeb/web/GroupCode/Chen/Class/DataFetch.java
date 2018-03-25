@@ -47,26 +47,55 @@ public class DataFetch {
         System.out.println("Json string got.");
         return urlString;
     }
-    public void DailyData(String ul){
-        //For daily data
-        String json = GetFromURL(ul);
-        Type = "Daily";
-        JSONObject jsonObject = JSONObject.fromObject(json);
-        String MetaData = jsonObject.getString("Meta Data");
-        JSONObject MataDataObj = JSONObject.fromObject(MetaData);
-        Symbol = MataDataObj.getString("2. Symbol");
-        TimeZone = MataDataObj.getString("5. Time Zone");
-        String TimeSeries = jsonObject.getString("Time Series (Daily)");
-        JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
-        Iterator iterator = TimeSeriesObj.keys();
+    private void JsonInterator(JSONObject obj){
+        Iterator iterator = obj.keys();
         while(iterator.hasNext()){
             String key = (String) iterator.next();
-            String value = jsonObject.getString(key);
+            String value = obj.getString(key);
             JSONObject record = JSONObject.fromObject(value);
             Class.StockDailyRecord recordObj = new Class.StockDailyRecord();
             recordObj.readData(record);
             recordObj.GetDate(key);
             Data.add(recordObj);
         }
+    }
+    public void DailyData(String ul){
+        //For daily data
+        String json = GetFromURL(ul);
+        Type = "Daily";
+        JSONObject jsonObject = JSONObject.fromObject(json);
+        String MetaData = jsonObject.getString("Meta Data");
+        JSONObject MetaDataObj = JSONObject.fromObject(MetaData);
+        Symbol = MetaDataObj.getString("2. Symbol");
+        TimeZone = MetaDataObj.getString("5. Time Zone");
+        String TimeSeries = jsonObject.getString("Time Series (Daily)");
+        JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
+        JsonInterator(TimeSeriesObj);
+    }
+    public void WeeklyData(String ul){
+        //For daily data
+        String json = GetFromURL(ul);
+        Type = "Weekly";
+        JSONObject jsonObject = JSONObject.fromObject(json);
+        String MetaData = jsonObject.getString("Meta Data");
+        JSONObject MetaDataObj = JSONObject.fromObject(MetaData);
+        Symbol = MetaDataObj.getString("2. Symbol");
+        TimeZone = MetaDataObj.getString("4. Time Zone");
+        String TimeSeries = jsonObject.getString("Weekly Time Series");
+        JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
+        JsonInterator(TimeSeriesObj);
+    }
+    public void MonthlyData(String ul){
+        //For daily data
+        String json = GetFromURL(ul);
+        Type = "Monthly";
+        JSONObject jsonObject = JSONObject.fromObject(json);
+        String MetaData = jsonObject.getString("Meta Data");
+        JSONObject MetaDataObj = JSONObject.fromObject(MetaData);
+        Symbol = MetaDataObj.getString("2. Symbol");
+        TimeZone = MetaDataObj.getString("4. Time Zone");
+        String TimeSeries = jsonObject.getString("Monthly Time Series");
+        JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
+        JsonInterator(TimeSeriesObj);
     }
 }
