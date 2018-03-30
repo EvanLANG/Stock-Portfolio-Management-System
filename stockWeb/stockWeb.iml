@@ -14,6 +14,7 @@
           <root url="file://$MODULE_DIR$/src/main/resources" />
           <root url="file://$MODULE_DIR$/web/src/main/resources" />
           <root url="file://$MODULE_DIR$/src" />
+          <root url="file://$MODULE_DIR$/web/GroupCode/huang" />
         </sourceRoots>
       </configuration>
     </facet>
@@ -32,6 +33,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/web/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/web/GroupCode/Chen" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/web/GroupCode/huang" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

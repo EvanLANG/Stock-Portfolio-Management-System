@@ -141,20 +141,23 @@
 <body>
 <header data-reactroot class="header1">
   <ul class="_1SQmm Bgc">
-    <li class=""><a class="h1c" href="index.jsp" data-rapid_p="1" data-v9y="1">
+
+    <li class=""><a class="h1c" id="home" href="index.jsp" data-rapid_p="1" data-v9y="1">
       <svg width="18" height="18" viewBox="0 0 32 32" style="fill: white;">
         <path d="M16.153 3.224L0 16.962h4.314v11.814h9.87v-8.003h3.934v8.003h9.84V16.962H32"></path>
       </svg>
       Home
     </a></li>
 
-    <li class="" ><a class="h1c" href="sign_in.jsp" data-rapid_p="2" data-v9y="1">
+    <li class="" ><a class="h1c" id="signin_or_userid" href="sign_in.jsp" data-rapid_p="2" data-v9y="1">
       Sign in
     </a></li>
 
-    <li class="" ><a class="h1c" href="sign_up.jsp" data-rapid_p="3" data-v9y="1">
+    <li class="" ><a class="h1c" id="signup_or_logout" href="sign_up.jsp" data-rapid_p="3" data-v9y="1">
       Sign up
     </a></li>
+
+
 
     <li class="line"></li>
 
