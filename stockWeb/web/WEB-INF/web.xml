@@ -18,7 +18,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>datafetchServlet</servlet-name>
-        <servlet-class>servlets.datafetchServlet</servlet-class>
+        <servlet-class>evan.servlets.datafetchServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -27,7 +27,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>datastoreServlet</servlet-name>
-        <servlet-class>servlets.datastoreServlet</servlet-class>
+        <servlet-class>evan.servlets.datastoreServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
