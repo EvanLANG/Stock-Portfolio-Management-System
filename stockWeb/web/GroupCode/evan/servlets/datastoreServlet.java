@@ -9,30 +9,40 @@ import java.io.IOException;
 import java.io.Writer;
 //import java.sql.Timestamp;
 import java.lang.String;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 // this servlet just for modified test purpose right now.
 @WebServlet(name= "datastoreServlet")
 public class datastoreServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-
-        String id = request.getParameter("id");
-        String timestamp = request.getParameter("timestamp");
-        String open = request.getParameter("open");
-        String high = request.getParameter("high");
-        String low = request.getParameter("low");
-        String close = request.getParameter("close");
-        String volume = request.getParameter("volume");
+        Class.DataFetch monthly_data = new Class.DataFetch();
+        //取所有monthly的数据存成Arraylist
+        monthly_data.MonthlyData("https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=MSFT&apikey=BBWCXYKPHWWLCBZ4");
+        //访问Data里面的Arraylist，取第一条记录
+        Class.StockDailyRecord test = monthly_data.Data.get(1);
+        //String id = request.getParameter("id");
+        //String timestamp = request.getParameter("timestamp");
+        //String open = request.getParameter("open");
+        //String high = request.getParameter("high");
+        //String low = request.getParameter("low");
+        //String close = request.getParameter("close");
+        //String volume = request.getParameter("volume");
         try{
-            System.out.println(id);
+            //Symbol就是公司名
+            System.out.println(monthly_data.Symbol);
             response.setHeader("Content-Type", "text/html; charset=UTF-8");
             Writer out=response.getWriter();
-            out.write(timestamp);
-            out.write(open);
-            out.write(high);
-            out.write(low);
-            out.write(close);
-            out.write(volume);
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            out.write(sdf.format(test.TradeDate));
+            out.write(Float.toString(test.open));
+            out.write(Float.toString(test.close));
+            out.write(Float.toString(test.high));
+            out.write(Float.toString(test.low));
+            out.write(test.volume);
             out.flush();
             out.close();
         }catch (Exception e){

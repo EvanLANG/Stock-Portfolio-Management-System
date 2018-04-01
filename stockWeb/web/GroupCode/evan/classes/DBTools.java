@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import evan.classes.company;
+
+
 public class DBTools {
     public static Connection getConn() {
         String driver = "org.postgresql.Driver";
@@ -22,22 +24,22 @@ public class DBTools {
         }
         return conn;
     }
-    public static int insertStock(company comp) {
+    public static int insertStock(Class.StockDailyRecord comp,String symbol) {
         Connection conn = getConn();
         String id = null;
-        id = comp.getId();
+        id = symbol;
         int i = 0;
         String sql = "insert into" + id + "(timestamp,open,high,low,close,volume) values(?,?,?,?,?,?)";
         PreparedStatement pstmt;
         try {
             pstmt = (PreparedStatement) conn.prepareStatement(sql);
             //pstmt.setString(1, comp.getId());
-            pstmt.setTimestamp(1, comp.getTimestamp());
-            pstmt.setInt(2, comp.getOpen());
-            pstmt.setInt(3, comp.getHigh());
-            pstmt.setInt(4, comp.getLow());
-            pstmt.setInt(5, comp.getClose());
-            pstmt.setInt(6, comp.getVolume());
+            pstmt.setTimestamp(1, comp.TradeDate);
+            pstmt.setFloat(2, comp.open);
+            pstmt.setFloat(3, comp.high);
+            pstmt.setFloat(4, comp.low);
+            pstmt.setFloat(5, comp.close);
+            pstmt.setInt(6, comp.volume);
             i = pstmt.executeUpdate();
             pstmt.close();
             conn.close();

@@ -1,13 +1,15 @@
 package Class;
 import net.sf.json.JSONObject;
 
+import java.sql.Timestamp;
+
 public class StockDailyRecord {
-    private String TradeDate;
-    private float open;
-    private float high;
-    private float low;
-    private float close;
-    private int volume;
+    public Timestamp TradeDate;
+    public float open;
+    public float high;
+    public float low;
+    public float close;
+    public int volume;
     public void readData(JSONObject value){
         open = Float.parseFloat(value.getString("1. open"));
         high = Float.parseFloat(value.getString("2. high"));
@@ -16,6 +18,13 @@ public class StockDailyRecord {
         volume = Integer.parseInt(value.getString("5. volume"));
     }
     public void GetDate(String date){
-        TradeDate = date;
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        String tsStr = date;
+        try {
+            TradeDate = Timestamp.valueOf(tsStr);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
