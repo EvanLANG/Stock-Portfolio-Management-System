@@ -11,10 +11,10 @@ import net.sf.json.JSONObject;
 //全部都存在此对象相应的attribute里面
 
 public class DataFetch {
-    private ArrayList<StockDailyRecord> Data;
-    private String Symbol;
-    private String TimeZone;
-    private String Type;
+    public ArrayList<StockDailyRecord> Data;
+    public String Symbol;
+    public String TimeZone;
+    public String Type;
     private String GetFromURL(String ul)
     {
         //this function aims to get the String from URL;
