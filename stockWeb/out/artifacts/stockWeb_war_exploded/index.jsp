@@ -149,15 +149,27 @@
       Home
     </a></li>
 
-    <li class="" ><a class="h1c" id="signin_or_userid" href="sign_in.jsp" data-rapid_p="2" data-v9y="1">
+    <li class="" ><a class="h1c" id="in_or_id" href="sign_in.jsp" data-rapid_p="2" data-v9y="1">
       Sign in
     </a></li>
 
-    <li class="" ><a class="h1c" id="signup_or_logout" href="sign_up.jsp" data-rapid_p="3" data-v9y="1">
+    <li class="" ><a class="h1c" id="up_or_logout" href="sign_up.jsp" data-rapid_p="3" data-v9y="1">
       Sign up
     </a></li>
 
+    <li><form action="initializingServlet" method="get">
+        <input type="button" value="change"  onclick="submit()">
+    </form></li>
 
+      <script type="text/javascript">
+          var current_user = ${sessionScope.user_id};
+          if (current_user) {
+              document.getElementById("in_or_id").href = "";
+              document.getElementById("in_or_id").innerHTML = current_user;
+              document.getElementById("up_or_logout").href = "index.jsp";
+              document.getElementById("up_or_logout").innerHTML = "Log out";
+          }
+      </script>
 
     <li class="line"></li>
 
