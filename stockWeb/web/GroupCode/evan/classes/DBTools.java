@@ -4,9 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import evan.classes.company;
-
-
+//import Chen.Class.StockDailyRecord;
+import java.sql.DatabaseMetaData;
 public class DBTools {
     public static Connection getConn() {
         String driver = "org.postgresql.Driver";
@@ -45,7 +44,51 @@ public class DBTools {
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+
         }
         return i;
     }
+    public boolean validateTableExist(String tableName){
+        boolean flag = false ;
+        int i = 0;
+        Connection conn = getConn();
+        String sql = "SELECT COUNT(*) FROM "+ tableName ;
+        PreparedStatement pstmt;
+        try{
+            pstmt = (PreparedStatement) conn.prepareStatement(sql);
+            i = pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+            flag =  true;
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return flag;
+    }
+    public static int createTable(String tablename) {
+        Connection conn = getConn();
+        int i = 0;
+        String id = null;
+        id = tablename;
+        String sql = "CREATE TABLE "+id+"\n" +
+                "(\n" +
+                "timestamp TIMESTAMP not null PRIMARY KEY ,\n" +
+                "open      FLOAT ,\n" +
+                "high      FLOAT,\n" +
+                "low       FLOAT, \n"+
+                "close     FLOAT, \n"+
+                "volume    INTEGER \n"+
+                ")";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement) conn.prepareStatement(sql);
+            i = pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return i;
+    }
+
 }
