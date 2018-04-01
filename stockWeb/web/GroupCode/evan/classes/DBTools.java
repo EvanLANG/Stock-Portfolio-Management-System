@@ -1,10 +1,10 @@
-package classes;
+package evan.classes;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import classes.company;
+import evan.classes.company;
 public class DBTools {
     public static Connection getConn() {
         String driver = "org.postgresql.Driver";

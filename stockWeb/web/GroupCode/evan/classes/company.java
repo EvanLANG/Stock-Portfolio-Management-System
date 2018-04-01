@@ -1,4 +1,4 @@
-package classes;
+package evan.classes;
 
 import java.sql.Timestamp;
 

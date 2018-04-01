@@ -4,6 +4,9 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
     <servlet>
         <servlet-name>initializingServlet</servlet-name>
         <servlet-class>servlets.initializingServlet</servlet-class>
@@ -11,11 +14,25 @@
 
     <servlet-mapping>
         <servlet-name>initializingServlet</servlet-name>
-        <url-pattern>initializingServlet</url-pattern>
+        <url-pattern>/initializingServlet</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>datafetchServlet</servlet-name>
+        <servlet-class>servlets.datafetchServlet</servlet-class>
+    </servlet>
 
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
+    <servlet-mapping>
+        <servlet-name>datafetchServlet</servlet-name>
+        <url-pattern>/datafetchServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>datastoreServlet</servlet-name>
+        <servlet-class>servlets.datastoreServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>datastoreServlet</servlet-name>
+        <url-pattern>/datastoreServlet</url-pattern>
+    </servlet-mapping>
 
 </web-app>

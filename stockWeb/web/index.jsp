@@ -157,7 +157,7 @@
       Sign up
     </a></li>
 
-      <script>
+      <script type="javascript">
           function initservlet(){
               $.ajax({
                   type:"POST",
