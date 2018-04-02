@@ -166,7 +166,7 @@
           if (current_user) {
               document.getElementById("in_or_id").href = "index.jsp";
               document.getElementById("in_or_id").innerHTML = current_user;
-              document.getElementById("up_or_logout").href = "index.jsp";
+              document.getElementById("up_or_logout").href = "logoutServlet";
               document.getElementById("up_or_logout").innerHTML = "Log out";
           }
       </script>
