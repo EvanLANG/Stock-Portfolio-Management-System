@@ -3,7 +3,7 @@ package Chen.Class;
 import java.net.*;
 import java.io.*;
 import java.util.*;
-
+import Chen.Class.StockDailyRecord;
 import net.sf.json.JSONObject;
 
 //你可以直接新声明一个DataFetch对象，
@@ -11,7 +11,7 @@ import net.sf.json.JSONObject;
 //全部都存在此对象相应的attribute里面
 
 public class DataFetch {
-    public ArrayList<StockDailyRecord> Data;
+    public ArrayList<StockDailyRecord> Data = new ArrayList<StockDailyRecord>();
     public String Symbol;
     public String TimeZone;
     public String Type;
@@ -47,6 +47,35 @@ public class DataFetch {
         System.out.println("Json string got.");
         return urlString;
     }
+    public void IntraData(String ul,String interval) {
+        //For daily data
+        String json = GetFromURL(ul);
+        Type = "Daily";
+        JSONObject jsonObject = JSONObject.fromObject(json);
+        String MetaData = jsonObject.getString("Meta Data");
+        JSONObject MetaDataObj = JSONObject.fromObject(MetaData);
+        Symbol = MetaDataObj.getString("2. Symbol");
+        TimeZone = MetaDataObj.getString("6. Time Zone");
+        String TimeSeries = jsonObject.getString("Time Series ("+interval+")");
+        JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
+        //迭代器可选择
+        TJsonInterator(TimeSeriesObj);
+    }
+    //取单条数据
+    private void TJsonInterator(JSONObject obj){
+        Iterator iterator = obj.keys();
+        String key = (String) iterator.next();
+        String value = obj.getString(key);
+        JSONObject record = JSONObject.fromObject(value);
+        StockDailyRecord recordObj = new StockDailyRecord();
+        recordObj.readData(record);
+        recordObj.GetDate(key);
+        try{
+            Data.add(recordObj);
+        }catch(Exception e){
+            e.printStackTrace(); }
+    }
+    //取全部数据
     private void JsonInterator(JSONObject obj){
         Iterator iterator = obj.keys();
         while(iterator.hasNext()){
@@ -56,10 +85,14 @@ public class DataFetch {
             StockDailyRecord recordObj = new StockDailyRecord();
             recordObj.readData(record);
             recordObj.GetDate(key);
-            Data.add(recordObj);
+            try{
+                Data.add(recordObj);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
     }
-    public void DailyData(String ul){
+    public void DailyData(String ul) {
         //For daily data
         String json = GetFromURL(ul);
         Type = "Daily";
@@ -67,7 +100,10 @@ public class DataFetch {
         String MetaData = jsonObject.getString("Meta Data");
         JSONObject MetaDataObj = JSONObject.fromObject(MetaData);
         Symbol = MetaDataObj.getString("2. Symbol");
-        TimeZone = MetaDataObj.getString("5. Time Zone");
+        try {
+            TimeZone = MetaDataObj.getString("5. Time Zone");
+        }catch(Exception e){
+        }
         String TimeSeries = jsonObject.getString("Time Series (Daily)");
         JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
         JsonInterator(TimeSeriesObj);

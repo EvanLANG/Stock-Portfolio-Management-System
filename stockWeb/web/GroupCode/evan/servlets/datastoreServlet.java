@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.Writer;
 //import java.sql.Timestamp;
 import java.lang.String;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -44,7 +45,7 @@ public class datastoreServlet extends HttpServlet {
             out.write(Float.toString(test.close));
             out.write(Float.toString(test.high));
             out.write(Float.toString(test.low));
-            out.write(test.volume);
+            out.write(Long.toString(test.volume));
             out.flush();
             out.close();
         }catch (Exception e){

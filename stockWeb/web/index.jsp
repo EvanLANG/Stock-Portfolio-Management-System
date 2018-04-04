@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8"%>
+
 <html>
 <style type="text/css">
   ._1SQmm {
@@ -149,24 +150,27 @@
       Home
     </a></li>
 
-    <li class="" ><a class="h1c" id="in_or_id" href="sign_in.jsp" data-rapid_p="2" data-v9y="1">
-      Sign in
-    </a></li>
+      <li class="" >
+          <c:choose>
+              <c:when test="${not empty sessionScope.user_id}">
+                  <a class="h1c" id="in" href="index.jsp">${sessionScope.user_id}</a>
+              </c:when>
+              <c:otherwise>
+                  <a class="h1c" id="uid" href="sign_in.jsp">Sign in</a>
+              </c:otherwise>
+          </c:choose>
+      </li>
 
-    <li class="" ><a class="h1c" id="up_or_logout" href="sign_up.jsp" data-rapid_p="3" data-v9y="1">
-      Sign up
-    </a></li>
-
-
-      <script type="text/javascript">
-          var current_user = ${sessionScope.user_id};
-          if (current_user) {
-              document.getElementById("in_or_id").href = "index.jsp";
-              document.getElementById("in_or_id").innerHTML = current_user;
-              document.getElementById("up_or_logout").href = "logoutServlet";
-              document.getElementById("up_or_logout").innerHTML = "Log out";
-          }
-      </script>
+      <li class="" >
+          <c:choose>
+              <c:when test="${not empty sessionScope.user_id}">
+                  <a class="h1c" id="up" href="logoutServlet">Log out</a>
+              </c:when>
+              <c:otherwise>
+                  <a class="h1c" id="logout" href="sign_up.jsp">Sign up</a>
+              </c:otherwise>
+          </c:choose>
+      </li>
 
     <li class="line"></li>
 

@@ -11,9 +11,9 @@ import Chen.Class.StockDailyRecord;
 public class DBTools {
     public static Connection getConn() {
         String driver = "org.postgresql.Driver";
-        String url = "jdbc:postgresql://localhost:5432/9900stockportfolio2?useSSL=true";
+        String url = "jdbc:postgresql://localhost:5432/9900stockportfolio?useSSL=true";
         String username = "postgres";
-        String password = "123456";
+        String password = "750300";
         Connection conn = null;
         try {
             Class.forName(driver); //classLoader
@@ -40,7 +40,7 @@ public class DBTools {
             pstmt.setFloat(3, comp.high);
             pstmt.setFloat(4, comp.low);
             pstmt.setFloat(5, comp.close);
-            pstmt.setInt(6, comp.volume);
+            pstmt.setLong(6, comp.volume);
             i = pstmt.executeUpdate();
             pstmt.close();
             conn.close();
