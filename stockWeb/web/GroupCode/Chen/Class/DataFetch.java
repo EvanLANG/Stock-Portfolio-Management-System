@@ -1,4 +1,4 @@
-package Class;
+package Chen.Class;
 
 import java.net.*;
 import java.io.*;

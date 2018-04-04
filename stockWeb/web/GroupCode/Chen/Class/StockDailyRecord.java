@@ -1,4 +1,4 @@
-package Class;
+package Chen.Class;
 import net.sf.json.JSONObject;
 
 import java.sql.Timestamp;

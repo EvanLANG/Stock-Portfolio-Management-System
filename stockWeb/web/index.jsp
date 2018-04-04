@@ -149,36 +149,24 @@
       Home
     </a></li>
 
-    <li class="" ><a class="h1c" id="signin_or_userid" href="sign_in.jsp" data-rapid_p="2" data-v9y="1">
+    <li class="" ><a class="h1c" id="in_or_id" href="sign_in.jsp" data-rapid_p="2" data-v9y="1">
       Sign in
     </a></li>
 
-    <li class="" ><a class="h1c" id="signup_or_logout" href="sign_up.jsp" data-rapid_p="3" data-v9y="1">
+    <li class="" ><a class="h1c" id="up_or_logout" href="sign_up.jsp" data-rapid_p="3" data-v9y="1">
       Sign up
     </a></li>
 
-      <script type="javascript">
-          function initservlet(){
-              $.ajax({
-                  type:"POST",
-                  url:"initializingservlet",
-                  data:{user:"${sessionScope.user_id}"},
-                  success: change()
-                  });
+
+      <script type="text/javascript">
+          var current_user = ${sessionScope.user_id};
+          if (current_user) {
+              document.getElementById("in_or_id").href = "index.jsp";
+              document.getElementById("in_or_id").innerHTML = current_user;
+              document.getElementById("up_or_logout").href = "logoutServlet";
+              document.getElementById("up_or_logout").innerHTML = "Log out";
           }
       </script>
-
-    <script type="javascript">
-    function change() {
-        var current_user = sessionScope.user_id;
-        if (current_user) {
-            document.getElementById("signin_or_userid").href = "user_page.jsp";
-            document.getElementById("signin_or_userid").innerHTML = current_user;
-            document.getElementById("signup_or_logout").href = "index.jsp";
-            document.getElementById("signup_or_logout").innerHTML = "Log out";
-        }
-    }
-    </script>
 
     <li class="line"></li>
 

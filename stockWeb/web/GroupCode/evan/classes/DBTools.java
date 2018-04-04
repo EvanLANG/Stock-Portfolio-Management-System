@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 //import Chen.Class.StockDailyRecord;
 import java.sql.DatabaseMetaData;
+import Chen.Class.StockDailyRecord;
+
 public class DBTools {
     public static Connection getConn() {
         String driver = "org.postgresql.Driver";
@@ -23,7 +25,7 @@ public class DBTools {
         }
         return conn;
     }
-    public static int insertStock(Class.StockDailyRecord comp,String symbol) {
+    public static int insertStock(StockDailyRecord comp, String symbol) {
         Connection conn = getConn();
         String id = null;
         id = symbol;
