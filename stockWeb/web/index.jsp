@@ -157,9 +157,6 @@
       Sign up
     </a></li>
 
-    <li><form action="initializingServlet" method="get">
-        <input type="button" value="change"  onclick="submit()">
-    </form></li>
 
       <script type="text/javascript">
           var current_user = ${sessionScope.user_id};

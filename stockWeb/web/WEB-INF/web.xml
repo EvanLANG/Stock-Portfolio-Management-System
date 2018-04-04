@@ -9,7 +9,7 @@
     </welcome-file-list>
     <servlet>
         <servlet-name>initializingServlet</servlet-name>
-        <servlet-class>servlets.initializingServlet</servlet-class>
+        <servlet-class>huang.servlets.initializingServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>initializingServlet</servlet-name>
@@ -36,7 +36,7 @@
 
     <servlet>
         <servlet-name>logoutServlet</servlet-name>
-        <servlet-class>servlets.logoutServlet</servlet-class>
+        <servlet-class>huang.servlets.logoutServlet</servlet-class>
     </servlet>
     <servlet-mapping>
     <servlet-name>logoutServlet</servlet-name>

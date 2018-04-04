@@ -12,6 +12,8 @@ import java.lang.String;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import Class.DataFetch;
+import Class.StockDailyRecord;
 
 // this servlet just for modified test purpose right now.
 @WebServlet(name= "datastoreServlet")
@@ -19,11 +21,11 @@ public class datastoreServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        Class.DataFetch monthly_data = new Class.DataFetch();
+        DataFetch monthly_data = new DataFetch();
         //取所有monthly的数据存成Arraylist
         monthly_data.MonthlyData("https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=MSFT&apikey=BBWCXYKPHWWLCBZ4");
         //访问Data里面的Arraylist，取第一条记录
-        Class.StockDailyRecord test = monthly_data.Data.get(1);
+        StockDailyRecord test = monthly_data.Data.get(1);
         //String id = request.getParameter("id");
         //String timestamp = request.getParameter("timestamp");
         //String open = request.getParameter("open");

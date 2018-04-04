@@ -1,4 +1,4 @@
-package servlets;
+package huang.servlets;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -6,10 +6,6 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-
-
-
-
 
 public class initializingServlet extends HttpServlet {
 
@@ -20,7 +16,7 @@ public class initializingServlet extends HttpServlet {
 
     // 数据库的用户名与密码
     static final String USER = "postgres";
-    static final String PASS = "123456";
+    static final String PASS = "750300";
 
     public initializingServlet() {
         super();
@@ -41,7 +37,7 @@ public class initializingServlet extends HttpServlet {
             stmt = conn.createStatement();
 
             String sql;
-            sql = "SELECT username, password FROM user_information";
+            sql = "SELECT uname, upasswd FROM users";
             //尚未搭建，username password
             ResultSet rs = stmt.executeQuery(sql);
 
@@ -71,7 +67,4 @@ public class initializingServlet extends HttpServlet {
         doGet(request, response);
     }
 
-    public void destroy()
-    {
-    }
 }
