@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 //import Chen.Class.StockDailyRecord;
 import java.sql.DatabaseMetaData;
-import Class.StockDailyRecord;
+import Chen.Class.StockDailyRecord;
 
 public class DBTools {
     public static Connection getConn() {

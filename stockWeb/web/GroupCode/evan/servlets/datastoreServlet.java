@@ -12,8 +12,8 @@ import java.lang.String;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import Class.DataFetch;
-import Class.StockDailyRecord;
+import Chen.Class.DataFetch;
+import Chen.Class.StockDailyRecord;
 
 // this servlet just for modified test purpose right now.
 @WebServlet(name= "datastoreServlet")
