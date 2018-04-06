@@ -30,19 +30,7 @@ public class initializingServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Connection conn = null;
         Statement stmt = null;
-        DataFetch monthly_data = new DataFetch();
-        //取所有monthly的数据存成Arraylist
-        String interval = "15min";
-        monthly_data.IntraData("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval="+interval+"&outputsize=full&apikey=BBWCXYKPHWWLCBZ4",interval);
-        //访问Data里面的Arraylist，取第一条记录
-        StockDailyRecord test = monthly_data.Data.get(0);
-        System.out.print(monthly_data.Data.size());
-        System.out.print(monthly_data.Symbol+'/');
-        System.out.print(test.close+'/');
-        System.out.print(test.open+'/');
-        System.out.print(test.high+'/');
-        System.out.print(test.low+'/');
-        System.out.print(test.volume);
+
         HttpSession session = request.getSession();
         java.lang.String username = request.getParameter("username");
         java.lang.String password = request.getParameter("password");
@@ -60,8 +48,6 @@ public class initializingServlet extends HttpServlet {
             //尚未搭建，username password
             ResultSet rs = stmt.executeQuery(sql);
 
-            System.out.print("1");
-
             while(rs.next()) {
 
                 java.lang.String real_username = rs.getString("uname");
@@ -75,8 +61,7 @@ public class initializingServlet extends HttpServlet {
             }
 
             //没有匹配的用户，或密码错误
-            response.getWriter().print("<script> alert(\"Nonexistent User, or incorrect password!\"); </script>");
-            request.getRequestDispatcher("sign_in.jsp").forward(request, response);
+            response.getWriter().print("<script> alert(\"Nonexistent User, or incorrect password!\"); window.location.href='sign_in.jsp'; </script>");
 
         } catch (SQLException e) {
             e.printStackTrace();

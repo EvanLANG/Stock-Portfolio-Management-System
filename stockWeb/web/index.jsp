@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: Chen
@@ -5,9 +6,14 @@
   Time: 23:15
   To change this template use File | Settings | File Templates.
 --%>
+<%@ page isELIgnored="false" %>
 <%@ page contentType="text/html;charset=UTF-8"%>
 
 <html>
+
+<head>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-3.3.1.min.js"></script>
+</head>
 <style type="text/css">
   ._1SQmm {
     list-style: none;
@@ -105,23 +111,30 @@
     cursor: pointer;
     line-height: 36px;
   }
-  #content_left {
-    float: left;
-    width: 750px;
-    border-bottom: 1px solid #BDBDBD;
+  #content_mid {
+      margin-left: auto;
+      margin-right: auto;
+      width: 60%;
+      text-align: center;
+      border-right: 1px solid #BDBDBD;
+      border-left: 1px solid #BDBDBD;
+      height:100%;
+      background-color: white;
   }
-  .leftContext
-  {
-    float: left;
-    width: 750px;
-    height:320px;
-    border-bottom: 1px solid #BDBDBD;
+
+  #content_left {
+      float: left;
+      width: 20%;
+      height: 100%;
+      border-right: 1px solid #BDBDBD;
+      background-color:#FFFCEC;
   }
   #content_right {
     float: right;
-    width: 328px;
+    width: 20%;
     height: 100%;
     border-left: 1px solid #BDBDBD;
+      background-color:#FFFCEC;
   }
   .mainContext
   {
@@ -130,16 +143,43 @@
     border-right:solid 1px #BDBDBD;
     width: 100%;
     height: 100%;
-    background-color:#FFFCEC;
     margin:0;
     padding: 0;
     position:relative;
     margin-left: auto;
     margin-right: auto;
+      background-color: #FFFCEC;
+  }
+
+
+  h1 {
+      display: block;
+      font-size: 2em;
+      -webkit-margin-before: 0.67em;
+      -webkit-margin-after: 0.67em;
+      -webkit-margin-start: 0px;
+      -webkit-margin-end: 0px;
+      font-weight: bold;
   }
 </style>
 
-<body>
+
+<script type="text/javascript">
+    function get_new_messages() {
+        if (${empty sessionScope.com})
+            {
+                    $.ajax({
+                    type: 'post',
+                    url: 'onloadindexServlet',
+                    data: {},
+                    seccess: self.location.reload()
+                })
+            }
+    }
+</script>
+
+
+<body onload="get_new_messages()">
 <header data-reactroot class="header1">
   <ul class="_1SQmm Bgc">
 
@@ -198,16 +238,181 @@
   </ul>
 </header>
 
+
+
+
+
 <div id="container" class="mainContext">
+<style>
 
-  <div id="content_right" class="">
+    .stock-info {
+        text-align: left;
+        padding: 10px 20px;
+        background-color: #f7faff;
+        border-top: #e9edf0 solid 2px;
+    }
+    .stock-info .stock-bets h1 a {
+        color: #333;
+        margin-right: 15px;
+        font-size: 18px;
+    }
+    .stock-info .stock-bets .price strong {
+        font-size: 54px;
+        line-height: 56px;
+        margin-right: 20px;
+    }
+    strong, b {
+        font-weight: bold;
+    }
 
-  </div>
+    .stock-info .stock-bets .price span {
+        font-size: 18px;
+        margin-right: 10px;
+        font-weight: 700;
+    }
 
-  <div id="content_left" class="">
+    .stock-info .bets-content {
+        margin-top: 20px;
+        border-top: #e9edf0 solid 1px;
+        padding: 14px 0;
+        height: 40px;
+    }
 
-  </div>
+    .stock-info .bets-content .bets-col-9 dl {
+        width: 15.11%;
+    }
+    .stock-info .bets-content dl {
+        float: left;
+        width: 15%;
+        line-height: 18px;
+    }
+    dl, dd {
+        margin: 0;
+    }
+    .stock-info .bets-content dd {
+        font-size: 14px;
+        font-weight: 700;
+    }
+    .s-stop {
+             color: #999;
+         }
+    .s-up {
+        color: #f24957;
+    }
+    .s-down {
+        color: #1dbf60;
+    }
+    ul, li {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    li {
+        display: list-item;
+        text-align: -webkit-match-parent;
+    }
+    .stock-info .stock-add button {
+        width: 40%;
+        height: 40px;
+        line-height: 40px;
+        background-color: #2e85ff;
+        border: 0;
+        padding: 0;
+        -webkit-border-radius: 4px;
+        border-radius: 4px;
+        font-size: 16px;
+        color: #FFF;
+        cursor: pointer;
+    }
+    ul, menu, dir {
+        display: block;
+        list-style-type: disc;
+        -webkit-margin-before: 1em;
+        -webkit-margin-after: 1em;
+        -webkit-margin-start: 0px;
+        -webkit-margin-end: 0px;
+        -webkit-padding-start: 40px;
+    }
+    .stock-add {
 
+        text-align: center;
+        float:right;
+        width: 50%;
+    }
+    .stock-info .bets-content dt {
+        color: #92a0ac;
+        font-size: 12px;
+    }
+    .bets-name {
+        font-family: DIN,"Microsoft YaHei",Arial,sans-serif;
+    }
+</style>
+
+
+    <div id="content_mid" class="">
+        <c:choose>
+            <c:when test="${empty sessionScope.com}">
+                <img alt="" src="picture/loading.gif" style="vertical-align: middle" />
+            </c:when>
+            <c:otherwise>
+
+            </c:otherwise>
+        </c:choose>
+
+        <div class="stock-info">
+            <div class="stock-bets">
+                <h1>
+                    <a class="bets-name" href="">上证指数 (<span>000001</span>)</a>
+                </h1>
+                <div class="price s-stop ">
+                    <strong class="_close">3131.11</strong>
+                    <span>0.00</span>
+                    <span>0.00%</span>
+
+                    <ul class="stock-add">
+                        <li><button class="">+ Favorite</button></li>
+                    </ul>
+                </div>
+
+                <div class="bets-content">
+
+                    <div class="bets-col-9">
+                        <dl><dt>High</dt><dd class="s-up">3163.34</dd></dl>
+                        <dl><dt>Low</dt><dd class="s-down">3128.87</dd></dl>
+                        <dl><dt>Open</dt><dd class="">3147.05</dd></dl>
+                        <dl><dt>Close</dt><dd>3136.63</dd></dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stock-info">
+            <div class="stock-bets">
+                <h1>
+                    <a class="bets-name" href="">上证指数 (<span>000001</span>)</a>
+                </h1>
+                <div class="price s-stop ">
+                    <strong class="_close">3131.11</strong>
+                    <span>0.00</span>
+                    <span>0.00%</span>
+
+                    <ul class="stock-add">
+                        <li><button class="">+ Favorite</button></li>
+                    </ul>
+                </div>
+
+                <div class="bets-content">
+
+                    <div class="bets-col-9">
+                        <dl><dt>High</dt><dd class="s-up">3163.34</dd></dl>
+                        <dl><dt>Low</dt><dd class="s-down">3128.87</dd></dl>
+                        <dl><dt>Open</dt><dd class="">3147.05</dd></dl>
+                        <dl><dt>Close</dt><dd>3136.63</dd></dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 

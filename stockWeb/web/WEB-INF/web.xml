@@ -44,4 +44,13 @@
     <url-pattern>/logoutServlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>onloadindexServlet</servlet-name>
+        <servlet-class>huang.servlets.onloadindexServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>onloadindexServlet</servlet-name>
+        <url-pattern>/onloadindexServlet</url-pattern>
+    </servlet-mapping>
+
 </web-app>
