@@ -33,7 +33,13 @@ public class onloadindexServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        Company new_com = new Company(monthly_data.Symbol, test.open, test.close, test.high, test.low, test.volume);
-        session.setAttribute("com", new_com);
+        Company new_com = new Company();
+        new_com.setSymbol(monthly_data.Symbol);
+        new_com.setHigh(test.high);
+        new_com.setLow(test.low);
+        new_com.setOpen(test.open);
+        new_com.setClose(test.close);
+        new_com.setVolume(test.volume);
+        session.setAttribute("comp", new_com);
     }
 }
