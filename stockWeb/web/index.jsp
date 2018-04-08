@@ -166,13 +166,17 @@
 
 <script type="text/javascript">
     function get_new_messages() {
-        if (${empty sessionScope.com})
+        if (${empty sessionScope.comp})
             {
                     $.ajax({
                     type: 'post',
                     url: 'onloadindexServlet',
-                    data: {}
-
+                    data: {},
+                    success: function myreload()
+                    {
+                        window.location.reload();
+                        setTimeout('myreload()',6000);
+                    }
                 })
             }
     }
@@ -355,32 +359,36 @@
                 <img alt="" src="picture/loading.gif" style="vertical-align: middle" />
             </c:when>
             <c:otherwise>
-                <div class="stock-info">
-                    <div class="stock-bets">
-                        <h1>
-                            <a class="bets-name" href="">${sessionScope.comp}</a>
-                        </h1>
-                        <div class="price s-stop ">
-                            <strong class="_close">3131.11</strong>
-                            <span>0.00</span>
-                            <span>0.00%</span>
 
-                            <ul class="stock-add">
-                                <li><button class="">+ Favorite</button></li>
-                            </ul>
-                        </div>
+                <c:forEach items="${sessionScope.comp}" var="current_comp">
+                    <div class="stock-info">
+                        <div class="stock-bets">
+                            <h1>
+                                <a class="bets-name" href="">${current_comp.symbol}</a>
+                            </h1>
+                            <div class="price s-stop ">
+                                <strong class="_close">${current_comp.volume}</strong>
+                                <span>${current_comp.close - current_comp.volume}</span>
+                                <span>${(current_comp.close - current_comp.volume)/current_comp.close * 100}</span>
 
-                        <div class="bets-content">
+                                <ul class="stock-add">
+                                    <li><button class="">+ Favorite</button></li>
+                                </ul>
+                            </div>
 
-                            <div class="bets-col-9">
-                                <dl><dt>High</dt><dd class="s-up">3163.34</dd></dl>
-                                <dl><dt>Low</dt><dd class="s-down">3128.87</dd></dl>
-                                <dl><dt>Open</dt><dd class="">3147.05</dd></dl>
-                                <dl><dt>Close</dt><dd>3136.63</dd></dl>
+                            <div class="bets-content">
+
+                                <div class="bets-col-9">
+                                    <dl><dt>High</dt><dd class="s-up">${current_comp.high}</dd></dl>
+                                    <dl><dt>Low</dt><dd class="s-down">${current_comp.low}</dd></dl>
+                                    <dl><dt>Open</dt><dd class="">${current_comp.open}</dd></dl>
+                                    <dl><dt>Close</dt><dd>${current_comp.close}</dd></dl>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </c:forEach>
+
             </c:otherwise>
         </c:choose>
 

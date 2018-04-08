@@ -1,12 +1,13 @@
 package huang.servlets;
 
-class Company {
+public class Company {
     private String symbol;
     private float open;
     private float high;
     private float low;
     private float close;
     private long volume;
+    private String url;
 
     public float getHigh() {
         return high;
@@ -46,5 +47,11 @@ class Company {
     }
     public void setVolume(long value) {
         volume = value;
+    }
+    public String getUrl() {
+        return url;
+    }
+    public void setUrl(String value) {
+        url = value;
     }
 }
