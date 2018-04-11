@@ -283,7 +283,7 @@
     }
 
     .stock-info .bets-content .bets-col-9 dl {
-        width: 15.11%;
+        width: 10.11%;
     }
     .stock-info .bets-content dl {
         float: left;
@@ -368,8 +368,8 @@
                             </h1>
                             <div class="price s-stop ">
                                 <strong class="_close">${current_comp.close}</strong>
-                                <span>${current_comp.close - current_comp.volume}</span>
-                                <span>${(current_comp.close - current_comp.volume)/current_comp.close * 100}</span>
+                                <span>00.00</span>
+                                <span>00.00</span>
 
                                 <ul class="stock-add">
                                     <li><button class="">+ Favorite</button></li>

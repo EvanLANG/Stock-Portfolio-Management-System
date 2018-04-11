@@ -8,6 +8,9 @@ public class Company {
     private float low;//到目前为止最低
     private float close;//昨日闭盘
     private long volume;//今日开盘到目前累积的交易量
+    private float change;//今日增长（减少）量
+    private float change_percent;//今日增长（减少）百分比
+    private boolean sig;//今日增长（减少）标志
     private String url;
 
     public float getHigh() {
@@ -61,5 +64,23 @@ public class Company {
     }
     public void setUrl(String value) {
         url = value;
+    }
+    public float getChange() {
+        return change;
+    }
+    public void setChange(float value) {
+        change = value;
+    }
+    public float getChange_percent() {
+        return change_percent;
+    }
+    public void setChange_percent(float value) {
+        change_percent = value;
+    }
+    public boolean getSig() {
+        return sig;
+    }
+    public void setSig(boolean value) {
+        sig = value;
     }
 }
