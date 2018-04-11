@@ -22,7 +22,7 @@ public class onloadindexServlet extends HttpServlet {
         DataFetch intra_data = new DataFetch();
         DataFetch daily_data = new DataFetch();
         //取所有monthly的数据存成Arraylist
-        String interval = "10min";
+        String interval = "15min";
 
         List<Company> companies = new ArrayList<Company>();
         List<String> symbollist = new ArrayList<String>();
@@ -32,8 +32,11 @@ public class onloadindexServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         for (String Sym: symbollist) {
-            intra_data.IntraData("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+Sym+"&interval=" + interval + "&outputsize=full&apikey=BBWCXYKPHWWLCBZ4", interval);
+            intra_data.IntraData("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+Sym+"&interval=" + interval + "&apikey=BBWCXYKPHWWLCBZ4", interval);
             //访问Data里面的Arraylist，取第一条记录
+            if (intra_data.Dataerror){
+                continue;
+            }
             StockDailyRecord test = intra_data.Data.get(0);
             System.out.println(intra_data.Symbol);
             System.out.println(test.close+"\n");//最新价
