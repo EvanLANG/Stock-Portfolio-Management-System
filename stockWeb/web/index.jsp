@@ -368,8 +368,8 @@
                             </h1>
                             <div class="price s-stop ">
                                 <strong class="_close">${current_comp.close}</strong>
-                                <span>00.00</span>
-                                <span>00.00</span>
+                                <span>${current_comp.change}</span>
+                                <span>${current_comp.change_percent}%</span>
 
                                 <ul class="stock-add">
                                     <li><button class="">+ Favorite</button></li>

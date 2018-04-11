@@ -1,5 +1,7 @@
 package huang.servlets;
 
+import java.text.DecimalFormat;
+
 public class Company {
     private String symbol;
     private float current;//现价
@@ -8,8 +10,8 @@ public class Company {
     private float low;//到目前为止最低
     private float close;//昨日闭盘
     private long volume;//今日开盘到目前累积的交易量
-    private float change;//今日增长（减少）量
-    private float change_percent;//今日增长（减少）百分比
+    private String change;//今日增长（减少）量
+    private String change_percent;//今日增长（减少）百分比
     private boolean sig;//今日增长（减少）标志
     private String url;
 
@@ -65,17 +67,19 @@ public class Company {
     public void setUrl(String value) {
         url = value;
     }
-    public float getChange() {
+    public String getChange() {
         return change;
     }
     public void setChange(float value) {
-        change = value;
+        DecimalFormat decimalFormat=new DecimalFormat(".00");
+        change = decimalFormat.format(value);
     }
-    public float getChange_percent() {
+    public String getChange_percent() {
         return change_percent;
     }
     public void setChange_percent(float value) {
-        change_percent = value;
+        DecimalFormat decimalFormat=new DecimalFormat(".00");
+        change_percent = decimalFormat.format(value);
     }
     public boolean getSig() {
         return sig;
