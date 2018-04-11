@@ -2,7 +2,6 @@ package huang.servlets;
 
 import Chen.Class.DataFetch;
 import Chen.Class.StockDailyRecord;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,9 +19,10 @@ public class onloadindexServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        DataFetch monthly_data = new DataFetch();
+        DataFetch intra_data = new DataFetch();
+        DataFetch daily_data = new DataFetch();
         //取所有monthly的数据存成Arraylist
-        String interval = "15min";
+        String interval = "10min";
 
         List<Company> companies = new ArrayList<Company>();
         List<String> symbollist = new ArrayList<String>();
@@ -32,23 +32,31 @@ public class onloadindexServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         for (String Sym: symbollist) {
-            monthly_data.IntraData("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+Sym+"&interval=" + interval + "&outputsize=full&apikey=BBWCXYKPHWWLCBZ4", interval);
+            intra_data.IntraData("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+Sym+"&interval=" + interval + "&outputsize=full&apikey=BBWCXYKPHWWLCBZ4", interval);
             //访问Data里面的Arraylist，取第一条记录
-            StockDailyRecord test = monthly_data.Data.get(0);
-            System.out.println(monthly_data.Symbol);
-            System.out.println(test.close);
-            System.out.println(test.open);
-            System.out.println(test.high);
-            System.out.println(test.low);
-            System.out.println(test.volume);
+            StockDailyRecord test = intra_data.Data.get(0);
+            System.out.println(intra_data.Symbol);
+            System.out.println(test.close+"\n");//最新价
+            System.out.println(test.TradeDate.toString());//检查下是不是最新时间
 
             Company new_com = new Company();
-            new_com.setSymbol(monthly_data.Symbol);
-            new_com.setHigh(test.high);
-            new_com.setLow(test.low);
-            new_com.setOpen(test.open);
+            //公司标识
+            new_com.setSymbol(intra_data.Symbol);
+            //现价
+            new_com.setCurrent(test.close);
+            //从今日开盘到目前为止累积的交易总量
+            new_com.setVolume(intra_data.TotalV);
+            //今日开盘价
+            new_com.setOpen(intra_data.newest_open);
+            //今日开盘到目前为止的最高价和最低价
+            new_com.setHigh(intra_data.current_high);
+            new_com.setLow(intra_data.current_low);
+
+            daily_data.DailyData("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol="+Sym+"&apikey=BBWCXYKPHWWLCBZ4");
+            StockDailyRecord test1 = daily_data.Data.get(0);
+            //昨日闭盘价
             new_com.setClose(test.close);
-            new_com.setVolume(test.volume);
+
             companies.add(new_com);
         }
 
