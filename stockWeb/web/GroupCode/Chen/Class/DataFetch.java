@@ -122,6 +122,7 @@ public class DataFetch {
     }
     public void DailyData(String ul) {
         //For daily data
+        Data = new ArrayList<StockDailyRecord>();
         String json = GetFromURL(ul);
         Type = "Daily";
         JSONObject jsonObject = JSONObject.fromObject(json);
