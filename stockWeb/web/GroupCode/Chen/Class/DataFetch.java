@@ -48,7 +48,7 @@ public class DataFetch {
         {
             e.printStackTrace();
         }
-        System.out.println("Json string got.");
+        System.out.println("Json string got.\n");
         return urlString;
     }
     public void IntraData(String ul,String interval) {
@@ -68,8 +68,11 @@ public class DataFetch {
         String TimeSeries = jsonObject.getString("Time Series ("+interval+")");
         JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
         //迭代器可选择
+        System.out.println("Iterating begins.\n");
         JsonInterator(TimeSeriesObj);
+        System.out.println("Iterating finished.\n");
         getIntraVolumeLowHigh();
+        System.out.println("Intra data obtained.\n");
     }
     private void getIntraVolumeLowHigh(){
         StockDailyRecord first_day = Data.get(0);
@@ -77,7 +80,7 @@ public class DataFetch {
         int index = 0;
         while(true){
             StockDailyRecord current = Data.get(index);
-            if(current.TradeDate.toString().substring(0,10) == day){
+            if(current.TradeDate.toString().substring(0,10).equals(day)){
                 TotalV += current.volume;
                 if(current.high>current_high){
                     current_high = current.high;
@@ -86,6 +89,7 @@ public class DataFetch {
                     current_low = current.low;
                 }
                 index++;
+                System.out.println("index:"+index+",");
             }else{
                 newest_open = Data.get(index-1).open;
                 break;
@@ -140,6 +144,7 @@ public class DataFetch {
         JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
         //可选迭代器
         TJsonInterator(TimeSeriesObj);
+        System.out.println("Daily data obtained.\n");
     }
     public void WeeklyData(String ul){
         //For daily data
