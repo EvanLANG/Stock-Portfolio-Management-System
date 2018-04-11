@@ -19,7 +19,7 @@ public class StockDailyRecord {
         volume = Long.parseLong(value.getString("5. volume"));
     }
     public void GetDate(String date){
-        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        //Timestamp ts = new Timestamp(System.currentTimeMillis());
         String tsStr = date;
         try {
             TradeDate = Timestamp.valueOf(tsStr);
