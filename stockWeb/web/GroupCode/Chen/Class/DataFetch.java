@@ -15,6 +15,10 @@ public class DataFetch {
     public String Symbol;
     public String TimeZone;
     public String Type;
+    public float current_high;
+    public float current_low;
+    public float newest_open;
+    public long TotalV;
     private String GetFromURL(String ul)
     {
         //this function aims to get the String from URL;
@@ -50,6 +54,10 @@ public class DataFetch {
     public void IntraData(String ul,String interval) {
         //For daily data
         Data = new ArrayList<StockDailyRecord>();
+        TotalV = 0;
+        newest_open = 0;
+        current_high = 0;
+        current_low = Integer.MAX_VALUE;
         String json = GetFromURL(ul);
         Type = "Daily";
         JSONObject jsonObject = JSONObject.fromObject(json);
@@ -60,7 +68,26 @@ public class DataFetch {
         String TimeSeries = jsonObject.getString("Time Series ("+interval+")");
         JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
         //迭代器可选择
-        TJsonInterator(TimeSeriesObj);
+        JsonInterator(TimeSeriesObj);
+        StockDailyRecord first_day = Data.get(0);
+        String day = first_day.TradeDate.toString().substring(0,10);
+        int index = 0;
+        while(true){
+            StockDailyRecord current = Data.get(index);
+            if(current.TradeDate.toString().substring(0,10) == day){
+                TotalV += current.volume;
+                if(current.high>current_high){
+                    current_high = current.high;
+                }
+                if(current.low < current_low){
+                    current_low = current.low;
+                }
+                index++;
+            }else{
+                newest_open = Data.get(index-1).open;
+                break;
+            }
+        }
     }
     //取单条数据
     private void TJsonInterator(JSONObject obj){
@@ -107,7 +134,8 @@ public class DataFetch {
         }
         String TimeSeries = jsonObject.getString("Time Series (Daily)");
         JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
-        JsonInterator(TimeSeriesObj);
+        //可选迭代器
+        TJsonInterator(TimeSeriesObj);
     }
     public void WeeklyData(String ul){
         //For daily data

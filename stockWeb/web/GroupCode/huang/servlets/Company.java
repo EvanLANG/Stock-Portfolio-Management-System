@@ -2,12 +2,12 @@ package huang.servlets;
 
 public class Company {
     private String symbol;
-    private float current;
-    private float open;
-    private float high;
-    private float low;
-    private float close;
-    private long volume;
+    private float current;//现价
+    private float open;//今日开盘
+    private float high;//今日开盘到目前为止最高
+    private float low;//到目前为止最低
+    private float close;//昨日闭盘
+    private long volume;//今日开盘到目前累积的交易量
     private String url;
 
     public float getHigh() {
@@ -15,6 +15,13 @@ public class Company {
     }
     public void setHigh(float value) {
         high = value;
+    }
+
+    public float getCurrent() {
+        return current;
+    }
+    public void setCurrent(float value) {
+        current = value;
     }
 
     public float getLow() {
@@ -54,12 +61,5 @@ public class Company {
     }
     public void setUrl(String value) {
         url = value;
-    }
-
-    public float getCurrent() {
-        return current;
-    }
-    public void setCurrent(float value) {
-        current = value;
     }
 }

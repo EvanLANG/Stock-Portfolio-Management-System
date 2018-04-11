@@ -1,9 +1,9 @@
-package Class;
+package Chen.Class;
 
 import java.net.*;
 import java.io.*;
 import java.util.*;
-
+import Chen.Class.StockDailyRecord;
 import net.sf.json.JSONObject;
 
 //你可以直接新声明一个DataFetch对象，
@@ -11,10 +11,14 @@ import net.sf.json.JSONObject;
 //全部都存在此对象相应的attribute里面
 
 public class DataFetch {
-    private ArrayList<StockDailyRecord> Data;
-    private String Symbol;
-    private String TimeZone;
-    private String Type;
+    public ArrayList<StockDailyRecord> Data = new ArrayList<StockDailyRecord>();
+    public String Symbol;
+    public String TimeZone;
+    public String Type;
+    public float current_high;
+    public float current_low;
+    public float newest_open;
+    public long TotalV;
     private String GetFromURL(String ul)
     {
         //this function aims to get the String from URL;
@@ -47,6 +51,59 @@ public class DataFetch {
         System.out.println("Json string got.");
         return urlString;
     }
+    public void IntraData(String ul,String interval) {
+        //For daily data
+        Data = new ArrayList<StockDailyRecord>();
+        TotalV = 0;
+        newest_open = 0;
+        current_high = 0;
+        current_low = Integer.MAX_VALUE;
+        String json = GetFromURL(ul);
+        Type = "Daily";
+        JSONObject jsonObject = JSONObject.fromObject(json);
+        String MetaData = jsonObject.getString("Meta Data");
+        JSONObject MetaDataObj = JSONObject.fromObject(MetaData);
+        Symbol = MetaDataObj.getString("2. Symbol");
+        TimeZone = MetaDataObj.getString("6. Time Zone");
+        String TimeSeries = jsonObject.getString("Time Series ("+interval+")");
+        JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
+        //迭代器可选择
+        JsonInterator(TimeSeriesObj);
+        StockDailyRecord first_day = Data.get(0);
+        String day = first_day.TradeDate.toString().substring(0,10);
+        int index = 0;
+        while(true){
+            StockDailyRecord current = Data.get(index);
+            if(current.TradeDate.toString().substring(0,10) == day){
+                TotalV += current.volume;
+                if(current.high>current_high){
+                    current_high = current.high;
+                }
+                if(current.low < current_low){
+                    current_low = current.low;
+                }
+                index++;
+            }else{
+                newest_open = Data.get(index-1).open;
+                break;
+            }
+        }
+    }
+    //取单条数据
+    private void TJsonInterator(JSONObject obj){
+        Iterator iterator = obj.keys();
+        String key = (String) iterator.next();
+        String value = obj.getString(key);
+        JSONObject record = JSONObject.fromObject(value);
+        StockDailyRecord recordObj = new StockDailyRecord();
+        recordObj.readData(record);
+        recordObj.GetDate(key);
+        try{
+            Data.add(recordObj);
+        }catch(Exception e){
+            e.printStackTrace(); }
+    }
+    //取全部数据
     private void JsonInterator(JSONObject obj){
         Iterator iterator = obj.keys();
         while(iterator.hasNext()){
@@ -56,10 +113,14 @@ public class DataFetch {
             StockDailyRecord recordObj = new StockDailyRecord();
             recordObj.readData(record);
             recordObj.GetDate(key);
-            Data.add(recordObj);
+            try{
+                Data.add(recordObj);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
     }
-    public void DailyData(String ul){
+    public void DailyData(String ul) {
         //For daily data
         String json = GetFromURL(ul);
         Type = "Daily";
@@ -67,10 +128,14 @@ public class DataFetch {
         String MetaData = jsonObject.getString("Meta Data");
         JSONObject MetaDataObj = JSONObject.fromObject(MetaData);
         Symbol = MetaDataObj.getString("2. Symbol");
-        TimeZone = MetaDataObj.getString("5. Time Zone");
+        try {
+            TimeZone = MetaDataObj.getString("5. Time Zone");
+        }catch(Exception e){
+        }
         String TimeSeries = jsonObject.getString("Time Series (Daily)");
         JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
-        JsonInterator(TimeSeriesObj);
+        //可选迭代器
+        TJsonInterator(TimeSeriesObj);
     }
     public void WeeklyData(String ul){
         //For daily data

