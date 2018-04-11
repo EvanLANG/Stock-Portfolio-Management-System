@@ -367,7 +367,7 @@
                                 <a class="bets-name" href="">${current_comp.symbol}</a>
                             </h1>
                             <div class="price s-stop ">
-                                <strong class="_close">${current_comp.volume}</strong>
+                                <strong class="_close">${current_comp.close}</strong>
                                 <span>${current_comp.close - current_comp.volume}</span>
                                 <span>${(current_comp.close - current_comp.volume)/current_comp.close * 100}</span>
 
@@ -383,6 +383,7 @@
                                     <dl><dt>Low</dt><dd class="s-down">${current_comp.low}</dd></dl>
                                     <dl><dt>Open</dt><dd class="">${current_comp.open}</dd></dl>
                                     <dl><dt>Close</dt><dd>${current_comp.close}</dd></dl>
+                                    <dl><dt>Volume</dt><dd>${current_comp.volume}</dd></dl>
                                 </div>
                             </div>
                         </div>

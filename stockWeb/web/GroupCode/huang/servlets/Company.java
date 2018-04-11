@@ -2,6 +2,7 @@ package huang.servlets;
 
 public class Company {
     private String symbol;
+    private float current;
     private float open;
     private float high;
     private float low;
@@ -53,5 +54,12 @@ public class Company {
     }
     public void setUrl(String value) {
         url = value;
+    }
+
+    public float getCurrent() {
+        return current;
+    }
+    public void setCurrent(float value) {
+        current = value;
     }
 }
