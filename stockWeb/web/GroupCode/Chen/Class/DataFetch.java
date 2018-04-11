@@ -69,6 +69,9 @@ public class DataFetch {
         JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
         //迭代器可选择
         JsonInterator(TimeSeriesObj);
+        getIntraVolumeLowHigh();
+    }
+    private void getIntraVolumeLowHigh(){
         StockDailyRecord first_day = Data.get(0);
         String day = first_day.TradeDate.toString().substring(0,10);
         int index = 0;
