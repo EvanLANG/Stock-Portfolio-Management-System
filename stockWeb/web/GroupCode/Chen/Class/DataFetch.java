@@ -49,6 +49,7 @@ public class DataFetch {
     }
     public void IntraData(String ul,String interval) {
         //For daily data
+        Data = new ArrayList<StockDailyRecord>();
         String json = GetFromURL(ul);
         Type = "Daily";
         JSONObject jsonObject = JSONObject.fromObject(json);
