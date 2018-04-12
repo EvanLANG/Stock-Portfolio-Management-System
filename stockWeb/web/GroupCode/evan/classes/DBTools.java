@@ -35,7 +35,7 @@ public class DBTools {
         try {
             pstmt = (PreparedStatement) conn.prepareStatement(sql);
             //pstmt.setString(1, comp.getId());
-            pstmt.setTimestamp(1, comp.TradeDate);
+            pstmt.setString(1, comp.TradeDate);
             pstmt.setFloat(2, comp.open);
             pstmt.setFloat(3, comp.high);
             pstmt.setFloat(4, comp.low);

@@ -5,7 +5,7 @@ import java.math.BigInteger;
 import java.sql.Timestamp;
 
 public class StockDailyRecord {
-    public Timestamp TradeDate;
+    public String TradeDate;
     public float open;
     public float high;
     public float low;
@@ -21,10 +21,6 @@ public class StockDailyRecord {
     public void GetDate(String date){
         //Timestamp ts = new Timestamp(System.currentTimeMillis());
         String tsStr = date;
-        try {
-            TradeDate = Timestamp.valueOf(tsStr);
-
-        } catch (Exception e) {
-        }
+        TradeDate = tsStr;
     }
 }

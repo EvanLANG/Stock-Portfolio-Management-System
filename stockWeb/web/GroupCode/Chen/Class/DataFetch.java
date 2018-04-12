@@ -82,11 +82,11 @@ public class DataFetch {
     }
     private void getIntraVolumeLowHigh(){
         StockDailyRecord first_day = Data.get(0);
-        String day = first_day.TradeDate.toString().substring(0,10);
+        String day = first_day.TradeDate.substring(0,10);
         int index = 0;
         while(true){
             StockDailyRecord current = Data.get(index);
-            if(current.TradeDate.toString().substring(0,10).equals(day)){
+            if(current.TradeDate.substring(0,10).equals(day)){
                 TotalV += current.volume;
                 if(current.high>current_high){
                     current_high = current.high;
@@ -103,7 +103,7 @@ public class DataFetch {
         }
     }
     //取单条数据
-    private void TJsonInterator(JSONObject obj){
+    private void TJsonInterator(JSONObject obj,String date){
         Iterator iterator = obj.keys();
         String key = (String) iterator.next();
         String value = obj.getString(key);
@@ -151,7 +151,7 @@ public class DataFetch {
             String TimeSeries = jsonObject.getString("Time Series (Daily)");
             JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
             //可选迭代器
-            TJsonInterator(TimeSeriesObj);
+            JsonInterator(TimeSeriesObj);
             System.out.println("Daily data obtained.\n");
         }catch(Exception e){
             Dataerror = true;

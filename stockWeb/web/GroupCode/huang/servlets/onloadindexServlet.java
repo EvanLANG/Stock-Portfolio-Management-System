@@ -27,6 +27,8 @@ public class onloadindexServlet extends HttpServlet {
         List<Company> companies = new ArrayList<Company>();
         List<String> symbollist = new ArrayList<String>();
         symbollist.add("MSFT");
+        symbollist.add("JOBS");
+        symbollist.add("TURN");
 
         HttpSession session = request.getSession();
 
@@ -37,10 +39,11 @@ public class onloadindexServlet extends HttpServlet {
                 continue;
             }
             StockDailyRecord test = intra_data.Data.get(0);
+            String current_day = test.TradeDate.substring(0,10);
             System.out.println(intra_data.Symbol);
             System.out.println(test.close + "\n");//最新价
-            System.out.println(test.TradeDate.toString());//检查下是不是最新时间
-
+            System.out.println(test.TradeDate);//检查下是不是最新时间
+            System.out.println(current_day);
             Company new_com = new Company();
             //公司标识
             new_com.setSymbol(intra_data.Symbol);
@@ -57,23 +60,21 @@ public class onloadindexServlet extends HttpServlet {
 
 
             daily_data.DailyData("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + Sym + "&apikey=BBWCXYKPHWWLCBZ4");
-                StockDailyRecord test1 = daily_data.Data.get(0);
-                StockDailyRecord test2 = daily_data.Data.get(1);
-                //昨日闭盘价
-
-                float close;
-                float change;
-                float change_percent;
-                boolean up_or_down;
-
-
-
-                if (test1.close == test.close && test1.open == intra_data.newest_open) {
+            StockDailyRecord test1 = daily_data.Data.get(0);
+            StockDailyRecord test2 = daily_data.Data.get(1);
+            System.out.println(test1.TradeDate + ","+test1.close);
+            System.out.println(test2.TradeDate + ","+test2.close);
+            float close;
+            //昨日闭盘价
+            if (test1.TradeDate.equals(current_day))     {
                     close = test2.close;
-                } else {
+                }else {
                     close = test1.close;
                 }
 
+                float change;
+                float change_percent;
+                boolean up_or_down;
 
                 new_com.setClose(close);
                 up_or_down = !(close > test.close);

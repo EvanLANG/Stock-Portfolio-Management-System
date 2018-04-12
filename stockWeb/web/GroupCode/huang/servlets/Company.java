@@ -71,14 +71,14 @@ public class Company {
         return change;
     }
     public void setChange(float value) {
-        DecimalFormat decimalFormat=new DecimalFormat(".00");
+        DecimalFormat decimalFormat=new DecimalFormat("0.00");
         change = decimalFormat.format(value);
     }
     public String getChange_percent() {
         return change_percent;
     }
     public void setChange_percent(float value) {
-        DecimalFormat decimalFormat=new DecimalFormat(".00");
+        DecimalFormat decimalFormat=new DecimalFormat("0.00");
         change_percent = decimalFormat.format(value);
     }
     public boolean getSig() {
