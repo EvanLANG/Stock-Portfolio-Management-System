@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 //import Chen.Class.StockDailyRecord;
-import java.sql.DatabaseMetaData;
+//import java.sql.DatabaseMetaData;
 import Chen.Class.StockDailyRecord;
 
 public class DBTools {
@@ -50,6 +50,30 @@ public class DBTools {
         }
         return i;
     }
+
+    public static int insertsymbols(String symbol, String sname, String ipoyear, String quoat) {
+        Connection conn = getConn();
+        //String id = null;
+        int i = 0;
+        String sql = "insert into symbols"+ "(symbol,sname,ipoyear,quoat) values(?,?,?,?)";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement) conn.prepareStatement(sql);
+            //pstmt.setString(1, comp.getId());
+            pstmt.setString(1, symbol);
+            pstmt.setString(2, sname);
+            pstmt.setString(3, ipoyear);
+            pstmt.setString(4, quoat);
+
+            i = pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return i;
+    }
     public boolean validateTableExist(String tableName){
         boolean flag = false ;
         int i = 0;
@@ -74,7 +98,7 @@ public class DBTools {
         id = tablename;
         String sql = "CREATE TABLE "+id+"\n" +
                 "(\n" +
-                "timestamp TIMESTAMP not null PRIMARY KEY ,\n" +
+                "timestamp VARCHAR(20) not null PRIMARY KEY ,\n" +
                 "open      FLOAT ,\n" +
                 "high      FLOAT,\n" +
                 "low       FLOAT, \n"+
