@@ -172,15 +172,20 @@ public class DataFetch {
     }
     public void MonthlyData(String ul){
         //For daily data
+        Dataerror = false;
         String json = GetFromURL(ul);
         Type = "Monthly";
         JSONObject jsonObject = JSONObject.fromObject(json);
-        String MetaData = jsonObject.getString("Meta Data");
-        JSONObject MetaDataObj = JSONObject.fromObject(MetaData);
-        Symbol = MetaDataObj.getString("2. Symbol");
-        TimeZone = MetaDataObj.getString("4. Time Zone");
-        String TimeSeries = jsonObject.getString("Monthly Time Series");
-        JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
-        JsonInterator(TimeSeriesObj);
+        try {
+            String MetaData = jsonObject.getString("Meta Data");
+            JSONObject MetaDataObj = JSONObject.fromObject(MetaData);
+            Symbol = MetaDataObj.getString("2. Symbol");
+            TimeZone = MetaDataObj.getString("4. Time Zone");
+            String TimeSeries = jsonObject.getString("Monthly Time Series");
+            JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
+            JsonInterator(TimeSeriesObj);
+        }catch(Exception e){
+            Dataerror = true;
+        }
     }
 }
