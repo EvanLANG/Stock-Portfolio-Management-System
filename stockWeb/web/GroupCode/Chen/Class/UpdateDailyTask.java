@@ -44,7 +44,7 @@ public class UpdateDailyTask extends TimerTask {
             //System.out.println(parts[3]);
         }
         for(String s : namelist){
-            //System.out.println(s);
+            System.out.println(s.trim());
             if (!db.validateTableExist(s+"_intraday")) {
                 db.createTable(s+"_intraday");
                 db.createTable(s+"_daily");
@@ -56,8 +56,10 @@ public class UpdateDailyTask extends TimerTask {
             daily_data.Dataerror = true;
             //intraday_data.Dataerror = true;
             //monthly_data.Dataerror = true;
-            while(daily_data.Dataerror){
+            int counts = 0;
+            while(daily_data.Dataerror&&counts<3){
                 daily_data.DailyData("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + s.trim() + "&apikey=BBWCXYKPHWWLCBZ4");
+                counts++;
             }
             /*
             while(intraday_data.Dataerror){

@@ -3,9 +3,12 @@ package evan.classes;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 //import Chen.Class.StockDailyRecord;
 //import java.sql.DatabaseMetaData;
+import Chen.Class.DataFetch;
 import Chen.Class.StockDailyRecord;
+import huang.servlets.Company;
 import org.postgresql.util.PSQLException;
 
 public class DBTools {
@@ -118,22 +121,83 @@ public class DBTools {
         }
         return i;
     }
-    public static String getDaily(String symbol,String date) {
+    public static ArrayList<StockDailyRecord> getDaily(String symbol) {
         Connection conn = getConn();
-        String result = "";
-        String sql = "select * from "+symbol+" where timestamp = '"+date+"'";
+        ArrayList<StockDailyRecord> result = new ArrayList<StockDailyRecord>();
+        String sql = "select * from "+symbol+"_daily";
         PreparedStatement pstmt;
         try {
             pstmt = (PreparedStatement)conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                result += String.valueOf(rs.getFloat("close"))+",";
-                result += String.valueOf(rs.getFloat("low"))+",";
-                result += String.valueOf(rs.getLong("volume"));
+                result.add(readData(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return result;
+    }
+    public static ArrayList<StockDailyRecord> getIntraday(String symbol) {
+        Connection conn = getConn();
+        ArrayList<StockDailyRecord> result = new ArrayList<StockDailyRecord>();
+        String sql = "select * from "+symbol+"_intraday";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement)conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                result.add(readData(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    private static StockDailyRecord readData(ResultSet rs){
+        StockDailyRecord record = new StockDailyRecord();
+        try {
+            record.open = rs.getFloat("open");
+            record.close = rs.getFloat("close");
+            record.high = rs.getFloat("high");
+            record.low = rs.getFloat("low");
+            record.volume = rs.getLong("volume");
+            record.TradeDate = rs.getString("timestamp");
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return record;
+    }
+    public static Company getIntraVolumeLowHigh(DataFetch data){
+        ArrayList<StockDailyRecord> Data = data.Data;
+        Company com = new Company();
+        StockDailyRecord first_day = Data.get(0);
+        String day = first_day.TradeDate.substring(0,10);
+        int index = 0;
+        while(true){
+            StockDailyRecord current = Data.get(index);
+            if(current.TradeDate.substring(0,10).equals(day)){
+                data.TotalV += current.volume;
+                if(current.high>data.current_high){
+                    data.current_high = current.high;
+                }
+                if(current.low < data.current_low){
+                    data.current_low = current.low;
+                }
+                index++;
+                //System.out.println("index:"+index+",");
+            }else{
+                data.newest_open = Data.get(index-1).open;
+                break;
+            }
+        }
+        com.setSymbol(data.Symbol);
+        //从今日开盘到目前为止累积的交易总量
+        com.setVolume(data.TotalV);
+        //今日开盘价
+        com.setOpen(data.newest_open);
+        //今日开盘到目前为止的最高价和最低价
+        com.setHigh(data.current_high);
+        com.setLow(data.current_low);
+        return com;
     }
 }

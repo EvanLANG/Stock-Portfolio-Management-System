@@ -16,10 +16,14 @@ public class DataFetch {
     public String TimeZone;
     public String Type;
     public boolean Dataerror;
-    public float current_high;
-    public float current_low;
-    public float newest_open;
-    public long TotalV;
+    public float current_high = 0;
+    public float current_low = Integer.MAX_VALUE;;
+    public float newest_open = 0;
+    public long TotalV = 0;
+    public DataFetch(){;}
+    public DataFetch(String i){
+        Symbol = i;
+    }
     private String GetFromURL(String ul)
     {
         //this function aims to get the String from URL;
@@ -144,10 +148,7 @@ public class DataFetch {
             String MetaData = jsonObject.getString("Meta Data");
             JSONObject MetaDataObj = JSONObject.fromObject(MetaData);
             Symbol = MetaDataObj.getString("2. Symbol");
-            try {
-                TimeZone = MetaDataObj.getString("5. Time Zone");
-            } catch (Exception e) {
-            }
+            TimeZone = MetaDataObj.getString("5. Time Zone");
             String TimeSeries = jsonObject.getString("Time Series (Daily)");
             JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
             //可选迭代器
