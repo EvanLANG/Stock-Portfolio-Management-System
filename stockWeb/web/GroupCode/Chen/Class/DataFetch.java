@@ -62,8 +62,8 @@ public class DataFetch {
         current_low = Integer.MAX_VALUE;
         String json = GetFromURL(ul);
         Type = "Daily";
-        JSONObject jsonObject = JSONObject.fromObject(json);
         try {
+            JSONObject jsonObject = JSONObject.fromObject(json);
             String MetaData = jsonObject.getString("Meta Data");
             JSONObject MetaDataObj = JSONObject.fromObject(MetaData);
             Symbol = MetaDataObj.getString("2. Symbol");
@@ -95,7 +95,7 @@ public class DataFetch {
                     current_low = current.low;
                 }
                 index++;
-                System.out.println("index:"+index+",");
+                //System.out.println("index:"+index+",");
             }else{
                 newest_open = Data.get(index-1).open;
                 break;
@@ -139,8 +139,8 @@ public class DataFetch {
         Data = new ArrayList<StockDailyRecord>();
         String json = GetFromURL(ul);
         Type = "Daily";
-        JSONObject jsonObject = JSONObject.fromObject(json);
         try {
+            JSONObject jsonObject = JSONObject.fromObject(json);
             String MetaData = jsonObject.getString("Meta Data");
             JSONObject MetaDataObj = JSONObject.fromObject(MetaData);
             Symbol = MetaDataObj.getString("2. Symbol");
@@ -175,8 +175,8 @@ public class DataFetch {
         Dataerror = false;
         String json = GetFromURL(ul);
         Type = "Monthly";
-        JSONObject jsonObject = JSONObject.fromObject(json);
         try {
+            JSONObject jsonObject = JSONObject.fromObject(json);
             String MetaData = jsonObject.getString("Meta Data");
             JSONObject MetaDataObj = JSONObject.fromObject(MetaData);
             Symbol = MetaDataObj.getString("2. Symbol");
