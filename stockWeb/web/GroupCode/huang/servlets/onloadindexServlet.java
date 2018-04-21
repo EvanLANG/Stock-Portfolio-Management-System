@@ -54,6 +54,10 @@ public class onloadindexServlet extends HttpServlet {
             StockDailyRecord test2 = daily_data.Data.get(1);
             //System.out.println(test1.TradeDate + ","+test1.close);
             //System.out.println(test2.TradeDate + ","+test2.close);
+            new_com.setOpen(test1.open);
+            new_com.setHigh(test1.high);
+            new_com.setLow(test1.low);
+
             float close;
             //昨日闭盘价
             if (test1.TradeDate.equals(current_day))     {
