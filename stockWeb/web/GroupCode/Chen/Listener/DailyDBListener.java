@@ -21,7 +21,7 @@ public class DailyDBListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent arg0) {
         timer = new Timer(true);
 
-        System.out.print("定时器启动");
+        System.out.print("Timer Start");
 
         Calendar calendar_d = Calendar.getInstance();
         Calendar calendar_m = Calendar.getInstance();
