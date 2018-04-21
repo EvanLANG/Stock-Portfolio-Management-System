@@ -23,7 +23,7 @@ public class readTXT {
 
         br.close();
         DBTools db = new DBTools();
-        //注释掉的这一段是用来添加所有公司数据的
+        //注释掉的这一段是用来添加所有公司数据的，等你睡觉前来跑一下这个readTXT就行
 
         /*
         for (String s : array) {
@@ -31,10 +31,13 @@ public class readTXT {
             namelist.add(parts[0]);
             db.insertsymbols(parts[0], parts[1], parts[2],parts[3]);
         }*/
-        //因为添加列表里所有公司很费时间，这里暂时只更新一下你想要的
+
+        //因为添加列表里所有公司很费时间，这里暂时只更新一下你想要的，如果用上面一部分开始更新所有公司 这三行可以去掉
         namelist.add("MSFT");
         namelist.add("JOBS");
         namelist.add("TURN");
+
+
         for(String s : namelist){
             //System.out.println(s);
             if (!db.validateTableExist(s+"_intraday")) {
