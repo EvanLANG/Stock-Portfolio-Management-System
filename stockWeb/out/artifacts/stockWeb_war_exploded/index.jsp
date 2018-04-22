@@ -258,7 +258,7 @@
     .stock-info .stock-bets h1 a {
         color: #333;
         margin-right: 15px;
-        font-size: 18px;
+        font-size: 28px;
     }
     .stock-info .stock-bets .price strong {
         font-size: 54px;
@@ -283,7 +283,7 @@
     }
 
     .stock-info .bets-content .bets-col-9 dl {
-        width: 15.11%;
+        width: 10.11%;
     }
     .stock-info .bets-content dl {
         float: left;
@@ -294,17 +294,17 @@
         margin: 0;
     }
     .stock-info .bets-content dd {
-        font-size: 14px;
+        font-size: 16px;
         font-weight: 700;
     }
     .s-stop {
              color: #999;
          }
     .s-up {
-        color: #f24957;
+        color: #1dbf60;
     }
     .s-down {
-        color: #1dbf60;
+        color: #f24957;
     }
     ul, li {
         list-style: none;
@@ -345,7 +345,7 @@
     }
     .stock-info .bets-content dt {
         color: #92a0ac;
-        font-size: 12px;
+        font-size: 15px;
     }
     .bets-name {
         font-family: DIN,"Microsoft YaHei",Arial,sans-serif;
@@ -367,9 +367,18 @@
                                 <a class="bets-name" href="">${current_comp.symbol}</a>
                             </h1>
                             <div class="price s-stop ">
-                                <strong class="_close">${current_comp.close}</strong>
-                                <span>${current_comp.close - current_comp.volume}</span>
-                                <span>${(current_comp.close - current_comp.volume)/current_comp.close * 100}</span>
+                                <c:choose>
+                                <c:when test="${current_comp.sig == true}">
+                                    <strong class="_close s-up">${current_comp.current}</strong>
+                                    <span class = s-up>${current_comp.change}</span>
+                                    <span class = s-up>${current_comp.change_percent}%</span>
+                                </c:when>
+                                <c:otherwise>
+                                    <strong class="_close s-down">${current_comp.current}</strong>
+                                    <span class = s-down>${current_comp.change}</span>
+                                    <span class = s-down>${current_comp.change_percent}%</span>
+                                </c:otherwise>
+                                </c:choose>
 
                                 <ul class="stock-add">
                                     <li><button class="">+ Favorite</button></li>

