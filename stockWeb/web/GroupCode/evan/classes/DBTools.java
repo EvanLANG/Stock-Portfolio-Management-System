@@ -1,15 +1,15 @@
 package evan.classes;
 
 import java.sql.*;
-//import java.text.DateFormat;
-//import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 //import Chen.Class.StockDailyRecord;
 //import java.sql.DatabaseMetaData;
 import Chen.Class.DataFetch;
 import Chen.Class.StockDailyRecord;
 import huang.servlets.Company;
-//import org.postgresql.util.PSQLException;
+import org.postgresql.util.PSQLException;
 
 public class DBTools {
     public static Connection getConn() {
@@ -199,79 +199,5 @@ public class DBTools {
         com.setHigh(data.current_high);
         com.setLow(data.current_low);
         return com;
-    }
-    public static int insertusers(String email, String uid, String uname, String upasswd, String risklevel, String favo, String birthdate, String gender) {
-        Connection conn = getConn();
-        //String id = null;
-        int i = 0;
-        String sql = "insert into users" + "(email,uid,uname,upasswd,risklevel,favo,birthdate,gender) values(?,?,?,?,?,?,?,?)";
-        PreparedStatement pstmt;
-        try {
-            pstmt = (PreparedStatement) conn.prepareStatement(sql);
-            pstmt.setString(1, email);
-            pstmt.setString(2, uid);
-            pstmt.setString(3, uname);
-            pstmt.setString(4, upasswd);
-            pstmt.setString(5, risklevel);
-            pstmt.setString(6, favo);
-            pstmt.setString(7, birthdate);
-            pstmt.setString(8, gender;
-
-            i = pstmt.executeUpdate();
-            pstmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-        }
-        return i;
-    }
-    public static int updatepasswd(String email,String passwd) {
-        Connection conn = getConn();
-        int i = 0;
-        String sql = "update users set upasswd = '"+passwd+"' where email='"+email+"'";
-        PreparedStatement pstmt;
-        try {
-            pstmt = (PreparedStatement) conn.prepareStatement(sql);
-            i = pstmt.executeUpdate();
-            pstmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return i;
-    }
-    public static String getfavorite(String email){
-        String favos= null;
-        Connection conn = getConn();
-        String sql = "select favo from users where email = '" + email+"'";
-        PreparedStatement pstmt;
-        try {
-            pstmt = (PreparedStatement)conn.prepareStatement(sql);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                favos= rs.getString("favo");
-            }
-            pstmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return favos;
-    }
-    public static int updatefavo(String email,String favos) {
-        Connection conn = getConn();
-        int i = 0;
-        String sql = "update users set favo = '"+favos+"' where email='"+email+"'";
-        PreparedStatement pstmt;
-        try {
-            pstmt = (PreparedStatement) conn.prepareStatement(sql);
-            i = pstmt.executeUpdate();
-            pstmt.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return i;
     }
 }
