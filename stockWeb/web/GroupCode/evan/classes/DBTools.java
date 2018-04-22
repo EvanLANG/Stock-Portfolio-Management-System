@@ -16,7 +16,7 @@ public class DBTools {
         String driver = "org.postgresql.Driver";
         String url = "jdbc:postgresql://localhost:5432/9900stockportfolio?useSSL=true";
         String username = "postgres";
-        String password = "750300";
+        String password = "921616";
         Connection conn = null;
         try {
             Class.forName(driver); //classLoader
@@ -215,7 +215,7 @@ public class DBTools {
             pstmt.setString(5, risklevel);
             pstmt.setString(6, favo);
             pstmt.setString(7, birthdate);
-            pstmt.setString(8, gender;
+            pstmt.setString(8, gender);
 
             i = pstmt.executeUpdate();
             pstmt.close();
