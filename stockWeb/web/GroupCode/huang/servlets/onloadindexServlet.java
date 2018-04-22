@@ -33,7 +33,8 @@ public class onloadindexServlet extends HttpServlet {
         symbollist.add("MSFT");
         symbollist.add("JOBS");
         symbollist.add("TURN");
-
+        symbollist.add("AABA");
+        symbollist.add("FATE");
 
         HttpSession session = request.getSession();
 
@@ -83,5 +84,6 @@ public class onloadindexServlet extends HttpServlet {
         }
 
         session.setAttribute("comp", companies);
+        session.setAttribute("complist", symbollist);
     }
 }

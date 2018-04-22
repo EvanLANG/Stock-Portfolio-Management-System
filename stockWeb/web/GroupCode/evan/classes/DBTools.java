@@ -16,7 +16,7 @@ public class DBTools {
         String driver = "org.postgresql.Driver";
         String url = "jdbc:postgresql://localhost:5432/9900stockportfolio?useSSL=true";
         String username = "postgres";
-        String password = "921616";
+        String password = "750300";
         Connection conn = null;
         try {
             Class.forName(driver); //classLoader
