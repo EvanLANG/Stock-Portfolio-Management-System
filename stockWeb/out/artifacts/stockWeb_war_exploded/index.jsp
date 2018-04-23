@@ -13,6 +13,45 @@
 
 <head>
     <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+        function PaintLine(sym){
+            var cv = document.getElementById(sym);
+            cv.width = 200;
+            cv.height = 40;
+            cv.style.background = "#f7faff";
+            var ctx = cv.getContext("2d");
+            var data = [.3, .1, .2, .4, .2, .7, .3, .9];
+            var color = "#f00";
+            var maxNum = Math.max.apply(null, data);    //求数组中的最大值
+            var padding = 2,  //边距
+                xLength = cv.width - 2*padding,    //x轴的长度
+                yLength = cv.height - 2*padding,  //y轴的长度
+                x0 = padding,  //原点x轴坐标
+                y0 = padding + (1 - data[0]/maxNum) * yLength,  //原点y轴坐标
+                yArrow_x = cv.width - padding,  //y轴箭头处坐标x
+                yArrow_y = y0, //y轴箭头处坐标y
+                pointsWidth = xLength/(data.length + 1);    //折线上每个点之间的距离
+            ctx.beginPath();//控制绘制的折线不受坐标轴样式属性的影响
+
+            //绘制y轴
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(yArrow_x, yArrow_y);
+
+            ctx.strokeStyle = "#92a0ac";
+            //中断（坐标轴和折线的）连接
+            ctx.stroke();
+            ctx.beginPath();
+            //绘制折线
+            for (var i = 0; i < data.length; i++) {
+                var pointX = padding + (i + 1) * pointsWidth;
+                var pointY = padding + (1 - data[i]/maxNum) * yLength;
+                ctx.lineTo(pointX, pointY);
+            }
+            ctx.strokeStyle = color;
+            ctx.stroke();
+        }
+
+    </script>
 </head>
 <style type="text/css">
   ._1SQmm {
@@ -118,37 +157,18 @@
       text-align: center;
       border-right: 1px solid #BDBDBD;
       border-left: 1px solid #BDBDBD;
-      height:100%;
       background-color: white;
   }
 
-  #content_left {
-      float: left;
-      width: 20%;
-      height: 100%;
-      border-right: 1px solid #BDBDBD;
-      background-color:#FFFCEC;
-  }
-  #content_right {
-    float: right;
-    width: 20%;
-    height: 100%;
-    border-left: 1px solid #BDBDBD;
-      background-color:#FFFCEC;
-  }
   .mainContext
   {
-    border-bottom:solid 1px #BDBDBD;
-    border-left:solid 1px #BDBDBD;
-    border-right:solid 1px #BDBDBD;
     width: 100%;
-    height: 100%;
     margin:0;
     padding: 0;
     position:relative;
     margin-left: auto;
     margin-right: auto;
-      background-color: #FFFCEC;
+      background-color: #26282a;
   }
 
 
@@ -331,18 +351,18 @@
     ul, menu, dir {
         display: block;
         list-style-type: disc;
-        -webkit-margin-before: 1em;
-        -webkit-margin-after: 1em;
+        -webkit-margin-before: 0px;
+        -webkit-margin-after: 0px;
         -webkit-margin-start: 0px;
         -webkit-margin-end: 0px;
         -webkit-padding-start: 40px;
     }
     .stock-add {
-
         text-align: center;
-        float:right;
+        float: right;
         width: 50%;
     }
+
     .stock-info .bets-content dt {
         color: #92a0ac;
         font-size: 15px;
@@ -361,35 +381,63 @@
             <c:otherwise>
 
                 <c:forEach items="${sessionScope.comp}" var="current_comp">
+
+
                     <div class="stock-info">
                         <div class="stock-bets">
                             <h1>
                                 <a class="bets-name" href="">${current_comp.symbol}</a>
                             </h1>
                             <div class="price s-stop ">
+
                                 <c:choose>
                                 <c:when test="${current_comp.sig == true}">
                                     <strong class="_close s-up">${current_comp.current}</strong>
                                     <span class = s-up>${current_comp.change}</span>
                                     <span class = s-up>${current_comp.change_percent}%</span>
+                                    <span class = s-up></span>
+                                    <a class="stock-chart"><canvas width="200" height="50" id="${current_comp.symbol}"></canvas></a>
+                                    <script>PaintLine('${current_comp.symbol}');</script>
+                                    <ul class="stock-add">
+                                        <li><button class="">+ Favorite</button></li>
+                                    </ul>
                                 </c:when>
                                 <c:otherwise>
                                     <strong class="_close s-down">${current_comp.current}</strong>
                                     <span class = s-down>${current_comp.change}</span>
                                     <span class = s-down>${current_comp.change_percent}%</span>
+                                    <span class = s-down></span>
+                                    <a class="stock-chart"><canvas width="200" height="50" id="${current_comp.symbol}"></canvas></a>
+                                    <script>PaintLine('${current_comp.symbol}');</script>
+                                    <ul class="stock-add">
+                                        <li><button class="">+ Favorite</button></li>
+                                    </ul>
                                 </c:otherwise>
                                 </c:choose>
 
-                                <ul class="stock-add">
-                                    <li><button class="">+ Favorite</button></li>
-                                </ul>
+
                             </div>
 
                             <div class="bets-content">
 
                                 <div class="bets-col-9">
-                                    <dl><dt>High</dt><dd class="s-up">${current_comp.high}</dd></dl>
-                                    <dl><dt>Low</dt><dd class="s-down">${current_comp.low}</dd></dl>
+                                    <c:choose>
+                                        <c:when test="${current_comp.high > current_comp.open}">
+                                            <dl><dt>High</dt><dd class="s-up">${current_comp.high}</dd></dl>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <dl><dt>High</dt><dd class="">${current_comp.high}</dd></dl>
+                                        </c:otherwise>
+                                    </c:choose>
+
+                                    <c:choose>
+                                        <c:when test="${current_comp.low < current_comp.open}">
+                                            <dl><dt>Low</dt><dd class="s-down">${current_comp.low}</dd></dl>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <dl><dt>Low</dt><dd class="">${current_comp.low}</dd></dl>
+                                        </c:otherwise>
+                                    </c:choose>
                                     <dl><dt>Open</dt><dd class="">${current_comp.open}</dd></dl>
                                     <dl><dt>Close</dt><dd>${current_comp.close}</dd></dl>
                                     <dl><dt>Volume</dt><dd>${current_comp.volume}</dd></dl>
