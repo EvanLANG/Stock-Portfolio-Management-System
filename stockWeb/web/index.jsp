@@ -14,21 +14,21 @@
 <head>
     <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-3.3.1.min.js"></script>
     <script type="text/javascript">
-        function PaintLine(sym){
+        function PaintLine(sym, data){
             var cv = document.getElementById(sym);
-            cv.width = 200;
-            cv.height = 40;
+            cv.width = 300;
+            cv.height = 60;
             cv.style.background = "#f7faff";
             var ctx = cv.getContext("2d");
-            var data = [.3, .1, .2, .4, .2, .7, .3, .9];
-            var color = "#f00";
+            var color_up = "green";
+            var color_down = "#f00";
             var maxNum = Math.max.apply(null, data);    //求数组中的最大值
-            var padding = 2,  //边距
-                xLength = cv.width - 2*padding,    //x轴的长度
-                yLength = cv.height - 2*padding,  //y轴的长度
-                x0 = padding,  //原点x轴坐标
-                y0 = padding + (1 - data[0]/maxNum) * yLength,  //原点y轴坐标
-                yArrow_x = cv.width - padding,  //y轴箭头处坐标x
+            var times = 35,
+                xLength = cv.width,    //x轴的长度
+                yLength = cv.height,  //y轴的长度
+                x0 = 0,  //原点x轴坐标
+                y0 = (1 - data[0]/maxNum) * yLength * times,  //原点y轴坐标
+                yArrow_x = cv.width,  //y轴箭头处坐标x
                 yArrow_y = y0, //y轴箭头处坐标y
                 pointsWidth = xLength/(data.length + 1);    //折线上每个点之间的距离
             ctx.beginPath();//控制绘制的折线不受坐标轴样式属性的影响
@@ -36,18 +36,29 @@
             //绘制y轴
             ctx.moveTo(x0, y0);
             ctx.lineTo(yArrow_x, yArrow_y);
-
             ctx.strokeStyle = "#92a0ac";
             //中断（坐标轴和折线的）连接
             ctx.stroke();
-            ctx.beginPath();
+
             //绘制折线
             for (var i = 0; i < data.length; i++) {
-                var pointX = padding + (i + 1) * pointsWidth;
-                var pointY = padding + (1 - data[i]/maxNum) * yLength;
-                ctx.lineTo(pointX, pointY);
+                var pointX =  (i + 1) * pointsWidth;
+                var pointY = (1 - data[i]/maxNum) * yLength * times;
+
+                if (pointY > (1 - data[0]/maxNum) * yLength * times) {
+                    ctx.strokeStyle = color_down;
+                } else {
+                    ctx.strokeStyle = color_up;
+                }
+
+                ctx.lineWidth = pointsWidth - 2;
+                ctx.beginPath();
+                ctx.moveTo(pointX,(1 - data[0]/maxNum) * yLength * times);
+                ctx.lineTo(pointX,pointY);
+                ctx.closePath();
+                ctx.stroke();
             }
-            ctx.strokeStyle = color;
+
             ctx.stroke();
         }
 
@@ -336,31 +347,19 @@
         text-align: -webkit-match-parent;
     }
     .stock-info .stock-add button {
-        width: 40%;
+        width: 200px;
         height: 40px;
-        line-height: 40px;
         background-color: #2e85ff;
         border: 0;
-        padding: 0;
-        -webkit-border-radius: 4px;
         border-radius: 4px;
         font-size: 16px;
         color: #FFF;
         cursor: pointer;
     }
-    ul, menu, dir, carvas {
-        display: block;
-        list-style-type: disc;
-        -webkit-margin-before: 0px;
-        -webkit-margin-after: 0px;
-        -webkit-margin-start: 0px;
-        -webkit-margin-end: 0px;
-        -webkit-padding-start: 40px;
-    }
+
     .stock-add {
         text-align: center;
-        float: right;
-        width: 50%;
+        float:right;
     }
 
     .stock-info .bets-content dt {
@@ -396,22 +395,18 @@
                                     <span class = s-up>${current_comp.change}</span>
                                     <span class = s-up>${current_comp.change_percent}%</span>
                                     <span class = s-up></span>
-                                    <a class="stock-chart"><canvas width="200" height="50" id="${current_comp.symbol}"></canvas></a>
-                                    <script>PaintLine('${current_comp.symbol}');</script>
-                                    <ul class="stock-add">
-                                        <li><button class="">+ Favorite</button></li>
-                                    </ul>
+                                    <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
+                                    <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(4)});</script>
+                                    <a class="stock-add"><button class="">+ Favorite</button></a>
                                 </c:when>
                                 <c:otherwise>
                                     <strong class="_close s-down">${current_comp.current}</strong>
                                     <span class = s-down>${current_comp.change}</span>
                                     <span class = s-down>${current_comp.change_percent}%</span>
                                     <span class = s-down></span>
-                                    <a class="stock-chart"><canvas width="200" height="50" id="${current_comp.symbol}"></canvas></a>
-                                    <script>PaintLine('${current_comp.symbol}');</script>
-                                    <ul class="stock-add">
-                                        <li><button class="">+ Favorite</button></li>
-                                    </ul>
+                                    <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
+                                    <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(4)});</script>
+                                    <a class="stock-add"><button class="">+ Favorite</button></a>
                                 </c:otherwise>
                                 </c:choose>
 
@@ -449,7 +444,6 @@
 
             </c:otherwise>
         </c:choose>
-
     </div>
 </div>
 
