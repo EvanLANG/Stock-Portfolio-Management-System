@@ -21,11 +21,8 @@ public class SignInServlet extends HttpServlet {
         response.setContentType("text/html");
         String username = request.getParameter("username") ;
         String password = request.getParameter("password") ;
-        System.out.print(username+",");
-        System.out.print(password+",");
         if(AccountExist(username,password)){
             User user = new User();
-            System.out.print("1");
             user.setUsername(username);
             //user.setPassword(password);
             getUser(user);

@@ -313,6 +313,7 @@ public class DBTools {
                 //Timestamp date = rs.getTimestamp("dateofbirth");
                 //String dateStr = sdf.format(date);
                 //user.setDateofbirth(dateStr.substring(0,10));
+                user.setFollow(rs.getString("follow"));
                 user.setEmail(rs.getString("email"));
             }
         } catch (SQLException e) {

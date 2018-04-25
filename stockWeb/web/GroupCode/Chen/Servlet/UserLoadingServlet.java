@@ -36,6 +36,7 @@ public class UserLoadingServlet extends HttpServlet {
 
         for (String Sym: symbollist) {
             //声明
+            System.out.print(Sym);
             DataFetch intra_data = new DataFetch(Sym);
             DataFetch daily_data = new DataFetch(Sym);
             //提取intrading day
@@ -95,8 +96,8 @@ public class UserLoadingServlet extends HttpServlet {
             pricelist.add(current_price);
         }
 
-        session.setAttribute("pricelist", pricelist);
-        session.setAttribute("comp", companies);
-        session.setAttribute("complist", symbollist);
+        session.setAttribute("user_pricelist", pricelist);
+        session.setAttribute("user_comp", companies);
+        session.setAttribute("user_complist", symbollist);
     }
 }

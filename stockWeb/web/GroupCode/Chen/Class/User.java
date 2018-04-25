@@ -31,11 +31,14 @@ public class User {
     public String getEmail(){
         return email;
     }
-    public void setFollow(String sym){
-        follow += ","+sym;
+    public void setFollow(String n){
+        follow = n;
     }
     public String[] getFollow(){
-        String[] list = follow.split(",");
+        String[] list = follow.split("#");
         return list;
+    }
+    public void addFollow(String sym){
+        follow += "#"+sym;
     }
 }

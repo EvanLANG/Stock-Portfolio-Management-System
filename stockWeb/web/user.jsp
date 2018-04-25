@@ -210,7 +210,7 @@
 
 <script type="text/javascript">
     function get_new_messages() {
-        if (${empty sessionScope.comp})
+        if (${empty sessionScope.user_comp})
         {
             $.ajax({
                 type: 'post',
@@ -397,12 +397,12 @@
 
     <div class="content_right" >
         <c:choose>
-            <c:when test="${empty sessionScope.comp}">
+            <c:when test="${empty sessionScope.user_comp}">
                 <img alt="" src="picture/loading.gif" style="vertical-align: middle" />
             </c:when>
             <c:otherwise>
 
-                <c:forEach items="${sessionScope.comp}" var="current_comp" varStatus="status">
+                <c:forEach items="${sessionScope.user_comp}" var="current_comp" varStatus="status">
 
 
                     <div class="stock-info">
@@ -419,7 +419,7 @@
                                         <span class = s-up>${current_comp.change_percent}%</span>
                                         <span class = s-up></span>
                                         <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
-                                        <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(status.index)});</script>
+                                        <script>PaintLine('${current_comp.symbol}', ${sessionScope.user_pricelist.get(status.index)});</script>
                                     </c:when>
                                     <c:otherwise>
                                         <strong class="_close s-down">${current_comp.current}</strong>
@@ -427,7 +427,7 @@
                                         <span class = s-down>${current_comp.change_percent}%</span>
                                         <span class = s-down></span>
                                         <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
-                                        <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(status.index)});</script>
+                                        <script>PaintLine('${current_comp.symbol}', ${sessionScope.user_pricelist.get(status.index)});</script>
                                     </c:otherwise>
                                 </c:choose>
 
