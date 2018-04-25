@@ -3,11 +3,14 @@ package evan.classes;
 import java.sql.*;
 //import java.text.DateFormat;
 //import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 //import Chen.Class.StockDailyRecord;
 //import java.sql.DatabaseMetaData;
 import Chen.Class.DataFetch;
 import Chen.Class.StockDailyRecord;
+import Chen.Class.User;
 import huang.servlets.Company;
 //import org.postgresql.util.PSQLException;
 
@@ -273,5 +276,47 @@ public class DBTools {
             e.printStackTrace();
         }
         return i;
+    }
+    public static Boolean AccountExist(String username,String password){
+        Connection conn = getConn();
+        String sql = "select * from users where uname = '"+ username+"' and upasswd = '"+ password+"'";
+        PreparedStatement pstmt;
+        boolean result;
+        try {
+            pstmt = (PreparedStatement)conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()){
+                result = true;
+            }else{
+                result = false;
+            }
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            result = false;
+        }
+        return result;
+    }
+    public static void getUser(User user) {
+        Connection conn = getConn();
+        String theUsername = user.getUsername();
+        String sql = "select * from users where uname = '" + theUsername+"'";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement)conn.prepareStatement(sql);
+            //DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                user.setId(rs.getString("uname"));
+                //user.setGender(rs.getString("gender"));
+                //Timestamp date = rs.getTimestamp("dateofbirth");
+                //String dateStr = sdf.format(date);
+                //user.setDateofbirth(dateStr.substring(0,10));
+                user.setEmail(rs.getString("email"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
