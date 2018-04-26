@@ -35,8 +35,8 @@ public class onloadindexServlet extends HttpServlet {
         symbollist.add("MSFT");
         symbollist.add("JOBS");
         symbollist.add("TURN");
-        symbollist.add("AABA");
-        symbollist.add("FATE");
+        //symbollist.add("AABA");
+        //symbollist.add("FATE");
 
         HttpSession session = request.getSession();
 

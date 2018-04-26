@@ -1,36 +1,13 @@
 <%--
   Created by IntelliJ IDEA.
-  User: huang
-  Date: 2018/3/27
-  Time: 20:21
+  User: LANG
+  Date: 2018/4/24
+  Time: 23:05
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-3.3.1.min.js"></script>
-    <script>
-        function validate()
-        {
-            var uname = document.getElementById("login-username").value;
-            var psw = document.getElementById("login-password").value;
-            $.ajax({
-                type: "GET",
-                url: "SignInServlet",
-                data: {username:uname,password:psw},
-                success: function(response){
-                    if (response=="false") {
-                        document.getElementById("error").innerHTML = "Invalid username or incorrect password, please try again.";
-                    } else if(response=="true"){
-                        window.location.href = "user.jsp";
-                    }else if(response=="ban"){
-                        document.getElementById("error").innerHTML = "This user is disabled by Administer, \n" +
-                            "please contact us to unlock it.";
-                    }
-                }
-            });
-        }
-    </script>
     <style type="text/css">
         ._1SQmm {
             list-style: none;
@@ -175,8 +152,6 @@
         .orko-button-primary, input.orko-button-primary {
             background: #188fff;
             color: #fff;
-            margin-top: 50px;
-            margin-bottom: 50px;
         }
 
 
@@ -228,7 +203,135 @@
 
     </style>
 </head>
+<style type="text/css">
+    ._1SQmm {
+        list-style: none;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        height: 50px;
+    }
+    ._1SQmm>li {
+        display: inline-block;
+        margin-right: 20px;
+        position: relative;
+        top: 30%;
+        font-family: PingFangSC-Regular,HelveticaNeue-Light,'Helvetica Neue Light','Microsoft YaHei',sans-serif;
+    }
+    .Bgc {
+        background-color: black;
+    }
+    .h1c {
+        padding: 3.33333px;
+        color: white;
+    }
 
+    .header1 {
+        border-bottom: 1px solid #e0e4e9;
+        background-color: #fff;
+        min-width: 1024px;
+    }
+    a:link {text-decoration: none;}
+    a:visited {text-decoration: none;}
+    a:hover {text-decoration: none;}
+    a:active {text-decoration: none;}
+
+    .pin-input {
+        font-family: PingFangSC-Regular,HelveticaNeue-Light,'Helvetica Neue Light','Microsoft YaHei',sans-serif;
+        font-size: 14px;
+        position: relative;
+        z-index: 1;
+        width: 450px;
+        height: 26px;
+        transition: color .3s,border .3s;
+        color: white;
+        border-bottom: 1px solid #aaa;
+        background: black;
+    }
+
+    .hide {
+        display:none;
+    }
+
+    input {
+        font-family: PingFangSC-Regular,HelveticaNeue-Light,'Helvetica Neue Light','Microsoft YaHei',sans-serif;
+        border: none;
+        outline: 0;
+    }
+
+    .btn {
+        background:url("picture/search.jpg")
+        no-repeat left top;
+        padding-bottom:4px;
+        width: 20px;
+    }
+
+    li.line {
+        height: 18px;
+        border-right: 1px solid #515056;
+    }
+
+    .pic {
+        width: 100%;
+        height: 200px;
+    }
+
+    .h2c {
+        list-style: none;
+        font-weight: 600;
+        color: #000;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+    .h2c>li {
+        -webkit-transition: opacity .3s;
+        transition: opacity .3s;
+        display: inline-block;
+        padding-bottom: 4px;
+        margin-right: 30px;
+    }
+    .h2c a:link, .h2c a:visited {
+        color: #000;
+        text-decoration: none;
+        display: block;
+    }
+    .text1 {
+        display: block;
+        cursor: pointer;
+        line-height: 36px;
+    }
+    #content_mid {
+        margin-left: auto;
+        margin-right: auto;
+        width: 60%;
+        text-align: ;
+        border-right: 1px solid #BDBDBD;
+        border-left: 1px solid #BDBDBD;
+        background-color: white;
+    }
+
+    .mainContext
+    {
+        width: 100%;
+        margin:0;
+        padding: 0;
+        position:relative;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: #26282a;
+    }
+
+
+    h1 {
+        display: block;
+        font-size: 2em;
+        -webkit-margin-before: 0.67em;
+        -webkit-margin-after: 0.67em;
+        -webkit-margin-start: 0px;
+        -webkit-margin-end: 0px;
+        font-weight: bold;
+    }
+</style>
 <body>
 <header data-reactroot class="header1">
     <ul class="_1SQmm Bgc">
@@ -268,39 +371,33 @@
         <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
     </ul>
 </header>
+<h2 align="center">CONTACT</h2>
 
-    <div class="login-box">
-        <div class="login-logo"><img src="picture/Chicken.png" alt="Yahoo" class="logo" width="200" height="">
+<!-- Add Google Maps -->
+<div id="googleMap" style="height:400px;width:100%;"></div>
+<script>
+    function myMap() {
+        var myCenter = new google.maps.LatLng(-33.917778, 151.231111);
+        var mapProp = {center:myCenter, zoom:12, scrollwheel:true, draggable:true, mapTypeId:google.maps.MapTypeId.ROADMAP};
+        var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+        var marker = new google.maps.Marker({position:myCenter});
+        marker.setMap(map);
+    }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2UQazoPOdbzjPm4mPxvW95vryHpouYZ0&callback=myMap"></script>
+<div id="contact" class="container-fluid bg-grey">
+
+    <div class="row">
+        <div class="col-sm-5">
+            <p>Please feel free to contact us.</p>
+            <p><span class="glyphicon glyphicon-map-marker"></span> Sydney, NSW, Australia</p>
+            <p><span class="glyphicon glyphicon-phone"></span> +61 0400 000 000</p>
+            <p><span class="glyphicon glyphicon-envelope"></span> z5119297@student.unsw.edu.au,z5099130@student.unsw.edu.au</p>
+            <p><span class="glyphicon glyphicon-envelope"></span> z5103319@student.unsw.edu.au,z5103300@student.unsw.edu.au</p>
         </div>
-        <p id="error-offline" role="alert" class="row error-offline hide">Network connection timed out. Please try&nbsp;again.</p>
-        <form id="login-username-form" class="username-challenge">
-            <input type="hidden" name="crumb" value="CbNbmcLwbcx">
-            <input type="hidden" name="acrumb" value="r7TscSmE">
-            <input type="hidden" name="sessionIndex" value="QQ--">
-
-            <h1 class="sign-in-title" id="mbr-login-greeting">
-                Sign&nbsp;in
-            </h1>
-
-
-
-
-            <div id="username-country-code-field" class="username-country-code cci-dropdown-disabled code-of-length-1">
-                <input class="phone-no " type="text" name="username" id="login-username" tabindex="1"  placeholder="Enter your&nbsp;username" required>
-                <input class="phone-no " type="password" name="password" id="login-password" tabindex="2"  placeholder="Enter your&nbsp;password" required>
-            </div>
-
-
-            <button type="button" id="login-signin" class="orko-button-primary orko-button" onclick="validate()" tabindex="2">NEXT</button>
-            <div class="col-md-6" id="error"></div>
-            <p class="row sign-up">
-                Don't have an&nbsp;account?
-                <a href="sign_up.jsp">Sign&nbsp;up</a>
-            </p>
-        </form>
-
     </div>
 
+</div>
 </body>
 
 

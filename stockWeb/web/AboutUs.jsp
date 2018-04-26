@@ -1,37 +1,27 @@
 <%--
   Created by IntelliJ IDEA.
-  User: huang
-  Date: 2018/3/27
-  Time: 20:21
+  User: LANG
+  Date: 2018/4/25
+  Time: 13:29
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <head>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-3.3.1.min.js"></script>
-    <script>
-        function validate()
-        {
-            var uname = document.getElementById("login-username").value;
-            var psw = document.getElementById("login-password").value;
-            $.ajax({
-                type: "GET",
-                url: "SignInServlet",
-                data: {username:uname,password:psw},
-                success: function(response){
-                    if (response=="false") {
-                        document.getElementById("error").innerHTML = "Invalid username or incorrect password, please try again.";
-                    } else if(response=="true"){
-                        window.location.href = "user.jsp";
-                    }else if(response=="ban"){
-                        document.getElementById("error").innerHTML = "This user is disabled by Administer, \n" +
-                            "please contact us to unlock it.";
-                    }
-                }
-            });
-        }
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     <style type="text/css">
+        .jumbotron {
+            background-color: #7c0bf4;
+            color: #fff;
+        }
+        .bg-grey {
+            background-color: #f6f6f6;
+        }
         ._1SQmm {
             list-style: none;
             color: #fff;
@@ -87,7 +77,7 @@
             outline: 0;
         }
 
-        .btn {
+        .btnn {
             background:url("picture/search.jpg")
             no-repeat left top;
             padding-bottom:4px;
@@ -175,8 +165,6 @@
         .orko-button-primary, input.orko-button-primary {
             background: #188fff;
             color: #fff;
-            margin-top: 50px;
-            margin-bottom: 50px;
         }
 
 
@@ -228,7 +216,129 @@
 
     </style>
 </head>
+<style type="text/css">
+    ._1SQmm {
+        list-style: none;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        height: 50px;
+    }
+    ._1SQmm>li {
+        display: inline-block;
+        margin-right: 20px;
+        position: relative;
+        top: 30%;
+        font-family: PingFangSC-Regular,HelveticaNeue-Light,'Helvetica Neue Light','Microsoft YaHei',sans-serif;
+    }
+    .Bgc {
+        background-color: black;
+    }
+    .h1c {
+        padding: 3.33333px;
+        color: white;
+    }
 
+    .header1 {
+        border-bottom: 1px solid #e0e4e9;
+        background-color: #fff;
+        min-width: 1024px;
+    }
+    a:link {text-decoration: none;}
+    a:visited {text-decoration: none;}
+    a:hover {text-decoration: none;}
+    a:active {text-decoration: none;}
+
+    .pin-input {
+        font-family: PingFangSC-Regular,HelveticaNeue-Light,'Helvetica Neue Light','Microsoft YaHei',sans-serif;
+        font-size: 14px;
+        position: relative;
+        z-index: 1;
+        width: 450px;
+        height: 26px;
+        transition: color .3s,border .3s;
+        color: white;
+        border-bottom: 1px solid #aaa;
+        background: black;
+    }
+
+    .hide {
+        display:none;
+    }
+
+    input {
+        font-family: PingFangSC-Regular,HelveticaNeue-Light,'Helvetica Neue Light','Microsoft YaHei',sans-serif;
+        border: none;
+        outline: 0;
+    }
+
+
+    li.line {
+        height: 18px;
+        border-right: 1px solid #515056;
+    }
+
+    .pic {
+        width: 100%;
+        height: 200px;
+    }
+
+    .h2c {
+        list-style: none;
+        font-weight: 600;
+        color: #000;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+    .h2c>li {
+        -webkit-transition: opacity .3s;
+        transition: opacity .3s;
+        display: inline-block;
+        padding-bottom: 4px;
+        margin-right: 30px;
+    }
+    .h2c a:link, .h2c a:visited {
+        color: #000;
+        text-decoration: none;
+        display: block;
+    }
+    .text1 {
+        display: block;
+        cursor: pointer;
+        line-height: 36px;
+    }
+    #content_mid {
+        margin-left: auto;
+        margin-right: auto;
+        width: 60%;
+        text-align: ;
+        border-right: 1px solid #BDBDBD;
+        border-left: 1px solid #BDBDBD;
+        background-color: white;
+    }
+
+    .mainContext
+    {
+        width: 100%;
+        margin:0;
+        padding: 0;
+        position:relative;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: #26282a;
+    }
+
+
+    h1 {
+        display: block;
+        font-size: 2em;
+        -webkit-margin-before: 0.67em;
+        -webkit-margin-after: 0.67em;
+        -webkit-margin-start: 0px;
+        -webkit-margin-end: 0px;
+        font-weight: bold;
+    }
+</style>
 <body>
 <header data-reactroot class="header1">
     <ul class="_1SQmm Bgc">
@@ -252,7 +362,7 @@
         <li id="min-search">
             <form id="formUrl" action="" method="get" target="_blank">
                 <input id="pin-input" class="pin-input" type="text" name="kw" placeholder="Search for symbols...">
-                <input class="btn" type="button" id="topSearchSubmit" data-eid="qd_A62" onclick="submit()">
+                <input class="btnn" type="button" id="topSearchSubmit" data-eid="qd_A62" onclick="submit()">
             </form>
         </li>
     </ul>
@@ -267,41 +377,46 @@
         <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
         <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
     </ul>
+
 </header>
-
-    <div class="login-box">
-        <div class="login-logo"><img src="picture/Chicken.png" alt="Yahoo" class="logo" width="200" height="">
-        </div>
-        <p id="error-offline" role="alert" class="row error-offline hide">Network connection timed out. Please try&nbsp;again.</p>
-        <form id="login-username-form" class="username-challenge">
-            <input type="hidden" name="crumb" value="CbNbmcLwbcx">
-            <input type="hidden" name="acrumb" value="r7TscSmE">
-            <input type="hidden" name="sessionIndex" value="QQ--">
-
-            <h1 class="sign-in-title" id="mbr-login-greeting">
-                Sign&nbsp;in
-            </h1>
+<h2 align="center">Us</h2>
 
 
+<div class="jumbotron text-center">
+    <h1>E-Finance</h1>
+    <p>We specialize in investing.</p>
+    <form class="form-inline" action="subscribe" method="post">
 
-
-            <div id="username-country-code-field" class="username-country-code cci-dropdown-disabled code-of-length-1">
-                <input class="phone-no " type="text" name="username" id="login-username" tabindex="1"  placeholder="Enter your&nbsp;username" required>
-                <input class="phone-no " type="password" name="password" id="login-password" tabindex="2"  placeholder="Enter your&nbsp;password" required>
+        <div class="input-group">
+            <input type="email" class="form-control" size="50" name="email" placeholder="Email Address" required>
+            <div class="input-group-btn">
+                <button type="submit" class="btn btn-default">Subscribe</button>
             </div>
+        </div>
+    </form>
+</div>
 
+<!-- Container (About Section) -->
+<div class="container-fluid">
+    <h2>About Company</h2>
+    <h4>In April 2020, E-Finance! Finance was named the No. 1 site "favored by Republicans 18 or older with annual household incomes of $100,000 or more" by conservative media organization Newsmax, based on viewership numbers tracked using the comScore Plan Metrix research service.</h4>
+    <p></p>
+    <button type="button" class="btn btn-default" onclick="skipto()">Get in Touch</button>
+</div>
+<script>
+    function skipto()
+    {
 
-            <button type="button" id="login-signin" class="orko-button-primary orko-button" onclick="validate()" tabindex="2">NEXT</button>
-            <div class="col-md-6" id="error"></div>
-            <p class="row sign-up">
-                Don't have an&nbsp;account?
-                <a href="sign_up.jsp">Sign&nbsp;up</a>
-            </p>
-        </form>
-
-    </div>
-
+        window.location.href="/Contactus.jsp";
+    }
+</script>
+<div class="container-fluid bg-grey">
+    <h2>Our Values</h2>
+    <h4><strong></strong> We provide financial news, data and commentary including stock quotes, press releases, financial analysis, and original content.</h4>
+    <h4><strong></strong> We also offer some online tools for personal finance management. In addition to posting partner content from a wide range of other web sites, it posts original stories by its team of staff journalists.</h4>
+</div>
 </body>
 
 
 </html>
+
