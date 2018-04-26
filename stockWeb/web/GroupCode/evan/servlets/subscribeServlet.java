@@ -14,6 +14,7 @@ public class subscribeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
         DBTools db = new DBTools();
+        //
         db.insertsubscribe(email);
         request.setAttribute("email", email);
         request.getRequestDispatcher("/AboutUsSUB.jsp").forward(request,response);

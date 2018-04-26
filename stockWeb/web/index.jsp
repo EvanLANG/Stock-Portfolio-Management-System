@@ -228,7 +228,7 @@
       <li class="" >
           <c:choose>
               <c:when test="${not empty sessionScope.user_id}">
-                  <a class="h1c" id="in" href="index.jsp">${sessionScope.user_id}</a>
+                  <a class="h1c" id="in" href="index.jsp">${sessionScope.user_id.id}</a>
               </c:when>
               <c:otherwise>
                   <a class="h1c" id="uid" href="sign_in.jsp">Sign in</a>
@@ -260,16 +260,12 @@
   <img class="pic" src="picture/background3.jpg" />
 
   <ul class="h2c">
-    <li><a class="text1" href="" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
-    <li><a class="text1" href="" data-rapid_p="22" data-v9y="1">Watchlists</a></li>
-    <li><a class="text1" href="" data-rapid_p="23" data-v9y="1">My Portfolio</a></li>
-    <li><a class="text1" href="" data-rapid_p="24" data-v9y="1">My Screeners</a></li>
+    <li><a class="text1" href="/index.jsp" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
     <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Markets</a></li>
-    <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Industries</a></li>
     <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
-    <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Technology</a></li>
-    <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Originals</a></li>
-    <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Events</a></li>
+    <li><a class="text1" href="/HeadNews.jsp" data-rapid_p="31" data-v9y="1">Events</a></li>
+    <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
+    <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
   </ul>
 </header>
 
@@ -379,7 +375,7 @@
             </c:when>
             <c:otherwise>
 
-                <c:forEach items="${sessionScope.comp}" var="current_comp">
+                <c:forEach items="${sessionScope.comp}" var="current_comp" varStatus="status">
 
 
                     <div class="stock-info">
@@ -396,7 +392,7 @@
                                     <span class = s-up>${current_comp.change_percent}%</span>
                                     <span class = s-up></span>
                                     <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
-                                    <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(4)});</script>
+                                    <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(status.index)});</script>
                                     <a class="stock-add"><button class="">+ Favorite</button></a>
                                 </c:when>
                                 <c:otherwise>
@@ -405,7 +401,7 @@
                                     <span class = s-down>${current_comp.change_percent}%</span>
                                     <span class = s-down></span>
                                     <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
-                                    <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(4)});</script>
+                                    <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(status.index)});</script>
                                     <a class="stock-add"><button class="">+ Favorite</button></a>
                                 </c:otherwise>
                                 </c:choose>

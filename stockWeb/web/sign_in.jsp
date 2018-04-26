@@ -260,16 +260,12 @@
     <img class="pic1" src="picture/background3.jpg" />
 
     <ul class="h2c">
-        <li><a class="text1" href="" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
-        <li><a class="text1" href="" data-rapid_p="22" data-v9y="1">Watchlists</a></li>
-        <li><a class="text1" href="" data-rapid_p="23" data-v9y="1">My Portfolio</a></li>
-        <li><a class="text1" href="" data-rapid_p="24" data-v9y="1">My Screeners</a></li>
+        <li><a class="text1" href="/index.jsp" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
         <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Markets</a></li>
-        <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Industries</a></li>
         <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
-        <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Technology</a></li>
-        <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Originals</a></li>
-        <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Events</a></li>
+        <li><a class="text1" href="/HeadNews.jsp" data-rapid_p="31" data-v9y="1">Events</a></li>
+        <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
+        <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
     </ul>
 </header>
 
