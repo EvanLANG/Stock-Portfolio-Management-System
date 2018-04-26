@@ -3,11 +3,14 @@ package evan.classes;
 import java.sql.*;
 //import java.text.DateFormat;
 //import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 //import Chen.Class.StockDailyRecord;
 //import java.sql.DatabaseMetaData;
 import Chen.Class.DataFetch;
 import Chen.Class.StockDailyRecord;
+import Chen.Class.User;
 import huang.servlets.Company;
 //import org.postgresql.util.PSQLException;
 
@@ -16,7 +19,7 @@ public class DBTools {
         String driver = "org.postgresql.Driver";
         String url = "jdbc:postgresql://localhost:5432/9900stockportfolio?useSSL=true";
         String username = "postgres";
-        String password = "123456";
+        String password = "921616";
         Connection conn = null;
         try {
             Class.forName(driver); //classLoader
@@ -274,23 +277,47 @@ public class DBTools {
         }
         return i;
     }
-    public static int insertsubscribe(String email) {
+    public static Boolean AccountExist(String username,String password){
         Connection conn = getConn();
-        //String id = null;
-        int i = 0;
-        String sql = "insert into subscribe" + "(email) values(?)";
+        String sql = "select * from users where uname = '"+ username+"' and upasswd = '"+ password+"'";
         PreparedStatement pstmt;
+        boolean result;
         try {
-            pstmt = (PreparedStatement) conn.prepareStatement(sql);
-            //pstmt.setString(1, comp.getId());
-            pstmt.setString(1, email);
-            i = pstmt.executeUpdate();
+            pstmt = (PreparedStatement)conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+            if(rs.next()){
+                result = true;
+            }else{
+                result = false;
+            }
             pstmt.close();
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
-
+            result = false;
         }
-        return i;
+        return result;
+    }
+    public static void getUser(User user) {
+        Connection conn = getConn();
+        String theUsername = user.getUsername();
+        String sql = "select * from users where uname = '" + theUsername+"'";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement)conn.prepareStatement(sql);
+            //DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                user.setId(rs.getString("uname"));
+                //user.setGender(rs.getString("gender"));
+                //Timestamp date = rs.getTimestamp("dateofbirth");
+                //String dateStr = sdf.format(date);
+                //user.setDateofbirth(dateStr.substring(0,10));
+                user.setFollow(rs.getString("follow"));
+                user.setEmail(rs.getString("email"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

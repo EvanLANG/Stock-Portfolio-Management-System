@@ -1,7 +1,10 @@
-package huang.servlets;
+package Chen.Servlet;
 
 import Chen.Class.DataFetch;
 import Chen.Class.StockDailyRecord;
+import Chen.Class.User;
+import huang.servlets.Company;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,31 +20,23 @@ import static evan.classes.DBTools.getDaily;
 import static evan.classes.DBTools.getIntraVolumeLowHigh;
 import static evan.classes.DBTools.getIntraday;
 
-@WebServlet(name = "onloadindexServlet")
-public class onloadindexServlet extends HttpServlet {
+@WebServlet(name = "UserLoadingServlet")
+public class UserLoadingServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+        doGet(request,response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //取所有monthly的数据存成Arraylist
         String interval = "15min";
-
-        List<Company> companies = new ArrayList<Company>();
-        List<String> symbollist = new ArrayList<String>();
-        List pricelist = new ArrayList();
-
-        //想要添加什么公司就在这里做处理
-        symbollist.add("MSFT");
-        symbollist.add("JOBS");
-        symbollist.add("TURN");
-        symbollist.add("AABA");
-        symbollist.add("FATE");
-
         HttpSession session = request.getSession();
+        User user = (User)session.getAttribute("user_id");
+        List<Company> companies = new ArrayList<Company>();
+        String[] symbollist = user.getFollow();
+        List pricelist = new ArrayList();
 
         for (String Sym: symbollist) {
             //声明
+            System.out.print(Sym);
             DataFetch intra_data = new DataFetch(Sym);
             DataFetch daily_data = new DataFetch(Sym);
             //提取intrading day
@@ -63,7 +58,7 @@ public class onloadindexServlet extends HttpServlet {
             float close;
             //昨日闭盘价
             if (test1.TradeDate.equals(current_day))     {
-                    close = test2.close;
+                close = test2.close;
             }else {
                 close = test1.close;
             }
@@ -101,8 +96,8 @@ public class onloadindexServlet extends HttpServlet {
             pricelist.add(current_price);
         }
 
-        session.setAttribute("pricelist", pricelist);
-        session.setAttribute("comp", companies);
-        session.setAttribute("complist", symbollist);
+        session.setAttribute("user_pricelist", pricelist);
+        session.setAttribute("user_comp", companies);
+        session.setAttribute("user_complist", symbollist);
     }
 }
