@@ -16,7 +16,7 @@ public class DBTools {
         String driver = "org.postgresql.Driver";
         String url = "jdbc:postgresql://localhost:5432/9900stockportfolio?useSSL=true";
         String username = "postgres";
-        String password = "921616";
+        String password = "123456";
         Connection conn = null;
         try {
             Class.forName(driver); //classLoader
@@ -271,6 +271,25 @@ public class DBTools {
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        return i;
+    }
+    public static int insertsubscribe(String email) {
+        Connection conn = getConn();
+        //String id = null;
+        int i = 0;
+        String sql = "insert into subscribe" + "(email) values(?)";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement) conn.prepareStatement(sql);
+            //pstmt.setString(1, comp.getId());
+            pstmt.setString(1, email);
+            i = pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+
         }
         return i;
     }
