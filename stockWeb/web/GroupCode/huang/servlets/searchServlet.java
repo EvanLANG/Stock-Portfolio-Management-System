@@ -60,6 +60,9 @@ public class searchServlet extends HttpServlet {
 
         //想要添加什么公司就在这里做处理
         java.lang.String keyword = request.getParameter("kw");
+        if (keyword == "") {
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+        }
         try {
             conn = DBTools.getConn();
 
@@ -76,7 +79,7 @@ public class searchServlet extends HttpServlet {
             while(rs.next()) {
                 java.lang.String symbol = rs.getString("symbol");
 
-                boolean y = Pattern.compile(keyword).matcher(symbol).find();
+                boolean y = Pattern.compile(keyword,Pattern.CASE_INSENSITIVE).matcher(symbol).find();
                 if (y) {
                     symbollist.add(symbol);
                 }

@@ -266,7 +266,7 @@
     <li class="line"></li>
 
     <li id="min-search">
-      <form id="formUrl" action="" method="get" target="_blank" >
+      <form id="formUrl" action="searchServlet" method="get" target="_blank" >
         <input id="pin-input" class="pin-input" type="text" name="kw" placeholder="Search for symbols...">
         <input class="btn" type="button" id="topSearchSubmit" data-eid="qd_A62" onclick="submit()">
       </form>

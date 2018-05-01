@@ -179,7 +179,6 @@
     position:relative;
     margin-left: auto;
     margin-right: auto;
-      background-color: #26282a;
   }
 
 
@@ -369,12 +368,13 @@
 
 
     <div id="content_mid" class="">
+
         <c:choose>
             <c:when test="${empty sessionScope.comp}">
                 <img alt="" src="picture/loading.gif" style="vertical-align: middle" />
             </c:when>
             <c:otherwise>
-
+                <img class="" src="picture/searchresult.jpg" />
                 <c:forEach items="${sessionScope.comp}" var="current_comp" varStatus="status">
 
 

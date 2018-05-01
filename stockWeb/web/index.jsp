@@ -179,7 +179,6 @@
     position:relative;
     margin-left: auto;
     margin-right: auto;
-      background-color: #26282a;
   }
 
 
