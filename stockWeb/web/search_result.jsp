@@ -214,7 +214,7 @@
 </script>
 
 
-<body onload="get_new_messages()">
+<body>
 <header data-reactroot class="header1">
   <ul class="_1SQmm Bgc">
 
