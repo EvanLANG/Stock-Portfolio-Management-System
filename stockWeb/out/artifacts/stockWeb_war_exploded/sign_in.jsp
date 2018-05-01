@@ -8,6 +8,29 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-3.3.1.min.js"></script>
+    <script>
+        function validate()
+        {
+            var uname = document.getElementById("login-username").value;
+            var psw = document.getElementById("login-password").value;
+            $.ajax({
+                type: "GET",
+                url: "SignInServlet",
+                data: {username:uname,password:psw},
+                success: function(response){
+                    if (response=="false") {
+                        document.getElementById("error").innerHTML = "Invalid username or incorrect password, please try again.";
+                    } else if(response=="true"){
+                        window.location.href = "user.jsp";
+                    }else if(response=="ban"){
+                        document.getElementById("error").innerHTML = "This user is disabled by Administer, \n" +
+                            "please contact us to unlock it.";
+                    }
+                }
+            });
+        }
+    </script>
     <style type="text/css">
         ._1SQmm {
             list-style: none;
@@ -152,6 +175,8 @@
         .orko-button-primary, input.orko-button-primary {
             background: #188fff;
             color: #fff;
+            margin-top: 50px;
+            margin-bottom: 50px;
         }
 
 
@@ -225,7 +250,7 @@
         <li class="line"></li>
 
         <li id="min-search">
-            <form id="formUrl" action="" method="get" target="_blank">
+            <form id="formUrl" action="searchServlet" method="get" target="_blank">
                 <input id="pin-input" class="pin-input" type="text" name="kw" placeholder="Search for symbols...">
                 <input class="btn" type="button" id="topSearchSubmit" data-eid="qd_A62" onclick="submit()">
             </form>
@@ -235,16 +260,12 @@
     <img class="pic1" src="picture/background3.jpg" />
 
     <ul class="h2c">
-        <li><a class="text1" href="" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
-        <li><a class="text1" href="" data-rapid_p="22" data-v9y="1">Watchlists</a></li>
-        <li><a class="text1" href="" data-rapid_p="23" data-v9y="1">My Portfolio</a></li>
-        <li><a class="text1" href="" data-rapid_p="24" data-v9y="1">My Screeners</a></li>
+        <li><a class="text1" href="/index.jsp" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
         <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Markets</a></li>
-        <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Industries</a></li>
         <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
-        <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Technology</a></li>
-        <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Originals</a></li>
-        <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Events</a></li>
+        <li><a class="text1" href="/HeadNews.jsp" data-rapid_p="31" data-v9y="1">Events</a></li>
+        <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
+        <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
     </ul>
 </header>
 
@@ -252,7 +273,7 @@
         <div class="login-logo"><img src="picture/Chicken.png" alt="Yahoo" class="logo" width="200" height="">
         </div>
         <p id="error-offline" role="alert" class="row error-offline hide">Network connection timed out. Please try&nbsp;again.</p>
-        <form id="login-username-form" action="datafetchServlet" method="post" class="username-challenge">
+        <form id="login-username-form" class="username-challenge">
             <input type="hidden" name="crumb" value="CbNbmcLwbcx">
             <input type="hidden" name="acrumb" value="r7TscSmE">
             <input type="hidden" name="sessionIndex" value="QQ--">
@@ -265,17 +286,13 @@
 
 
             <div id="username-country-code-field" class="username-country-code cci-dropdown-disabled code-of-length-1">
-                <input class="phone-no " type="text" name="username" id="login-username" tabindex="1" value=""  placeholder="Enter your&nbsp;email">
-                <input class="phone-no " type="text" name="password" id="login-password" tabindex="2" value=""  placeholder="Enter your&nbsp;password">
+                <input class="phone-no " type="text" name="username" id="login-username" tabindex="1"  placeholder="Enter your&nbsp;username" required>
+                <input class="phone-no " type="password" name="password" id="login-password" tabindex="2"  placeholder="Enter your&nbsp;password" required>
             </div>
-            <p id="username-error" class="row error hide" role="alert"></p>
 
 
-
-
-
-            <input id="login-signin" type="submit" name="signin" class="orko-button-primary orko-button" value="Next" tabindex="2">
-
+            <button type="button" id="login-signin" class="orko-button-primary orko-button" onclick="validate()" tabindex="2">NEXT</button>
+            <div class="col-md-6" id="error"></div>
             <p class="row sign-up">
                 Don't have an&nbsp;account?
                 <a href="sign_up.jsp">Sign&nbsp;up</a>
