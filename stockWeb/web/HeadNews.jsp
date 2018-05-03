@@ -387,7 +387,7 @@
             xhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
                     var obj = JSON.parse(this.responseText);
-                    var item = obj.results
+                    var item = obj.results;
                     myFunction(item);
                 }
             };
@@ -404,7 +404,7 @@
 
             for (i = 0; i < max; i++) {
 
-                out += '<p><span><a href="' + x[i].url + '">' + x[i].title +  '</a></span><br><span class="small">'+x[i].abstract+'</span><br><span class="small">'+x[i].byline+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+x[i].published_date+'</span><br><br>';
+                out += '<p><span><a href="' + x[i].url + '"target="_blank">' + x[i].title + "</a></span><br><img src="+ x[i].media[0]['media-metadata'][2].url +'><br><span class="small">'+x[i].abstract+'</span><br><span class="small">'+x[i].byline+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+x[i].published_date+'</span><br><br>';
             }
             document.getElementById("comment").innerHTML=out;
 
