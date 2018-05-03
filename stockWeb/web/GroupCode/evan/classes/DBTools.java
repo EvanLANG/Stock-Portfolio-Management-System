@@ -6,15 +6,11 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 //import Chen.Class.StockDailyRecord;
 //import java.sql.DatabaseMetaData;
 import Chen.Class.DataFetch;
-import Chen.Class.RankObject;
 import Chen.Class.StockDailyRecord;
 import Chen.Class.User;
-import Chen.Comparator.ValueComparator;
 import huang.servlets.Company;
 //import org.postgresql.util.PSQLException;
 
@@ -23,7 +19,7 @@ public class DBTools {
         String driver = "org.postgresql.Driver";
         String url = "jdbc:postgresql://localhost:5432/9900stockportfolio?useSSL=true";
         String username = "postgres";
-        String password = "921616";
+        String password = "750300";
         Connection conn = null;
         try {
             Class.forName(driver); //classLoader
@@ -131,7 +127,7 @@ public class DBTools {
     public static ArrayList<StockDailyRecord> getDaily(String symbol) {
         Connection conn = getConn();
         ArrayList<StockDailyRecord> result = new ArrayList<StockDailyRecord>();
-        String sql = "select * from mstf_daily order by timestamp DESC";
+        String sql = "select * from "+symbol+"_daily";
         PreparedStatement pstmt;
         try {
             pstmt = (PreparedStatement)conn.prepareStatement(sql);
@@ -139,27 +135,22 @@ public class DBTools {
             while (rs.next()) {
                 result.add(readData(rs));
             }
-            pstmt.close();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return result;
     }
     public static ArrayList<StockDailyRecord> getIntraday(String symbol) {
         Connection conn = getConn();
         ArrayList<StockDailyRecord> result = new ArrayList<StockDailyRecord>();
-        String sql = "select * from "+symbol+"_intraday order by timestamp DESC";
+        String sql = "select * from "+symbol+"_intraday";
+        PreparedStatement pstmt;
         try {
-            PreparedStatement pstmt;
             pstmt = (PreparedStatement)conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 result.add(readData(rs));
             }
-            pstmt.close();
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -347,146 +338,5 @@ public class DBTools {
 
         }
         return i;
-    }
-    public static List<RankObject> getValueRank(){
-        Connection conn = getConn();
-        List<RankObject> RankList = new ArrayList<RankObject>();
-        ArrayList<String> list = new ArrayList<String>();
-        int i = 0;
-        String sql = "select * from symbols";
-        try {
-            PreparedStatement pstmt;
-            pstmt = (PreparedStatement)conn.prepareStatement(sql);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                list.add(rs.getString("symbol"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        for(String sym: list){
-            RankObject object = new RankObject();
-            sql = "select * from "+sym+"_intraday order by timestamp DESC";
-            try {
-                PreparedStatement pstmt;
-                pstmt = (PreparedStatement)conn.prepareStatement(sql);
-                ResultSet rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    object.setValue(rs.getFloat("close"));
-                    object.setSym(sym);
-                    break;
-                }
-                pstmt.close();
-                RankList.add(object);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        try {
-            conn.close();
-        }catch (SQLException E){
-            E.printStackTrace();
-        }
-        Collections.sort(RankList, new ValueComparator());
-        return RankList.subList(0,20);
-    }
-    public static List<RankObject> getFollowRank(){
-        Connection conn = getConn();
-        List<RankObject> RankList = new ArrayList<RankObject>();
-        int i = 0;
-        String sql = "select * from symbols order by follows DESC";
-        try {
-            RankObject object = new RankObject();
-            PreparedStatement pstmt;
-            pstmt = (PreparedStatement)conn.prepareStatement(sql);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                object.setFollowNum(rs.getInt("follows"));
-                object.setSym(rs.getString("symbol"));
-                RankList.add(object);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            conn.close();
-        }catch (SQLException E){
-            E.printStackTrace();
-        }
-        //Collections.sort(RankList, new ValueComparator());
-        return RankList.subList(0,20);
-    }
-    public static List<RankObject> getRiseFallRank(int interval){
-        String postfix;
-        if(interval == 1){
-            postfix = "_intraday";
-        }else if(interval == 7){
-            postfix = "_daily";
-        }else{
-            postfix = "_monthly";
-        }
-        Connection conn = getConn();
-        List<RankObject> RankList = new ArrayList<RankObject>();
-        ArrayList<String> list = new ArrayList<String>();
-        int i = 0;
-        String sql = "select * from symbols";
-        try {
-            PreparedStatement pstmt;
-            pstmt = (PreparedStatement)conn.prepareStatement(sql);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                list.add(rs.getString("symbol"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        for(String sym: list){
-            RankObject object = new RankObject();
-            if(interval == 1) {
-                try{
-                    conn.close();
-                }catch(SQLException e){
-                    e.printStackTrace();
-                }
-                DataFetch intra_data = new DataFetch(sym);
-                intra_data.Data = getIntraday(sym);
-                StockDailyRecord test = intra_data.Data.get(0);
-                Company new_com = getIntraVolumeLowHigh(intra_data);
-                float riseNfall = (new_com.getClose() - new_com.getOpen()) / new_com.getOpen();
-                object.setValue(riseNfall);
-                object.setSym(sym);
-            }else{
-                sql = "select * from "+sym+postfix+" order by timestamp DESC";
-                try {
-                    PreparedStatement pstmt;
-                    pstmt = (PreparedStatement)conn.prepareStatement(sql);
-                    ResultSet rs = pstmt.executeQuery();
-                    int count = interval;
-                    float close = 0;
-                    float open = 0;
-                    while (rs.next() && count > 0) {
-                        if(count==interval){
-                            close = rs.getFloat("close");
-                        }else if(count==1){
-                            open = rs.getFloat("open");
-                        }
-                        count--;
-                    }
-                    object.setValue((close-open)/open);
-                    object.setSym(sym);
-                    pstmt.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-            RankList.add(object);
-        }
-        try {
-            conn.close();
-        }catch (SQLException E){
-            E.printStackTrace();
-        }
-        Collections.sort(RankList, new ValueComparator());
-        return RankList.subList(0,20);
     }
 }

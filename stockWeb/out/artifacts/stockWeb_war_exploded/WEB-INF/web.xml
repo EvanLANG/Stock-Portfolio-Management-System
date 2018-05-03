@@ -53,4 +53,29 @@
         <url-pattern>/onloadindexServlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>SignInServlet</servlet-name>
+        <servlet-class>Chen.Servlet.SignInServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SignInServlet</servlet-name>
+        <url-pattern>/SignInServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UserLoadingServlet</servlet-name>
+        <servlet-class>Chen.Servlet.UserLoadingServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserLoadingServlet</servlet-name>
+        <url-pattern>/UserLoadingServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>searchServlet</servlet-name>
+        <servlet-class>huang.servlets.searchServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>searchServlet</servlet-name>
+        <url-pattern>/searchServlet</url-pattern>
+    </servlet-mapping>
 </web-app>

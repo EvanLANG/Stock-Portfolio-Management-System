@@ -213,7 +213,7 @@
 </script>
 
 
-<body onload="get_new_messages()">
+<body>
 <header data-reactroot class="header1">
   <ul class="_1SQmm Bgc">
 
@@ -368,12 +368,13 @@
 
 
     <div id="content_mid" class="">
+
         <c:choose>
             <c:when test="${empty sessionScope.comp}">
                 <img alt="" src="picture/loading.gif" style="vertical-align: middle" />
             </c:when>
             <c:otherwise>
-
+                <img class="" src="picture/searchresult.jpg" />
                 <c:forEach items="${sessionScope.comp}" var="current_comp" varStatus="status">
 
 
