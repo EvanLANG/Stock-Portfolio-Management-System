@@ -6,11 +6,16 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 //import Chen.Class.StockDailyRecord;
 //import java.sql.DatabaseMetaData;
 import Chen.Class.DataFetch;
+import Chen.Class.RankObject;
 import Chen.Class.StockDailyRecord;
 import Chen.Class.User;
+import Chen.Comparator.RiseNFallComparator;
+import Chen.Comparator.ValueComparator;
 import huang.servlets.Company;
 //import org.postgresql.util.PSQLException;
 
@@ -19,7 +24,7 @@ public class DBTools {
         String driver = "org.postgresql.Driver";
         String url = "jdbc:postgresql://localhost:5432/9900stockportfolio?useSSL=true";
         String username = "postgres";
-        String password = "750300";
+        String password = "921616";
         Connection conn = null;
         try {
             Class.forName(driver); //classLoader
@@ -53,6 +58,9 @@ public class DBTools {
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            try{
+                conn.close();
+            }catch(SQLException E){; }
         }
         return i;
     }
@@ -76,7 +84,9 @@ public class DBTools {
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
-
+            try{
+                conn.close();
+            }catch(SQLException E){; }
         }
         return i;
     }
@@ -95,6 +105,9 @@ public class DBTools {
             flag = true;
         } catch (SQLException e) {
             e.printStackTrace();
+            try{
+                conn.close();
+            }catch(SQLException E){; }
         }
         return flag;
     }
@@ -121,13 +134,16 @@ public class DBTools {
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            try{
+                conn.close();
+            }catch(SQLException E){; }
         }
         return i;
     }
     public static ArrayList<StockDailyRecord> getDaily(String symbol) {
         Connection conn = getConn();
         ArrayList<StockDailyRecord> result = new ArrayList<StockDailyRecord>();
-        String sql = "select * from "+symbol+"_daily";
+        String sql = "select * from "+symbol+"_daily order by timestamp DESC";
         PreparedStatement pstmt;
         try {
             pstmt = (PreparedStatement)conn.prepareStatement(sql);
@@ -135,15 +151,39 @@ public class DBTools {
             while (rs.next()) {
                 result.add(readData(rs));
             }
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            try{
+                conn.close();
+            }catch(SQLException E){; }
+        }
+        return result;
+    }
+    public static ArrayList<StockDailyRecord> getMonthly(String symbol) {
+        Connection conn = getConn();
+        ArrayList<StockDailyRecord> result = new ArrayList<StockDailyRecord>();
+        String sql = "select * from "+symbol+"_monthly order by timestamp DESC";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement)conn.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                result.add(readData(rs));
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try{
+                conn.close();
+            }catch(SQLException E){; }
         }
         return result;
     }
     public static ArrayList<StockDailyRecord> getIntraday(String symbol) {
         Connection conn = getConn();
         ArrayList<StockDailyRecord> result = new ArrayList<StockDailyRecord>();
-        String sql = "select * from "+symbol+"_intraday";
+        String sql = "select * from "+symbol+"_intraday order by timestamp DESC";
         PreparedStatement pstmt;
         try {
             pstmt = (PreparedStatement)conn.prepareStatement(sql);
@@ -151,8 +191,12 @@ public class DBTools {
             while (rs.next()) {
                 result.add(readData(rs));
             }
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            try{
+                conn.close();
+            }catch(SQLException E){; }
         }
         return result;
     }
@@ -225,6 +269,9 @@ public class DBTools {
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            try{
+                conn.close();
+            }catch(SQLException E){; }
 
         }
         return i;
@@ -241,6 +288,9 @@ public class DBTools {
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            try{
+                conn.close();
+            }catch(SQLException E){; }
         }
         return i;
     }
@@ -259,6 +309,9 @@ public class DBTools {
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            try{
+                conn.close();
+            }catch(SQLException E){; }
         }
         return favos;
     }
@@ -274,6 +327,9 @@ public class DBTools {
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            try{
+                conn.close();
+            }catch(SQLException E){; }
         }
         return i;
     }
@@ -295,6 +351,9 @@ public class DBTools {
         } catch (SQLException e) {
             e.printStackTrace();
             result = false;
+            try{
+                conn.close();
+            }catch(SQLException E){; }
         }
         return result;
     }
@@ -316,8 +375,12 @@ public class DBTools {
                 user.setFollow(rs.getString("follow"));
                 user.setEmail(rs.getString("email"));
             }
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            try{
+                conn.close();
+            }catch(SQLException E){; }
         }
     }
     public static int insertsubscribe(String email) {
@@ -335,8 +398,106 @@ public class DBTools {
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
-
+            try{
+                conn.close();
+            }catch(SQLException E){; }
         }
         return i;
     }
+    public static ArrayList<String> getSymbols(){
+        Connection conn = getConn();
+        ArrayList<String> list = new ArrayList<String>();
+        String sql = "select symbol from symbols";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement)conn.prepareStatement(sql);
+            //DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                list.add(rs.getString(1));
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try{
+                conn.close();
+            }catch(SQLException E){; }
+        }
+        return list;
+    }
+    public static List<RankObject> getFollowsRank(){
+        Connection conn = getConn();
+        ArrayList<RankObject> list = new ArrayList<RankObject>();
+        String sql = "select * from symbols order by follows DESC";
+        PreparedStatement pstmt;
+        int count = 30;
+        try {
+            pstmt = (PreparedStatement)conn.prepareStatement(sql);
+            //DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()&&count > 0) {
+                RankObject object = new RankObject();
+                object.setSym(rs.getString("symbol"));
+                object.setFollowNum(rs.getInt("follows"));
+                list.add(object);
+                count--;
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try{
+                conn.close();
+            }catch(SQLException E){; }
+        }
+        return list.subList(0,20);
+    }
+    public static List<RankObject> getRFRank(){
+        List<RankObject> list = new ArrayList<RankObject>();
+        ArrayList<String> namelist = getSymbols();
+        for(String symbol:namelist){
+            DataFetch intra_data = new DataFetch(symbol);
+            try {
+                intra_data.Data = getIntraday(symbol);
+                StockDailyRecord test = intra_data.Data.get(0);
+                Company new_com = getIntraVolumeLowHigh(intra_data);
+                new_com.setCurrent(test.close);
+                RankObject object = new RankObject();
+                object.setSym(symbol);
+                object.setRiseAndFall((new_com.getCurrent() - new_com.getOpen()) / new_com.getOpen());
+                list.add(object);
+            }catch(Exception e){
+                continue;
+            }
+        }
+        Collections.sort(list, new RiseNFallComparator());
+        return list.subList(0,20);
+    }
+    public static List<RankObject> getValuesRank(){
+        List<RankObject> list = new ArrayList<RankObject>();
+        ArrayList<String> namelist = getSymbols();
+        //List<String> namelist = new ArrayList<String>();
+
+        //想要添加什么公司就在这里做处理
+        //namelist.add("MSFT");
+        //namelist.add("JOBS");
+        //namelist.add("TURN");
+        //namelist.add("AABA");
+        //namelist.add("FATE");
+        for(String symbol:namelist){
+            DataFetch daily_data = new DataFetch(symbol);
+            try {
+                daily_data.Data = getDaily(symbol);
+                StockDailyRecord test = daily_data.Data.get(0);
+                RankObject object = new RankObject();
+                object.setSym(symbol);
+                object.setValue(test.close);
+                list.add(object);
+            }catch(Exception e){
+                continue;
+            }
+        }
+        Collections.sort(list, new ValueComparator());
+        return list.subList(0,20);
+    }
+
 }
