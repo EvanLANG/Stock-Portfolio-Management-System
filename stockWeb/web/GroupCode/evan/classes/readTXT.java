@@ -26,12 +26,12 @@ public class readTXT {
         //注释掉的这一段是用来添加所有公司数据的，等你睡觉前来跑一下这个readTXT就行
 
 
-/*        for (String s : array) {
+       for (String s : array) {
             String[] parts = s.split("#");
             namelist.add(parts[0]);
             //db.insertsymbols(parts[0], parts[1], parts[2],parts[3]);
         }
-*/      namelist.add("MSFT");
+        namelist.add("MSFT");
         namelist.add("JOBS");
         namelist.add("TURN");
 
