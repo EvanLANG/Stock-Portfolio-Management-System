@@ -60,32 +60,31 @@ public class searchServlet extends HttpServlet {
 
         //想要添加什么公司就在这里做处理
         java.lang.String keyword = request.getParameter("kw");
-        if (keyword == "") {
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
-        }
-        try {
-            conn = DBTools.getConn();
+        if (!keyword.equals("")) {
+            try {
+                conn = DBTools.getConn();
 
-            if (conn == null) {
-                request.getRequestDispatcher("/index.jsp").forward(request, response);
-            }
-            stmt = conn.createStatement();
-
-            String sql;
-            sql = "SELECT symbol, sname FROM symbols";
-            //尚未搭建，username password
-            ResultSet rs = stmt.executeQuery(sql);
-
-            while(rs.next()) {
-                java.lang.String symbol = rs.getString("symbol");
-
-                boolean y = Pattern.compile(keyword,Pattern.CASE_INSENSITIVE).matcher(symbol).find();
-                if (y) {
-                    symbollist.add(symbol);
+                if (conn == null) {
+                    request.getRequestDispatcher("/index.jsp").forward(request, response);
                 }
+                stmt = conn.createStatement();
+
+                String sql;
+                sql = "SELECT symbol, sname FROM symbols";
+                //尚未搭建，username password
+                ResultSet rs = stmt.executeQuery(sql);
+
+                while (rs.next()) {
+                    java.lang.String symbol = rs.getString("symbol");
+
+                    boolean y = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE).matcher(symbol).find();
+                    if (y) {
+                        symbollist.add(symbol);
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
 
 
@@ -99,7 +98,10 @@ public class searchServlet extends HttpServlet {
             DataFetch daily_data = new DataFetch(Sym);
             //提取intrading day
             intra_data.Data = getIntraday(Sym);//获取全部数据列表
+
+            if (intra_data.Data.isEmpty()) {continue;}
             StockDailyRecord test = intra_data.Data.get(0);
+
             String current_day = test.TradeDate.substring(0, 10);
 
             Company new_com = getIntraVolumeLowHigh(intra_data);//获取处理过的数据

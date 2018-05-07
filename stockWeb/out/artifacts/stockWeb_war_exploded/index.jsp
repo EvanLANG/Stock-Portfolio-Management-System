@@ -369,12 +369,12 @@
 
     <div id="content_mid" class="">
         <c:choose>
-            <c:when test="${empty sessionScope.comp}">
+            <c:when test="${empty sessionScope.index_comp}">
                 <img alt="" src="picture/loading.gif" style="vertical-align: middle" />
             </c:when>
             <c:otherwise>
 
-                <c:forEach items="${sessionScope.comp}" var="current_comp" varStatus="status">
+                <c:forEach items="${sessionScope.index_comp}" var="current_comp" varStatus="status">
 
 
                     <div class="stock-info">

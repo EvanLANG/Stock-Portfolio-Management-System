@@ -103,6 +103,7 @@ public class onloadindexServlet extends HttpServlet {
 
         session.setAttribute("pricelist", pricelist);
         session.setAttribute("comp", companies);
+        session.setAttribute("index_comp", companies);
         session.setAttribute("complist", symbollist);
     }
 }
