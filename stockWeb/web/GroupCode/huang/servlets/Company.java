@@ -15,6 +15,11 @@ public class Company {
     private boolean sig;//今日增长（减少）标志
     private String url;
 
+    private int rank_index;
+    private int rank_follows;
+    private float rank_RF;
+    private float rank_value;
+
     public float getHigh() {
         return high;
     }
@@ -86,5 +91,33 @@ public class Company {
     }
     public void setSig(boolean value) {
         sig = value;
+    }
+
+    public int getRank_index() {
+        return rank_index;
+    }
+    public void setRank_index(int value) {
+        rank_index = value;
+    }
+
+    public int getRank_follows() {
+        return rank_follows;
+    }
+    public void setRank_follows(int value) {
+        rank_follows = value;
+    }
+
+    public float getRank_RF() {
+        return rank_RF;
+    }
+    public void setRank_RF(float value) {
+        rank_RF = value;
+    }
+
+    public float getRank_value() {
+        return rank_value;
+    }
+    public void setRank_value(float value) {
+        rank_value = value;
     }
 }

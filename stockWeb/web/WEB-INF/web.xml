@@ -78,4 +78,13 @@
         <servlet-name>searchServlet</servlet-name>
         <url-pattern>/searchServlet</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>rankServlet</servlet-name>
+        <servlet-class>huang.servlets.rankServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rankServlet</servlet-name>
+        <url-pattern>/rankServlet</url-pattern>
+    </servlet-mapping>
 </web-app>

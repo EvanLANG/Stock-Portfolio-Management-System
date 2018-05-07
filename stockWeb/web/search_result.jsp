@@ -166,9 +166,7 @@
       margin-right: auto;
       width: 60%;
       text-align: center;
-      border-right: 1px solid #BDBDBD;
-      border-left: 1px solid #BDBDBD;
-      background-color: white;
+      background-color: #f7faff;
   }
 
   .mainContext
@@ -260,7 +258,7 @@
 
   <ul class="h2c">
     <li><a class="text1" href="/index.jsp" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
-    <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Markets</a></li>
+    <li><a class="text1" href="rankServlet" data-rapid_p="31" data-v9y="1">Markets</a></li>
     <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
     <li><a class="text1" href="/HeadNews.jsp" data-rapid_p="31" data-v9y="1">Events</a></li>
     <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
@@ -371,10 +369,10 @@
 
         <c:choose>
             <c:when test="${empty sessionScope.comp}">
-                <img alt="" src="picture/loading.gif" style="vertical-align: middle" />
+                <img alt="" src="picture/noresult.png" style="vertical-align: middle" />
             </c:when>
             <c:otherwise>
-                <img class="" src="picture/searchresult.jpg" />
+                <img class="" src="picture/searchresult.png" />
                 <c:forEach items="${sessionScope.comp}" var="current_comp" varStatus="status">
 
 

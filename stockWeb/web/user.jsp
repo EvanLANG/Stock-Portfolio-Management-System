@@ -274,7 +274,7 @@
 
     <ul class="h2c">
         <li><a class="text1" href="/index.jsp" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
-        <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Markets</a></li>
+        <li><a class="text1" href="rankServlet" data-rapid_p="31" data-v9y="1">Markets</a></li>
         <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
         <li><a class="text1" href="/HeadNews.jsp" data-rapid_p="31" data-v9y="1">Events</a></li>
         <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
@@ -381,7 +381,7 @@
         .content_left{  width:21%;  min-height:800px;  float:left;  text-align:left;
             border-right:1px solid #BDBDBD;  border-left:1px solid #BDBDBD;
             border-bottom:1px solid #BDBDBD;  margin:0;  }
-        .content_right{  width:75%;  min-height:800px;  float:right;  margin:0;  text-align:left;  }
+        .content_right{  width:75%;  min-height:800px;  float:right;  margin:0;  text-align:left;  background-color: #f7faff;}
     </style>
 
     <div class="content_left">

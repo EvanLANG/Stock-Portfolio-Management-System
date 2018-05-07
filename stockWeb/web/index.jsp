@@ -260,7 +260,7 @@
 
   <ul class="h2c">
     <li><a class="text1" href="/index.jsp" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
-    <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Markets</a></li>
+    <li><a class="text1" href="rankServlet" data-rapid_p="31" data-v9y="1">Markets</a></li>
     <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
     <li><a class="text1" href="/HeadNews.jsp" data-rapid_p="31" data-v9y="1">Events</a></li>
     <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
@@ -369,12 +369,12 @@
 
     <div id="content_mid" class="">
         <c:choose>
-            <c:when test="${empty sessionScope.comp}">
+            <c:when test="${empty sessionScope.index_comp}">
                 <img alt="" src="picture/loading.gif" style="vertical-align: middle" />
             </c:when>
             <c:otherwise>
 
-                <c:forEach items="${sessionScope.comp}" var="current_comp" varStatus="status">
+                <c:forEach items="${sessionScope.index_comp}" var="current_comp" varStatus="status">
 
 
                     <div class="stock-info">
