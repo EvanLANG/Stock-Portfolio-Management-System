@@ -24,7 +24,7 @@ public class DBTools {
         String driver = "org.postgresql.Driver";
         String url = "jdbc:postgresql://localhost:5432/9900stockportfolio?useSSL=true";
         String username = "postgres";
-        String password = "750300";
+        String password = "921616";
         Connection conn = null;
         try {
             Class.forName(driver); //classLoader
@@ -297,13 +297,13 @@ public class DBTools {
     public static String getfavorite(String email){
         String favos= null;
         Connection conn = getConn();
-        String sql = "select favo from users where email = '" + email+"'";
+        String sql = "select follow from users where email = '" + email+"'";
         PreparedStatement pstmt;
         try {
             pstmt = (PreparedStatement)conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                favos= rs.getString("favo");
+                favos= rs.getString("follow");
             }
             pstmt.close();
             conn.close();
@@ -318,7 +318,7 @@ public class DBTools {
     public static int updatefavo(String email,String favos) {
         Connection conn = getConn();
         int i = 0;
-        String sql = "update users set favo = '"+favos+"' where email='"+email+"'";
+        String sql = "update users set follow = '"+favos+"' where email='"+email+"'";
         PreparedStatement pstmt;
         try {
             pstmt = (PreparedStatement) conn.prepareStatement(sql);
@@ -475,14 +475,7 @@ public class DBTools {
     public static List<RankObject> getValuesRank(){
         List<RankObject> list = new ArrayList<RankObject>();
         ArrayList<String> namelist = getSymbols();
-        //List<String> namelist = new ArrayList<String>();
 
-        //想要添加什么公司就在这里做处理
-        //namelist.add("MSFT");
-        //namelist.add("JOBS");
-        //namelist.add("TURN");
-        //namelist.add("AABA");
-        //namelist.add("FATE");
         for(String symbol:namelist){
             DataFetch daily_data = new DataFetch(symbol);
             try {
