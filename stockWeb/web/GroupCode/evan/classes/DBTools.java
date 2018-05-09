@@ -203,7 +203,7 @@ public class DBTools {
         }
         return result;
     }
-    private static StockDailyRecord readData(ResultSet rs){
+    public static StockDailyRecord readData(ResultSet rs){
         StockDailyRecord record = new StockDailyRecord();
         try {
             record.open = rs.getFloat("open");

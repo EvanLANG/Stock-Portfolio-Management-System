@@ -462,6 +462,7 @@
                                     <dl><dt>Open</dt><dd class="">${current_comp.open}</dd></dl>
                                     <dl><dt>Close</dt><dd>${current_comp.close}</dd></dl>
                                     <dl><dt>Volume</dt><dd>${current_comp.volume}</dd></dl>
+                                    <dl style = "width: 400px;"><dt>Company Name</dt><dd><i>${current_comp.comname}</i></dd></dl>
                                 </div>
                             </div>
                         </div>

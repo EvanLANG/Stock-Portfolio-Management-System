@@ -434,7 +434,6 @@
                                         <span class = s-up>&#9650; ${current_comp.change}</span>
                                         <span class = s-up>&#9650; ${current_comp.change_percent}%</span>
                                         <span class = s-up></span>
-                                        <a class="stock-add"><button class="">+ Favorite</button></a>
                                     </c:when>
                                     <c:otherwise>
                                         <strong class="_close s-down">${current_comp.current}</strong>
@@ -514,7 +513,6 @@
                                         <span class = s-up>&#9650; ${current_comp.change}</span>
                                         <span class = s-up>&#9650; ${current_comp.change_percent}%</span>
                                         <span class = s-up></span>
-                                        <a class="stock-add"><button class="">+ Favorite</button></a>
                                     </c:when>
                                     <c:otherwise>
                                         <strong class="_close s-down">${current_comp.current}</strong>
@@ -594,7 +592,6 @@
                                         <span class = s-up>&#9650; ${current_comp.change}</span>
                                         <span class = s-up>&#9650; ${current_comp.change_percent}%</span>
                                         <span class = s-up></span>
-                                        <a class="stock-add"><button class="">+ Favorite</button></a>
                                     </c:when>
                                     <c:otherwise>
                                         <strong class="_close s-down">${current_comp.current}</strong>
