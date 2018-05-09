@@ -58,7 +58,50 @@
 
             ctx.stroke();
         }
-
+        function favorite(sym) {
+            $.ajax({
+                type: 'post',
+                url: 'updatefavoServlet',
+                data: {'symbol':sym,'type':'f'},
+                success: function(response)
+                {
+                    obj = document.getElementById(sym+"#f#f");
+                    if (typeof(element)!= "undefined" || obj != null){
+                        obj.innerHTML = "<button class=\"\" onclick=\"cancel('"+sym+"')\">- Cancel</button>";
+                    }
+                    obj = document.getElementById(sym+"#f#rf");
+                    if (typeof(element)!= "undefined" || obj != null){
+                        obj.innerHTML = "<button class=\"\" onclick=\"cancel('"+sym+"')\">- Cancel</button>";
+                    }
+                    obj = document.getElementById(sym+"#f#v");
+                    if (typeof(element)!= "undefined" || obj != null){
+                        obj.innerHTML = "<button class=\"\" onclick=\"cancel('"+sym+"')\">- Cancel</button>";
+                    }
+                }
+            })
+        }
+        function cancel(sym) {
+            $.ajax({
+                type: 'post',
+                url: 'updatefavoServlet',
+                data: {'symbol':sym,'type':'c'},
+                success: function(response)
+                {
+                    obj = document.getElementById(sym+"#f#f");
+                    if (typeof(element)!= "undefined" || obj != null){
+                        obj.innerHTML = "<button class=\"\" onclick=\"favorite('"+sym+"')\">+ Favorite</button>";
+                    }
+                    obj = document.getElementById(sym+"#f#rf");
+                    if (typeof(element)!= "undefined" || obj != null){
+                        obj.innerHTML = "<button class=\"\" onclick=\"favorite('"+sym+"')\">+ Favorite</button>";
+                    }
+                    obj = document.getElementById(sym+"#f#v");
+                    if (typeof(element)!= "undefined" || obj != null){
+                        obj.innerHTML = "<button class=\"\" onclick=\"favorite('"+sym+"')\">+ Favorite</button>";
+                    }
+                }
+            })
+        }
     </script>
 </head>
 <style type="text/css">
@@ -387,14 +430,20 @@
                                         <span class = s-up>${current_comp.change}</span>
                                         <span class = s-up>${current_comp.change_percent}%</span>
                                         <span class = s-up></span>
-                                        <a class="stock-add"><button class="">+ Favorite</button></a>
                                     </c:when>
                                     <c:otherwise>
                                         <strong class="_close s-down">${current_comp.current}</strong>
                                         <span class = s-down>${current_comp.change}</span>
                                         <span class = s-down>${current_comp.change_percent}%</span>
                                         <span class = s-down></span>
-                                        <a class="stock-add"><button class="">+ Favorite</button></a>
+                                    </c:otherwise>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${current_comp.followed == 1}">
+                                        <a class="stock-add" id=${current_comp.symbol}#f#f><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a class="stock-add" id=${current_comp.symbol}#f#f><button class="" onclick="favorite('${current_comp.symbol}')">+ Favorite</button></a>
                                     </c:otherwise>
                                 </c:choose>
 
@@ -460,14 +509,20 @@
                                         <span class = s-up>${current_comp.change}</span>
                                         <span class = s-up>${current_comp.change_percent}%</span>
                                         <span class = s-up></span>
-                                        <a class="stock-add"><button class="">+ Favorite</button></a>
                                     </c:when>
                                     <c:otherwise>
                                         <strong class="_close s-down">${current_comp.current}</strong>
                                         <span class = s-down>${current_comp.change}</span>
                                         <span class = s-down>${current_comp.change_percent}%</span>
                                         <span class = s-down></span>
-                                        <a class="stock-add"><button class="">+ Favorite</button></a>
+                                    </c:otherwise>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${current_comp.followed == 1}">
+                                        <a class="stock-add" id=${current_comp.symbol}#f#rf><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a class="stock-add" id=${current_comp.symbol}#f#rf><button class="" onclick="favorite('${current_comp.symbol}')">+ Favorite</button></a>
                                     </c:otherwise>
                                 </c:choose>
 
@@ -533,14 +588,20 @@
                                         <span class = s-up>${current_comp.change}</span>
                                         <span class = s-up>${current_comp.change_percent}%</span>
                                         <span class = s-up></span>
-                                        <a class="stock-add"><button class="">+ Favorite</button></a>
                                     </c:when>
                                     <c:otherwise>
                                         <strong class="_close s-down">${current_comp.current}</strong>
                                         <span class = s-down>${current_comp.change}</span>
                                         <span class = s-down>${current_comp.change_percent}%</span>
                                         <span class = s-down></span>
-                                        <a class="stock-add"><button class="">+ Favorite</button></a>
+                                    </c:otherwise>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${current_comp.followed == 1}">
+                                        <a class="stock-add" id=${current_comp.symbol}#f#v><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a class="stock-add" id=${current_comp.symbol}#f#v><button class="" onclick="favorite('${current_comp.symbol}')">+ Favorite</button></a>
                                     </c:otherwise>
                                 </c:choose>
 

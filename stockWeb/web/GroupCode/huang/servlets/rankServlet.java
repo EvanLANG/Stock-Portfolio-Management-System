@@ -3,6 +3,7 @@ package huang.servlets;
 import Chen.Class.DataFetch;
 import Chen.Class.RankObject;
 import Chen.Class.StockDailyRecord;
+import Chen.Class.User;
 import evan.classes.DBTools;
 import org.apache.commons.collections.list.AbstractLinkedList;
 
@@ -30,7 +31,7 @@ public class rankServlet extends HttpServlet {
         List<Company> companies = new ArrayList<Company>();
         List<String> symbollist = new ArrayList<String>();
         List pricelist = new ArrayList();
-
+        User user = (User)session.getAttribute("user_id");
         for (RankObject obj : rank) {
             String sym = obj.getSym();
             symbollist.add(sym);
@@ -96,6 +97,15 @@ public class rankServlet extends HttpServlet {
             new_com.setChange_percent(change_percent);
             new_com.setSig(up_or_down);
 
+            if(user!=null) {
+                String favo = user.getFollowString();
+                if(favo!=null&&favo.contains(new_com.getSymbol())){
+                    new_com.setFollowed(1);
+                }else{new_com.setFollowed(0);}
+            }else{
+                new_com.setFollowed(0);
+            }
+
             companies.add(new_com);
 
             //当天所有价格（15min）
@@ -132,7 +142,8 @@ public class rankServlet extends HttpServlet {
         Connection conn = null;
         Statement stmt = null;
         HttpSession session = request.getSession();
-
+        User user = (User)session.getAttribute("user_id");
+        getUser(user);
         //取所有monthly的数据存成Arraylist
         String interval = "15min";
 

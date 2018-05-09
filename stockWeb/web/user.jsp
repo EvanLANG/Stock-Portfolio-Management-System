@@ -225,7 +225,7 @@
         window.location.reload();
     }
     function get_new_messages() {
-        if ((${empty sessionScope.user_comp}) || (${sessionScope.where != "user"}))
+        if ((${sessionScope.user_comp == null}) || (${sessionScope.where != "user"}))
             $.ajax({
                 type: 'post',
                 url: 'UserLoadingServlet',

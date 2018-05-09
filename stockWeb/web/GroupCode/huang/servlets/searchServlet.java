@@ -174,6 +174,6 @@ public class searchServlet extends HttpServlet {
         session.setAttribute("complist", symbollist);
         session.setAttribute("where", "search");
 
-        request.getRequestDispatcher("/search_result.jsp").forward(request, response);
+        response.sendRedirect("/search_result.jsp");
     }
 }
