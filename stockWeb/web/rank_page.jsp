@@ -20,7 +20,7 @@
             var color_up = "green";
             var color_down = "#f00";
             var maxNum = Math.max.apply(null, data);    //求数组中的最大值
-            var times = 35,
+            var times = data[0]/(Math.max.apply(null, data) - Math.min.apply(null, data)),
                 xLength = cv.width,    //x轴的长度
                 yLength = cv.height,  //y轴的长度
                 x0 = 0,  //原点x轴坐标
@@ -68,6 +68,7 @@
         margin: 0;
         padding: 0;
         height: 50px;
+        width: 1880px;
     }
     ._1SQmm>li {
         display: inline-block;
@@ -126,7 +127,7 @@
     }
 
     .pic {
-        width: 100%;
+        width: 1880px;
         height: 200px;
     }
 
@@ -154,19 +155,10 @@
         cursor: pointer;
         line-height: 36px;
     }
-    #content_mid {
-        margin-left: auto;
-        margin-right: auto;
-        width: 60%;
-        text-align: center;
-        border-right: 1px solid #BDBDBD;
-        border-left: 1px solid #BDBDBD;
-        background-color: white;
-    }
 
     .mainContext
     {
-        width: 100%;
+        width: 1880px;
         margin:0;
         padding: 0;
         position:relative;
@@ -190,24 +182,26 @@
         float: left;
         text-align: center;
         margin-right: auto;
-        width: 33%;
+        width: 620px;
         background-color: #f7faff;
     }
 
     #content_mid {
         float: left;
-        width: 33.5%;
+        width: 620px;
         text-align: center;
+        margin-left: auto;
+        margin-right: auto;
         border-right: 3px solid darkblue;
         border-left: 3px solid darkblue;
         background-color: #f7faff;
     }
 
     #content_right {
-        float: right;
+        float: left;
         text-align: center;
         margin-right: auto;
-        width: 33%;
+        width: 620px;
         background-color: #f7faff;
     }
 </style>
@@ -384,15 +378,15 @@
                                 <c:choose>
                                     <c:when test="${current_comp.sig == true}">
                                         <strong class="_close s-up">${current_comp.current}</strong>
-                                        <span class = s-up>${current_comp.change}</span>
-                                        <span class = s-up>${current_comp.change_percent}%</span>
+                                        <span class = s-up>&#9650; ${current_comp.change}</span>
+                                        <span class = s-up>&#9650; ${current_comp.change_percent}%</span>
                                         <span class = s-up></span>
                                         <a class="stock-add"><button class="">+ Favorite</button></a>
                                     </c:when>
                                     <c:otherwise>
                                         <strong class="_close s-down">${current_comp.current}</strong>
-                                        <span class = s-down>${current_comp.change}</span>
-                                        <span class = s-down>${current_comp.change_percent}%</span>
+                                        <span class = s-down>&#9660; ${current_comp.change}</span>
+                                        <span class = s-down>&#9660; ${current_comp.change_percent}%</span>
                                         <span class = s-down></span>
                                         <a class="stock-add"><button class="">+ Favorite</button></a>
                                     </c:otherwise>
@@ -425,7 +419,7 @@
                                     <dl><dt>Close</dt><dd>${current_comp.close}</dd></dl>
                                     <dl><dt>Volume</dt><dd>${current_comp.volume}</dd></dl>
                                     <dl><dt>&nbsp;</dt><dd>&nbsp;</dd></dl><dl><dt>&nbsp;</dt><dd>&nbsp;</dd></dl>
-                                    <dl><dt>Follows</dt><dd>${current_comp.rank_follows}</dd></dl>
+                                    <i><u><b><dl><dt><font size="5" face="STLiti">Follows</font></dt><dd>${current_comp.rank_follows}</dd></dl></b></u></i>
                                 </div>
                             </div>
                         </div>
@@ -457,15 +451,15 @@
                                 <c:choose>
                                     <c:when test="${current_comp.sig == true}">
                                         <strong class="_close s-up">${current_comp.current}</strong>
-                                        <span class = s-up>${current_comp.change}</span>
-                                        <span class = s-up>${current_comp.change_percent}%</span>
+                                        <span class = s-up>&#9650; ${current_comp.change}</span>
+                                        <span class = s-up>&#9650; ${current_comp.change_percent}%</span>
                                         <span class = s-up></span>
                                         <a class="stock-add"><button class="">+ Favorite</button></a>
                                     </c:when>
                                     <c:otherwise>
                                         <strong class="_close s-down">${current_comp.current}</strong>
-                                        <span class = s-down>${current_comp.change}</span>
-                                        <span class = s-down>${current_comp.change_percent}%</span>
+                                        <span class = s-down>&#9660; ${current_comp.change}</span>
+                                        <span class = s-down>&#9660; ${current_comp.change_percent}%</span>
                                         <span class = s-down></span>
                                         <a class="stock-add"><button class="">+ Favorite</button></a>
                                     </c:otherwise>
@@ -498,7 +492,7 @@
                                     <dl><dt>Close</dt><dd>${current_comp.close}</dd></dl>
                                     <dl><dt>Volume</dt><dd>${current_comp.volume}</dd></dl>
                                     <dl><dt>&nbsp;</dt><dd>&nbsp;</dd></dl><dl><dt>&nbsp;</dt><dd>&nbsp;</dd></dl>
-                                    <dl><dt>Rise</dt><dd>${current_comp.rank_RF}</dd></dl>
+                                    <i><u><b><dl><dt><font size="5" face="STLiti">Rise</font></dt><dd>${current_comp.rank_RF}</dd></dl></b></u></i>
                                 </div>
                             </div>
                         </div>
@@ -530,15 +524,15 @@
                                 <c:choose>
                                     <c:when test="${current_comp.sig == true}">
                                         <strong class="_close s-up">${current_comp.current}</strong>
-                                        <span class = s-up>${current_comp.change}</span>
-                                        <span class = s-up>${current_comp.change_percent}%</span>
+                                        <span class = s-up>&#9650; ${current_comp.change}</span>
+                                        <span class = s-up>&#9650; ${current_comp.change_percent}%</span>
                                         <span class = s-up></span>
                                         <a class="stock-add"><button class="">+ Favorite</button></a>
                                     </c:when>
                                     <c:otherwise>
                                         <strong class="_close s-down">${current_comp.current}</strong>
-                                        <span class = s-down>${current_comp.change}</span>
-                                        <span class = s-down>${current_comp.change_percent}%</span>
+                                        <span class = s-down>&#9660; ${current_comp.change}</span>
+                                        <span class = s-down>&#9660; ${current_comp.change_percent}%</span>
                                         <span class = s-down></span>
                                         <a class="stock-add"><button class="">+ Favorite</button></a>
                                     </c:otherwise>
@@ -571,7 +565,7 @@
                                     <dl><dt>Close</dt><dd>${current_comp.close}</dd></dl>
                                     <dl><dt>Volume</dt><dd>${current_comp.volume}</dd></dl>
                                     <dl><dt>&nbsp;</dt><dd>&nbsp;</dd></dl><dl><dt>&nbsp;</dt><dd>&nbsp;</dd></dl>
-                                    <dl><dt>Value</dt><dd>${current_comp.rank_value}</dd></dl>
+                                    <i><u><b><dl><dt><font size="5" face="STLiti">Value</font></dt><dd>${current_comp.rank_value}</dd></dl></b></u></i>
                                 </div>
                             </div>
                         </div>

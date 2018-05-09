@@ -17,13 +17,13 @@
         function PaintLine(sym, data){
             var cv = document.getElementById(sym);
             cv.width = 300;
-            cv.height = 60;
+            cv.height = 80;
             cv.style.background = "#f7faff";
             var ctx = cv.getContext("2d");
             var color_up = "green";
             var color_down = "#f00";
-            var maxNum = Math.max.apply(null, data);    //求数组中的最大值
-            var times = 35,
+            var maxNum = Math.max.apply(null, data);   //求数组中的最大值
+            var times = data[0]/(Math.max.apply(null, data) - Math.min.apply(null, data)),
                 xLength = cv.width,    //x轴的长度
                 yLength = cv.height,  //y轴的长度
                 x0 = 0,  //原点x轴坐标
@@ -164,7 +164,7 @@
   #content_mid {
       margin-left: auto;
       margin-right: auto;
-      width: 60%;
+      width: 1000px;
       text-align: center;
       border-right: 1px solid #BDBDBD;
       border-left: 1px solid #BDBDBD;
@@ -366,6 +366,17 @@
     .bets-name {
         font-family: DIN,"Microsoft YaHei",Arial,sans-serif;
     }
+
+    .dot-top {
+
+        border-width: 10px;
+        border-color: red;
+        border-top-width: 0;
+        border-style: dashed;
+        border-bottom-style: solid;
+        border-left-color: transparent;
+        border-right-color: transparent;
+    }
 </style>
 
 
@@ -389,8 +400,8 @@
                                 <c:choose>
                                 <c:when test="${current_comp.sig == true}">
                                     <strong class="_close s-up">${current_comp.current}</strong>
-                                    <span class = s-up>${current_comp.change}</span>
-                                    <span class = s-up>${current_comp.change_percent}%</span>
+                                    <span class = s-up>&#9650; ${current_comp.change}</span>
+                                    <span class = s-up>&#9650; ${current_comp.change_percent}%</span>
                                     <span class = s-up></span>
                                     <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
                                     <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(status.index)});</script>
@@ -398,8 +409,8 @@
                                 </c:when>
                                 <c:otherwise>
                                     <strong class="_close s-down">${current_comp.current}</strong>
-                                    <span class = s-down>${current_comp.change}</span>
-                                    <span class = s-down>${current_comp.change_percent}%</span>
+                                    <span class = s-down>&#9660; ${current_comp.change}</span>
+                                    <span class = s-down>&#9660; ${current_comp.change_percent}%</span>
                                     <span class = s-down></span>
                                     <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
                                     <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(status.index)});</script>
