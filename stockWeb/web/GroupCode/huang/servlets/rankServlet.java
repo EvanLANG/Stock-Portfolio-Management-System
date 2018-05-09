@@ -51,8 +51,6 @@ public class rankServlet extends HttpServlet {
             symbollist.add(sym);
         }
 
-
-
         System.out.println(symbollist);
 
         HttpSession session = request.getSession();
