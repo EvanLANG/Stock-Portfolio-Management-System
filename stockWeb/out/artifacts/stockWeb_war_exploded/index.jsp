@@ -195,19 +195,21 @@
 
 
 <script type="text/javascript">
+    function myreload(){
+        window.location.reload();
+    }
     function get_new_messages() {
-        if (${empty sessionScope.comp})
+        if ((${sessionScope.where != "index"}) || (${empty sessionScope.comp}))
             {
-                    $.ajax({
+                $.ajax({
                     type: 'post',
                     url: 'onloadindexServlet',
                     data: {},
-                    success: function myreload()
+                    success: function(response)
                     {
-                        window.location.reload();
-                        setTimeout('myreload()',6000);
+                        setTimeout(myreload(),60000);
                     }
-                })
+                });
             }
     }
 </script>
@@ -227,7 +229,7 @@
       <li class="" >
           <c:choose>
               <c:when test="${not empty sessionScope.user_id}">
-                  <a class="h1c" id="in" href="index.jsp">${sessionScope.user_id.id}</a>
+                  <a class="h1c" id="in" href="user.jsp">${sessionScope.user_id.id}</a>
               </c:when>
               <c:otherwise>
                   <a class="h1c" id="uid" href="sign_in.jsp">Sign in</a>
@@ -261,7 +263,7 @@
   <ul class="h2c">
     <li><a class="text1" href="/index.jsp" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
     <li><a class="text1" href="rankServlet" data-rapid_p="31" data-v9y="1">Markets</a></li>
-    <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
+    <li><a class="text1" href="/user.jsp" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
     <li><a class="text1" href="/HeadNews.jsp" data-rapid_p="31" data-v9y="1">Events</a></li>
     <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
     <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
@@ -369,7 +371,7 @@
 
     <div id="content_mid" class="">
         <c:choose>
-            <c:when test="${empty sessionScope.index_comp}">
+            <c:when test="${empty sessionScope.index_comp || sessionScope.where!='index'}">
                 <img alt="" src="picture/loading.gif" style="vertical-align: middle" />
             </c:when>
             <c:otherwise>

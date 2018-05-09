@@ -31,14 +31,14 @@ public class readTXT {
             namelist.add(parts[0]);
             //db.insertsymbols(parts[0], parts[1], parts[2],parts[3]);
         }
-        namelist.add("MSFT");
-        namelist.add("JOBS");
-        namelist.add("TURN");
+       // namelist.add("MSFT");
+        //namelist.add("JOBS");
+        //namelist.add("TURN");
 
 
 
         for(String s : namelist){
-            //System.out.println(s);
+            System.out.println(s);
             if (!db.validateTableExist(s+"_intraday")) {
                 db.createTable(s+"_intraday");
                 db.createTable(s+"_daily");
@@ -51,37 +51,26 @@ public class readTXT {
             intraday_data.Dataerror = true;
             monthly_data.Dataerror = true;
             int counts=0;
-            while(daily_data.Dataerror&&counts<3){
+            while(daily_data.Dataerror&&counts<1){
                 daily_data.DailyData("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + s + "&apikey=BBWCXYKPHWWLCBZ4");
                 counts++;
             }
-            for (StockDailyRecord record: daily_data.Data){
-                if(db.insertStock(record,s+"_daily")==0){
-                    break;
-                }
-            }
+            db.insertStock(daily_data.Data,s.trim()+"_daily");
+
             counts=0;
-            while(intraday_data.Dataerror&&counts<3){
+            while(intraday_data.Dataerror&&counts<1){
                 intraday_data.IntraData("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + s + "&interval=15min&apikey=BBWCXYKPHWWLCBZ4","15min");
                 counts++;
             }
-            for (StockDailyRecord record: intraday_data.Data){
-                if(db.insertStock(record,s+"_intraday")==0){
-                    break;
-                }
-            }
+            db.insertStock(intraday_data.Data,s.trim()+"_intraday");
             counts=0;
-            while(monthly_data.Dataerror&&counts<3){
+            while(monthly_data.Dataerror&&counts<1){
                 monthly_data.MonthlyData("https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=" + s + "&apikey=BBWCXYKPHWWLCBZ4");
                 counts++;
             }
-            for (StockDailyRecord record: monthly_data.Data){
-                if(db.insertStock(record,s+"_monthly")==0){
-                    break;
-                }
-            }
-            //break;//去掉这个break就是存储所有SYMBOL的数据，现在只存一条PIH的
+            db.insertStock(monthly_data.Data,s.trim()+"_monthly");
         }
+        //IMNP
         //System.out.print(db.getDaily("pih_daily","2018-04-17"));
     }
 }

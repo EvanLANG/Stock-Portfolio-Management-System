@@ -75,11 +75,7 @@ public class UpdateDailyTask extends TimerTask {
                 }
             }
             */
-            for (StockDailyRecord record: daily_data.Data){
-                if(db.insertStock(record,s.trim()+"_daily")==0){
-                    break;
-                }
-            }
+            db.insertStock(daily_data.Data,s.trim()+"_daily");
             /*
             for (StockDailyRecord record: monthly_data.Data){
                 if(db.insertStock(record,s+"_monthly")==0){

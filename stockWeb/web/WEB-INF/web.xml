@@ -87,4 +87,12 @@
         <servlet-name>rankServlet</servlet-name>
         <url-pattern>/rankServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>updatefavoServlet</servlet-name>
+        <url-pattern>/updatefavoServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>updatefavoServlet</servlet-name>
+        <servlet-class>evan.servlets.updatefavoServlet</servlet-class>
+    </servlet>
 </web-app>
