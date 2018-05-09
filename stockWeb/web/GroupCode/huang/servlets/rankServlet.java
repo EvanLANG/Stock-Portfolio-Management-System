@@ -149,6 +149,7 @@ public class rankServlet extends HttpServlet {
         rank = getValuesRank();
         SessionFunction(session, rank,"3","V");
 
+        session.setAttribute("where","rank");
 
         request.getRequestDispatcher("/rank_page.jsp").forward(request, response);
     }

@@ -37,6 +37,7 @@ public class updatefavoServlet extends HttpServlet {
         writer.flush();
         //request.setAttribute("email", email);
         //request.getRequestDispatcher("/somepage.jsp").forward(request,response);
+        session.setAttribute("where", "updated");
 
     }
 

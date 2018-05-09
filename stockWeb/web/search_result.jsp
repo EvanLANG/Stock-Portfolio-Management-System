@@ -249,7 +249,7 @@
       <li class="" >
           <c:choose>
               <c:when test="${not empty sessionScope.user_id}">
-                  <a class="h1c" id="in" href="index.jsp">${sessionScope.user_id.id}</a>
+                  <a class="h1c" id="in" href="user.jsp">${sessionScope.user_id.id}</a>
               </c:when>
               <c:otherwise>
                   <a class="h1c" id="uid" href="sign_in.jsp">Sign in</a>

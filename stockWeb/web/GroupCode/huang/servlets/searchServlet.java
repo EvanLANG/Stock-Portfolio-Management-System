@@ -172,6 +172,7 @@ public class searchServlet extends HttpServlet {
         session.setAttribute("pricelist", pricelist);
         session.setAttribute("comp", companies);
         session.setAttribute("complist", symbollist);
+        session.setAttribute("where", "search");
 
         request.getRequestDispatcher("/search_result.jsp").forward(request, response);
     }

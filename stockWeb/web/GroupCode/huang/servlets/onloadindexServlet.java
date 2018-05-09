@@ -105,5 +105,6 @@ public class onloadindexServlet extends HttpServlet {
         session.setAttribute("comp", companies);
         session.setAttribute("index_comp", companies);
         session.setAttribute("complist", symbollist);
+        session.setAttribute("where", "index");
     }
 }

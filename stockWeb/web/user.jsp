@@ -225,13 +225,14 @@
         window.location.reload();
     }
     function get_new_messages() {
+        if ((${empty sessionScope.user_comp}) || (${sessionScope.where != "user"}))
             $.ajax({
                 type: 'post',
                 url: 'UserLoadingServlet',
                 data: {},
                 success: function(response)
                 {
-                    setTimeout(myreload(),100000);
+                    setTimeout(myreload(),6000);
                 }
             });
     }
@@ -252,7 +253,7 @@
         <li class="" >
             <c:choose>
                 <c:when test="${not empty sessionScope.user_id}">
-                    <a class="h1c" id="in" href="index.jsp">${sessionScope.user_id.id}</a>
+                    <a class="h1c" id="in" href="user.jsp">${sessionScope.user_id.id}</a>
                 </c:when>
                 <c:otherwise>
                     <a class="h1c" id="uid" href="sign_in.jsp">Sign in</a>
@@ -404,7 +405,7 @@
 
     <div class="content_right" >
         <c:choose>
-            <c:when test="${empty sessionScope.user_comp}">
+            <c:when test="${empty sessionScope.index_comp || sessionScope.where!='user'}">
                 <img alt="" src="picture/loading.gif" style="vertical-align: middle" />
             </c:when>
             <c:otherwise>

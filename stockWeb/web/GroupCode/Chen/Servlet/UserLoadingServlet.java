@@ -113,6 +113,7 @@ public class UserLoadingServlet extends HttpServlet {
             session.setAttribute("user_pricelist", pricelist);
             session.setAttribute("user_comp", companies);
             session.setAttribute("user_complist", symbollist);
+            session.setAttribute("where", "user");
         }
     }
 }
