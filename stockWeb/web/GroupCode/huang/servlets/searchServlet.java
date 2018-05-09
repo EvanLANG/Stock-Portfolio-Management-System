@@ -12,18 +12,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.*;
 
-import static evan.classes.DBTools.getDaily;
-import static evan.classes.DBTools.getIntraVolumeLowHigh;
-import static evan.classes.DBTools.getIntraday;
+import static evan.classes.DBTools.*;
 
 @WebServlet(name = "searchServlet")
 public class searchServlet extends HttpServlet {
@@ -40,68 +36,58 @@ public class searchServlet extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-
-
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
-    }
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        Connection conn = null;
-        Statement stmt = null;
-
-        //取所有monthly的数据存成Arraylist
-        String interval = "15min";
-
+    private void SearchFunction(HttpSession session,List<String> symbollist,List<String> snamelist){
         List<Company> companies = new ArrayList<Company>();
-        List<String> symbollist = new ArrayList<String>();
+        List<String> recordllist = new ArrayList<String>();
         List pricelist = new ArrayList();
-
-        //想要添加什么公司就在这里做处理
-        java.lang.String keyword = request.getParameter("kw");
-        if (!keyword.equals("")) {
-            try {
-                conn = DBTools.getConn();
-
-                if (conn == null) {
-                    request.getRequestDispatcher("/index.jsp").forward(request, response);
-                }
-                stmt = conn.createStatement();
-
-                String sql;
-                sql = "SELECT symbol, sname FROM symbols";
-                //尚未搭建，username password
-                ResultSet rs = stmt.executeQuery(sql);
-
+        User user = (User)session.getAttribute("user_id");
+        DBTools db = new DBTools();
+        Connection conn = getConn();
+        PreparedStatement pstmt=null;
+        HashMap<String,DataFetch> intra_map = new HashMap<String, DataFetch>();
+        HashMap<String,DataFetch> daily_map = new HashMap<String,DataFetch>();
+        try {
+            for (String Sym : symbollist) {
+                DataFetch intra_data = new DataFetch(Sym);
+                DataFetch daily_data = new DataFetch(Sym);
+                ArrayList<StockDailyRecord> result = new ArrayList<StockDailyRecord>();
+                String sql = "select * from " + Sym + "_intraday order by timestamp DESC";
+                pstmt = (PreparedStatement) conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
-                    java.lang.String symbol = rs.getString("symbol");
-
-                    boolean y = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE).matcher(symbol).find();
-                    if (y) {
-                        symbollist.add(symbol);
-                    }
+                    result.add(readData(rs));
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                intra_data.Data = result;
+                intra_map.put(Sym,intra_data);
+                result = new ArrayList<StockDailyRecord>();
+                sql = "select * from "+Sym+"_daily order by timestamp DESC";
+                pstmt = (PreparedStatement)conn.prepareStatement(sql);
+                rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    result.add(readData(rs));
+                }
+                daily_data.Data = result;
+                daily_map.put(Sym,daily_data);
             }
+            pstmt.close();
+            conn.close();
+        }catch (SQLException e) {
+            try{
+                conn.close();
+            }catch(SQLException E){; }
         }
 
-
-        System.out.println(symbollist);
-
-        HttpSession session = request.getSession();
-        User user = (User)session.getAttribute("user_id");
-
-        for (String Sym : symbollist) {
+        for (int i=0;i < symbollist.size();i++) {
             //声明
+            String Sym = symbollist.get(i);
+            String sname = snamelist.get(i);
             DataFetch intra_data = new DataFetch(Sym);
             DataFetch daily_data = new DataFetch(Sym);
             //提取intrading day
-            intra_data.Data = getIntraday(Sym);//获取全部数据列表
-
-            if (intra_data.Data.size()<2) {continue;}
+            intra_data.Data = null;
+            if(intra_map.get(Sym)!=null&&intra_map.get(Sym).Data.size()!=0){
+                intra_data.Data = intra_map.get(Sym).Data;//获取全部数据列表
+            }else{continue;}
             StockDailyRecord test = intra_data.Data.get(0);
 
             String current_day = test.TradeDate.substring(0, 10);
@@ -109,9 +95,12 @@ public class searchServlet extends HttpServlet {
             Company new_com = getIntraVolumeLowHigh(intra_data);//获取处理过的数据
             new_com.setCurrent(test.close);
             new_com.setSymbol(Sym);
+            new_com.setComname(sname);
             //提取daily
-            daily_data.Data = getDaily(Sym);//获取全部数据列表
-            if (daily_data.Data.size()<2) {continue;}
+            daily_data.Data = null;//获取全部数据列表
+            if(daily_map.get(Sym)!=null&&daily_map.get(Sym).Data.size()!=0){
+                daily_data.Data = daily_map.get(Sym).Data;//获取全部数据列表
+            }else {continue;}
             StockDailyRecord test1 = daily_data.Data.get(0);
             StockDailyRecord test2 = daily_data.Data.get(1);
             //System.out.println(test1.TradeDate + ","+test1.close);
@@ -174,6 +163,69 @@ public class searchServlet extends HttpServlet {
         session.setAttribute("complist", symbollist);
         session.setAttribute("where", "search");
 
+    }
+
+
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        doGet(request, response);
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        Connection conn = null;
+        Statement stmt = null;
+
+        //取所有monthly的数据存成Arraylist
+        String interval = "15min";
+
+        List<Company> companies = new ArrayList<Company>();
+        List<String> recordllist = new ArrayList<String>();
+        List<String> symbollist = new ArrayList<String>();
+        List<String> snamelist = new ArrayList<String>();
+        List pricelist = new ArrayList();
+
+        //想要添加什么公司就在这里做处理
+        java.lang.String keyword = request.getParameter("kw");
+        if (!keyword.equals("")) {
+            try {
+                conn = getConn();
+
+                if (conn == null) {
+                    request.getRequestDispatcher("/index.jsp").forward(request, response);
+                }
+                String sql;
+                sql = "SELECT symbol, sname FROM symbols";
+                //尚未搭建，username password
+                PreparedStatement pstmt;
+                pstmt = (PreparedStatement)conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery();
+
+                while (rs.next()) {
+                    java.lang.String symbol = rs.getString("symbol");
+                    String sname = rs.getString("sname");
+                    //boolean y = symbol.contains(keyword);
+                    //boolean m = sname.contains(keyword);
+                    boolean y = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE).matcher(symbol).find();
+                    boolean m = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE).matcher(sname).find();
+                    if (y||m) {
+                        symbollist.add(symbol);
+                        snamelist.add(sname);
+                    }
+                }
+                pstmt.close();
+                conn.close();
+            } catch (SQLException e) {
+                try{
+                    conn.close();
+                }catch(SQLException E){; }
+            }
+        }
+
+        System.out.println(symbollist.size());
+        HttpSession session = request.getSession();
+        SearchFunction(session,symbollist,snamelist);
         response.sendRedirect("/search_result.jsp");
+
     }
 }

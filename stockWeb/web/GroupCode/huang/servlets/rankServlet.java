@@ -142,26 +142,30 @@ public class rankServlet extends HttpServlet {
         Connection conn = null;
         Statement stmt = null;
         HttpSession session = request.getSession();
-        User user = (User)session.getAttribute("user_id");
-        getUser(user);
-        //取所有monthly的数据存成Arraylist
-        String interval = "15min";
+        if(session.getAttribute("user_id")==null){
+            request.getRequestDispatcher("/rank_page.jsp").forward(request, response);
+        }else{
+            User user = (User)session.getAttribute("user_id");
+            getUser(user);
+            //取所有monthly的数据存成Arraylist
+            String interval = "15min";
 
 
 //follows rank
-        List<RankObject> rank = getFollowsRank();
-        SessionFunction(session, rank,"1","F");
+            List<RankObject> rank = getFollowsRank();
+            SessionFunction(session, rank,"1","F");
 
 //Rise and Fall rank
-        rank = getRFRank();
-        SessionFunction(session, rank,"2","RF");
+            rank = getRFRank();
+            SessionFunction(session, rank,"2","RF");
 
 //Value rank
-        rank = getValuesRank();
-        SessionFunction(session, rank,"3","V");
+            rank = getValuesRank();
+            SessionFunction(session, rank,"3","V");
 
-        session.setAttribute("where","rank");
+            session.setAttribute("where","rank");
 
-        request.getRequestDispatcher("/rank_page.jsp").forward(request, response);
+            request.getRequestDispatcher("/rank_page.jsp").forward(request, response);
+        }
     }
 }

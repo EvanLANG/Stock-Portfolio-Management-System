@@ -65,16 +65,21 @@
                 data: {'symbol':sym,'type':'f'},
                 success: function(response)
                 {
+                    obj = document.getElementById(sym+"fn");
+                    alert(parseInt(obj.innerHTML));
+                    if (obj != null){
+                        obj.innerHTML = parseInt(obj.innerHTML)+1+"";
+                    }
                     obj = document.getElementById(sym+"#f#f");
-                    if (typeof(element)!= "undefined" || obj != null){
+                    if (obj != null){
                         obj.innerHTML = "<button class=\"\" onclick=\"cancel('"+sym+"')\">- Cancel</button>";
                     }
                     obj = document.getElementById(sym+"#f#rf");
-                    if (typeof(element)!= "undefined" || obj != null){
+                    if (obj != null){
                         obj.innerHTML = "<button class=\"\" onclick=\"cancel('"+sym+"')\">- Cancel</button>";
                     }
                     obj = document.getElementById(sym+"#f#v");
-                    if (typeof(element)!= "undefined" || obj != null){
+                    if (obj != null){
                         obj.innerHTML = "<button class=\"\" onclick=\"cancel('"+sym+"')\">- Cancel</button>";
                     }
                 }
@@ -87,16 +92,21 @@
                 data: {'symbol':sym,'type':'c'},
                 success: function(response)
                 {
+                    obj = document.getElementById(sym+"fn");
+                    alert(parseInt(obj.innerHTML));
+                    if (obj != null){
+                        obj.innerHTML = parseInt(obj.innerHTML)-1+"";
+                    }
                     obj = document.getElementById(sym+"#f#f");
-                    if (typeof(element)!= "undefined" || obj != null){
+                    if (obj != null){
                         obj.innerHTML = "<button class=\"\" onclick=\"favorite('"+sym+"')\">+ Favorite</button>";
                     }
                     obj = document.getElementById(sym+"#f#rf");
-                    if (typeof(element)!= "undefined" || obj != null){
+                    if (obj != null){
                         obj.innerHTML = "<button class=\"\" onclick=\"favorite('"+sym+"')\">+ Favorite</button>";
                     }
                     obj = document.getElementById(sym+"#f#v");
-                    if (typeof(element)!= "undefined" || obj != null){
+                    if (obj != null){
                         obj.innerHTML = "<button class=\"\" onclick=\"favorite('"+sym+"')\">+ Favorite</button>";
                     }
                 }
@@ -474,7 +484,7 @@
                                     <dl><dt>Close</dt><dd>${current_comp.close}</dd></dl>
                                     <dl><dt>Volume</dt><dd>${current_comp.volume}</dd></dl>
                                     <dl><dt>&nbsp;</dt><dd>&nbsp;</dd></dl><dl><dt>&nbsp;</dt><dd>&nbsp;</dd></dl>
-                                    <dl><dt>Follows</dt><dd>${current_comp.rank_follows}</dd></dl>
+                                    <dl><dt>Follows</dt><dd id=${current_comp.symbol}fn>${current_comp.rank_follows}</dd></dl>
                                 </div>
                             </div>
                         </div>
