@@ -34,7 +34,10 @@ public class UserLoadingServlet extends HttpServlet {
         String[] symbollist = user.getFollow();
         List pricelist = new ArrayList();
         if(symbollist == null){
-            ;
+            session.setAttribute("user_pricelist", new ArrayList());
+            session.setAttribute("user_comp", new ArrayList());
+            session.setAttribute("user_complist", new ArrayList());
+            session.setAttribute("where", "user");
         }else {
             for (String Sym : symbollist) {
                 //声明

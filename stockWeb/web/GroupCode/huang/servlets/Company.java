@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 
 public class Company {
     private String symbol;
+    private String comname;
     private float current;//现价
     private float open;//今日开盘
     private float high;//今日开盘到目前为止最高
@@ -19,7 +20,8 @@ public class Company {
     private int rank_follows;
     private float rank_RF;
     private float rank_value;
-
+    public void setComname(String i){ comname = i;}
+    public String getComname(){ return comname; }
     public float getHigh() {
         return high;
     }

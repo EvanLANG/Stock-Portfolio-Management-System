@@ -215,7 +215,7 @@
             data: {'symbol':sym,'type':'f'},
             success: function(response)
             {
-                obj = document.getElementById("f");
+                obj = document.getElementById(sym+"f");
                 obj.innerHTML = "<button class=\"\" onclick=\"cancel('"+sym+"')\">- Cancel</button>";
             }
         })
@@ -227,7 +227,7 @@
             data: {'symbol':sym,'type':'c'},
             success: function(response)
             {
-                obj = document.getElementById("f");
+                obj = document.getElementById(sym+"f");
                 obj.innerHTML = "<button class=\"\" onclick=\"favorite('"+sym+"')\">+ Favorite</button>";
             }
         })
@@ -427,10 +427,10 @@
                                 </c:choose>
                                 <c:choose>
                                 <c:when test="${current_comp.followed == 1}">
-                                    <a class="stock-add" id="f"><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
+                                    <a class="stock-add" id=${current_comp.symbol}f><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a class="stock-add" id="f"><button class="" onclick="favorite('${current_comp.symbol}')">+ Favorite</button></a>
+                                    <a class="stock-add" id=${current_comp.symbol}f><button class="" onclick="favorite('${current_comp.symbol}')">+ Favorite</button></a>
                                 </c:otherwise>
                                 </c:choose>
 

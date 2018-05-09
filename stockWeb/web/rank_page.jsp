@@ -58,7 +58,60 @@
 
             ctx.stroke();
         }
-
+        function favorite(sym) {
+            $.ajax({
+                type: 'post',
+                url: 'updatefavoServlet',
+                data: {'symbol':sym,'type':'f'},
+                success: function(response)
+                {
+                    obj = document.getElementById(sym+"fn");
+                    alert(parseInt(obj.innerHTML));
+                    if (obj != null){
+                        obj.innerHTML = parseInt(obj.innerHTML)+1+"";
+                    }
+                    obj = document.getElementById(sym+"#f#f");
+                    if (obj != null){
+                        obj.innerHTML = "<button class=\"\" onclick=\"cancel('"+sym+"')\">- Cancel</button>";
+                    }
+                    obj = document.getElementById(sym+"#f#rf");
+                    if (obj != null){
+                        obj.innerHTML = "<button class=\"\" onclick=\"cancel('"+sym+"')\">- Cancel</button>";
+                    }
+                    obj = document.getElementById(sym+"#f#v");
+                    if (obj != null){
+                        obj.innerHTML = "<button class=\"\" onclick=\"cancel('"+sym+"')\">- Cancel</button>";
+                    }
+                }
+            })
+        }
+        function cancel(sym) {
+            $.ajax({
+                type: 'post',
+                url: 'updatefavoServlet',
+                data: {'symbol':sym,'type':'c'},
+                success: function(response)
+                {
+                    obj = document.getElementById(sym+"fn");
+                    alert(parseInt(obj.innerHTML));
+                    if (obj != null){
+                        obj.innerHTML = parseInt(obj.innerHTML)-1+"";
+                    }
+                    obj = document.getElementById(sym+"#f#f");
+                    if (obj != null){
+                        obj.innerHTML = "<button class=\"\" onclick=\"favorite('"+sym+"')\">+ Favorite</button>";
+                    }
+                    obj = document.getElementById(sym+"#f#rf");
+                    if (obj != null){
+                        obj.innerHTML = "<button class=\"\" onclick=\"favorite('"+sym+"')\">+ Favorite</button>";
+                    }
+                    obj = document.getElementById(sym+"#f#v");
+                    if (obj != null){
+                        obj.innerHTML = "<button class=\"\" onclick=\"favorite('"+sym+"')\">+ Favorite</button>";
+                    }
+                }
+            })
+        }
     </script>
 </head>
 <style type="text/css">
@@ -388,7 +441,14 @@
                                         <span class = s-down>&#9660; ${current_comp.change}</span>
                                         <span class = s-down>&#9660; ${current_comp.change_percent}%</span>
                                         <span class = s-down></span>
-                                        <a class="stock-add"><button class="">+ Favorite</button></a>
+                                    </c:otherwise>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${current_comp.followed == 1}">
+                                        <a class="stock-add" id=${current_comp.symbol}#f#f><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a class="stock-add" id=${current_comp.symbol}#f#f><button class="" onclick="favorite('${current_comp.symbol}')">+ Favorite</button></a>
                                     </c:otherwise>
                                 </c:choose>
 
@@ -419,7 +479,7 @@
                                     <dl><dt>Close</dt><dd>${current_comp.close}</dd></dl>
                                     <dl><dt>Volume</dt><dd>${current_comp.volume}</dd></dl>
                                     <dl><dt>&nbsp;</dt><dd>&nbsp;</dd></dl><dl><dt>&nbsp;</dt><dd>&nbsp;</dd></dl>
-                                    <i><u><b><dl><dt><font size="5" face="STLiti">Follows</font></dt><dd>${current_comp.rank_follows}</dd></dl></b></u></i>
+                                    <i><u><b><dl><dt><font size="5" face="STLiti">Follows</font></dt><dd id=${current_comp.symbol}fn>${current_comp.rank_follows}</dd></dl></b></u></i>
                                 </div>
                             </div>
                         </div>
@@ -461,7 +521,14 @@
                                         <span class = s-down>&#9660; ${current_comp.change}</span>
                                         <span class = s-down>&#9660; ${current_comp.change_percent}%</span>
                                         <span class = s-down></span>
-                                        <a class="stock-add"><button class="">+ Favorite</button></a>
+                                    </c:otherwise>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${current_comp.followed == 1}">
+                                        <a class="stock-add" id=${current_comp.symbol}#f#rf><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a class="stock-add" id=${current_comp.symbol}#f#rf><button class="" onclick="favorite('${current_comp.symbol}')">+ Favorite</button></a>
                                     </c:otherwise>
                                 </c:choose>
 
@@ -534,7 +601,14 @@
                                         <span class = s-down>&#9660; ${current_comp.change}</span>
                                         <span class = s-down>&#9660; ${current_comp.change_percent}%</span>
                                         <span class = s-down></span>
-                                        <a class="stock-add"><button class="">+ Favorite</button></a>
+                                    </c:otherwise>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${current_comp.followed == 1}">
+                                        <a class="stock-add" id=${current_comp.symbol}#f#v><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a class="stock-add" id=${current_comp.symbol}#f#v><button class="" onclick="favorite('${current_comp.symbol}')">+ Favorite</button></a>
                                     </c:otherwise>
                                 </c:choose>
 
