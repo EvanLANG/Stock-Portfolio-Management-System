@@ -2,6 +2,7 @@ package huang.servlets;
 
 import Chen.Class.DataFetch;
 import Chen.Class.StockDailyRecord;
+import Chen.Class.User;
 import evan.classes.DBTools;
 
 import javax.servlet.ServletException;
@@ -91,6 +92,7 @@ public class searchServlet extends HttpServlet {
         System.out.println(symbollist);
 
         HttpSession session = request.getSession();
+        User user = (User)session.getAttribute("user_id");
 
         for (String Sym : symbollist) {
             //声明
@@ -99,7 +101,7 @@ public class searchServlet extends HttpServlet {
             //提取intrading day
             intra_data.Data = getIntraday(Sym);//获取全部数据列表
 
-            if (intra_data.Data.isEmpty()) {continue;}
+            if (intra_data.Data.size()<2) {continue;}
             StockDailyRecord test = intra_data.Data.get(0);
 
             String current_day = test.TradeDate.substring(0, 10);
@@ -109,6 +111,7 @@ public class searchServlet extends HttpServlet {
             new_com.setSymbol(Sym);
             //提取daily
             daily_data.Data = getDaily(Sym);//获取全部数据列表
+            if (daily_data.Data.size()<2) {continue;}
             StockDailyRecord test1 = daily_data.Data.get(0);
             StockDailyRecord test2 = daily_data.Data.get(1);
             //System.out.println(test1.TradeDate + ","+test1.close);
@@ -135,7 +138,14 @@ public class searchServlet extends HttpServlet {
             new_com.setChange(change);
             new_com.setChange_percent(change_percent);
             new_com.setSig(up_or_down);
-
+            if(user!=null) {
+                String favo = user.getFollowString();
+                if(favo!=null&&favo.contains(new_com.getSymbol())){
+                    new_com.setFollowed(1);
+                }else{new_com.setFollowed(0);}
+            }else{
+                new_com.setFollowed(0);
+            }
             companies.add(new_com);
 
 

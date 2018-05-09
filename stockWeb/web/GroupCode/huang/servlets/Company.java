@@ -14,7 +14,7 @@ public class Company {
     private String change_percent;//今日增长（减少）百分比
     private boolean sig;//今日增长（减少）标志
     private String url;
-
+    private int followed;
     private int rank_index;
     private int rank_follows;
     private float rank_RF;
@@ -92,6 +92,11 @@ public class Company {
     public void setSig(boolean value) {
         sig = value;
     }
+
+    public int getFollowed() {
+        return followed;
+    }
+    public void setFollowed(int value) { followed = value; }
 
     public int getRank_index() {
         return rank_index;

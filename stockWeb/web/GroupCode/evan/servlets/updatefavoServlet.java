@@ -1,5 +1,6 @@
 package evan.servlets;
 
+import Chen.Class.User;
 import evan.classes.DBTools;
 
 import javax.servlet.ServletException;
@@ -7,21 +8,33 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import static evan.classes.DBTools.*;
 
 @WebServlet(name = "updatefavoServlet")
 public class updatefavoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String email = request.getParameter("email");
-        String favo = request.getParameter("favo");
+        String sym = request.getParameter("symbol");
+        String type = request.getParameter("type");
         //favorite stock formate: AA,BB,CC,DD
-        String favos = null;
+        System.out.println(sym);
+        System.out.println(type);
+
+        HttpSession session = request.getSession();
+        User user = (User)session.getAttribute("user_id");
         DBTools db = new DBTools();
-        favos = db.getfavorite(email);
-        favos = favos + "," + favo;
-        db.updatefavo(email,favos);
+        if(type.equals("f")) {
+            db.updatefavo(user, sym);
+        }else{
+            db.cancelfavo(user, sym);
+        }
+        session.setAttribute("user_id",user);
+        PrintWriter writer = response.getWriter();
+        writer.print("success.");
+        writer.flush();
         //request.setAttribute("email", email);
         //request.getRequestDispatcher("/somepage.jsp").forward(request,response);
 

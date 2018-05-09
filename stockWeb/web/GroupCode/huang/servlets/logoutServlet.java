@@ -16,6 +16,9 @@ public class logoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         session.setAttribute("user_id", null);
+        session.setAttribute("user_comp", null);
+        session.setAttribute("user_pricelist", null);
+        session.setAttribute("user_complist", null);
         //其它股票信息也置空
         request.getRequestDispatcher("/index.jsp").forward(request, response);
     }

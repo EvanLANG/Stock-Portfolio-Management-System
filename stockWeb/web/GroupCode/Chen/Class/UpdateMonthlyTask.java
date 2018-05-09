@@ -78,11 +78,7 @@ public class UpdateMonthlyTask extends TimerTask {
                 }
             }
             */
-            for (StockDailyRecord record: monthly_data.Data){
-                if(db.insertStock(record,s.trim()+"_monthly")==0){
-                    break;
-                }
-            }
+            db.insertStock(monthly_data.Data,s.trim()+"_monthly");
             /*
             for (StockDailyRecord record: monthly_data.Data){
                 if(db.insertStock(record,s+"_monthly")==0){

@@ -17,6 +17,8 @@ import Chen.Class.User;
 import Chen.Comparator.RiseNFallComparator;
 import Chen.Comparator.ValueComparator;
 import huang.servlets.Company;
+
+import static java.lang.Float.isInfinite;
 //import org.postgresql.util.PSQLException;
 
 public class DBTools {
@@ -24,7 +26,7 @@ public class DBTools {
         String driver = "org.postgresql.Driver";
         String url = "jdbc:postgresql://localhost:5432/9900stockportfolio?useSSL=true";
         String username = "postgres";
-        String password = "750300";
+        String password = "921616";
         Connection conn = null;
         try {
             Class.forName(driver); //classLoader
@@ -37,7 +39,7 @@ public class DBTools {
         return conn;
     }
 
-    public static int insertStock(StockDailyRecord comp, String symbol) {
+    public static int insertStock(ArrayList<StockDailyRecord> list, String symbol) {
         Connection conn = getConn();
         String id = null;
         id = symbol;
@@ -46,18 +48,22 @@ public class DBTools {
         PreparedStatement pstmt;
         try {
             pstmt = (PreparedStatement) conn.prepareStatement(sql);
-            //pstmt.setString(1, comp.getId());
-            pstmt.setString(1, comp.TradeDate);
-            pstmt.setFloat(2, comp.open);
-            pstmt.setFloat(3, comp.high);
-            pstmt.setFloat(4, comp.low);
-            pstmt.setFloat(5, comp.close);
-            pstmt.setString(6, String.valueOf(comp.volume));
-            i = pstmt.executeUpdate();
+            for(StockDailyRecord comp: list){
+                //pstmt.setString(1, comp.getId());
+                pstmt.setString(1, comp.TradeDate);
+                pstmt.setFloat(2, comp.open);
+                pstmt.setFloat(3, comp.high);
+                pstmt.setFloat(4, comp.low);
+                pstmt.setFloat(5, comp.close);
+                pstmt.setString(6, String.valueOf(comp.volume));
+                i = pstmt.executeUpdate();
+                if(i == 0){
+                    break;
+                }
+            }
             pstmt.close();
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
             try{
                 conn.close();
             }catch(SQLException E){; }
@@ -104,7 +110,6 @@ public class DBTools {
             conn.close();
             flag = true;
         } catch (SQLException e) {
-            e.printStackTrace();
             try{
                 conn.close();
             }catch(SQLException E){; }
@@ -133,7 +138,6 @@ public class DBTools {
             pstmt.close();
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
             try{
                 conn.close();
             }catch(SQLException E){; }
@@ -153,13 +157,13 @@ public class DBTools {
             }
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
             try{
                 conn.close();
             }catch(SQLException E){; }
         }
         return result;
     }
+
     public static ArrayList<StockDailyRecord> getMonthly(String symbol) {
         Connection conn = getConn();
         ArrayList<StockDailyRecord> result = new ArrayList<StockDailyRecord>();
@@ -193,7 +197,6 @@ public class DBTools {
             }
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
             try{
                 conn.close();
             }catch(SQLException E){; }
@@ -315,13 +318,53 @@ public class DBTools {
         }
         return favos;
     }
-    public static int updatefavo(String email,String favos) {
+    public static int updatefavo(User user,String sym) {
+        String favos = "";
+        if(user.getFollowString().length() == 0){
+            favos = user.getFollowString()+sym;
+        }else{
+            favos = user.getFollowString()+"#"+sym;
+        }
+        user.setFollow(favos);
         Connection conn = getConn();
         int i = 0;
-        String sql = "update users set follow = '"+favos+"' where email='"+email+"'";
+        String sql1 = "update users set follow = '"+favos+"' where email='"+user.getEmail()+"'";
+        String sql2 = "update symbols set follows = follows+1 where symbol='"+sym+"'";
         PreparedStatement pstmt;
         try {
-            pstmt = (PreparedStatement) conn.prepareStatement(sql);
+            pstmt = (PreparedStatement) conn.prepareStatement(sql1);
+            i = pstmt.executeUpdate();
+            pstmt = (PreparedStatement) conn.prepareStatement(sql2);
+            i = pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            try{
+                conn.close();
+            }catch(SQLException E){; }
+        }
+        return i;
+    }
+    public static int cancelfavo(User user,String sym) {
+        String favos = "";
+        if(user.getFollowString().contains("#")) {
+            favos = user.getFollowString().replace("#" + sym, "");
+            favos = favos.replace(sym + "#", "");
+            user.setFollow(favos);
+        }else{
+            favos = user.getFollowString().replace(sym, "");
+            user.setFollow(favos);
+        }
+        Connection conn = getConn();
+        int i = 0;
+        String sql1 = "update users set follow = '"+favos+"' where email='"+user.getEmail()+"'";
+        String sql2 = "update symbols set follows = follows-1 where symbol='"+sym+"'";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement) conn.prepareStatement(sql1);
+            i = pstmt.executeUpdate();
+            pstmt = (PreparedStatement) conn.prepareStatement(sql2);
             i = pstmt.executeUpdate();
             pstmt.close();
             conn.close();
@@ -372,7 +415,11 @@ public class DBTools {
                 //Timestamp date = rs.getTimestamp("dateofbirth");
                 //String dateStr = sdf.format(date);
                 //user.setDateofbirth(dateStr.substring(0,10));
-                user.setFollow(rs.getString("follow"));
+                if(rs.getString("follow") == null){
+                    user.setFollow("");
+                }else{
+                    user.setFollow(rs.getString("follow"));
+                }
                 user.setEmail(rs.getString("email"));
             }
             conn.close();
@@ -418,7 +465,6 @@ public class DBTools {
             }
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
             try{
                 conn.close();
             }catch(SQLException E){; }
@@ -442,54 +488,77 @@ public class DBTools {
                 list.add(object);
                 count--;
             }
+            pstmt.close();
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
             try{
                 conn.close();
             }catch(SQLException E){; }
         }
         return list.subList(0,20);
     }
-    public static List<RankObject> getRFRank(){
-        List<RankObject> list = new ArrayList<RankObject>();
-        ArrayList<String> namelist = getSymbols();
-        for(String symbol:namelist){
-            DataFetch intra_data = new DataFetch(symbol);
-            try {
-                intra_data.Data = getIntraday(symbol);
-                StockDailyRecord test = intra_data.Data.get(0);
-                Company new_com = getIntraVolumeLowHigh(intra_data);
-                new_com.setCurrent(test.close);
-                RankObject object = new RankObject();
-                object.setSym(symbol);
-                object.setRiseAndFall((new_com.getCurrent() - new_com.getOpen()) / new_com.getOpen());
-                list.add(object);
-            }catch(Exception e){
-                continue;
-            }
-        }
-        Collections.sort(list, new RiseNFallComparator());
-        return list.subList(0,20);
-    }
     public static List<RankObject> getValuesRank(){
+        Connection conn = getConn();
         List<RankObject> list = new ArrayList<RankObject>();
         ArrayList<String> namelist = getSymbols();
-
-        for(String symbol:namelist){
-            DataFetch daily_data = new DataFetch(symbol);
-            try {
-                daily_data.Data = getDaily(symbol);
-                StockDailyRecord test = daily_data.Data.get(0);
+        String sql="";
+        PreparedStatement pstmt = null;
+        try {
+            for(String symbol:namelist) {
+                sql = "select * from " + symbol + "_daily order by timestamp DESC";
+                pstmt = (PreparedStatement) conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery();
                 RankObject object = new RankObject();
                 object.setSym(symbol);
-                object.setValue(test.close);
+                while (rs.next()) {
+                    object.setValue(rs.getFloat("close"));
+                    break;
+                }
                 list.add(object);
-            }catch(Exception e){
-                continue;
             }
+            pstmt.close();
+            conn.close();
+        }catch (SQLException e) {
+            try{
+                conn.close();
+            }catch(SQLException E){; }
         }
         Collections.sort(list, new ValueComparator());
+        return list.subList(0,20);
+    }
+    public static List<RankObject> getRFRank(){
+        Connection conn = getConn();
+        List<RankObject> list = new ArrayList<RankObject>();
+        ArrayList<String> namelist = getSymbols();
+        String sql="";
+        PreparedStatement pstmt = null;
+        try {
+            for(String symbol:namelist) {
+                sql = "select * from " + symbol + "_daily order by timestamp DESC";
+                pstmt = (PreparedStatement) conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery();
+                RankObject object = new RankObject();
+                object.setSym(symbol);
+                while (rs.next()) {
+                    float open = rs.getFloat("open");
+                    float close = rs.getFloat("close");
+                    object.setRiseAndFall((close-open)/open);
+                    break;
+                }
+                if(isInfinite(object.getRiseAndFall())){
+                    continue;
+                }
+                list.add(object);
+            }
+            pstmt.close();
+            conn.close();
+        }catch (SQLException e) {
+            try{
+                pstmt.close();
+                conn.close();
+            }catch(SQLException E){; }
+        }
+        Collections.sort(list, new RiseNFallComparator());
         return list.subList(0,20);
     }
 

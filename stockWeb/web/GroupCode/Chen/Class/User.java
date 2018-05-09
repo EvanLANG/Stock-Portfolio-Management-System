@@ -35,10 +35,17 @@ public class User {
         follow = n;
     }
     public String[] getFollow(){
-        String[] list = follow.split("#");
-        return list;
+        if(follow.length() == 0){
+            return null;
+        }else{
+            String[] list = follow.split("#");
+            return list;
+        }
     }
     public void addFollow(String sym){
         follow += "#"+sym;
+    }
+    public String getFollowString(){
+        return follow;
     }
 }

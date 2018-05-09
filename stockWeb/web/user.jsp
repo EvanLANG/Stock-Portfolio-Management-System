@@ -58,6 +58,18 @@
 
             ctx.stroke();
         }
+        function cancel(sym) {
+            $.ajax({
+                type: 'post',
+                url: 'updatefavoServlet',
+                data: {'symbol':sym,'type':'c'},
+                success: function(response)
+                {
+                    obj = document.getElementById(sym+"favo");
+                    obj.parentNode.removeChild(obj);
+                }
+            })
+        }
 
     </script>
 </head>
@@ -209,20 +221,19 @@
 
 
 <script type="text/javascript">
+    function myreload(){
+        window.location.reload();
+    }
     function get_new_messages() {
-        if (${empty sessionScope.user_comp})
-        {
             $.ajax({
                 type: 'post',
                 url: 'UserLoadingServlet',
                 data: {},
-                success: function myreload()
+                success: function(response)
                 {
-                    window.location.reload();
-                    setTimeout('myreload()',6000);
+                    setTimeout(myreload(),100000);
                 }
-            })
-        }
+            });
     }
 </script>
 
@@ -275,7 +286,7 @@
     <ul class="h2c">
         <li><a class="text1" href="/index.jsp" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
         <li><a class="text1" href="rankServlet" data-rapid_p="31" data-v9y="1">Markets</a></li>
-        <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
+        <li><a class="text1" href="/user.jsp" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
         <li><a class="text1" href="/HeadNews.jsp" data-rapid_p="31" data-v9y="1">Events</a></li>
         <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
         <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
@@ -401,7 +412,7 @@
                 <c:forEach items="${sessionScope.user_comp}" var="current_comp" varStatus="status">
 
 
-                    <div class="stock-info">
+                    <div class="stock-info" id=${current_comp.symbol}favo>
                         <div class="stock-bets">
                             <h1>
                                 <a class="bets-name" href="">${current_comp.symbol}</a>
@@ -453,6 +464,7 @@
                                     <dl><dt>Open</dt><dd class="">${current_comp.open}</dd></dl>
                                     <dl><dt>Close</dt><dd>${current_comp.close}</dd></dl>
                                     <dl><dt>Volume</dt><dd>${current_comp.volume}</dd></dl>
+                                    <a class="stock-add"><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
                                 </div>
                             </div>
                         </div>
