@@ -224,7 +224,8 @@ public class searchServlet extends HttpServlet {
 
         System.out.println(symbollist.size());
         HttpSession session = request.getSession();
-        SearchFunction(session,symbollist,snamelist);
+        if (symbollist.size()>0) { SearchFunction(session,symbollist,snamelist); }
+        else {session.setAttribute("comp",null);}
         response.sendRedirect("/search_result.jsp");
 
     }
