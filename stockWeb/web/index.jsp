@@ -214,6 +214,33 @@
     }
 </script>
 
+<script type="text/javascript">
+    function favorite(sym) {
+        $.ajax({
+            type: 'post',
+            url: 'updatefavoServlet',
+            data: {'symbol':sym,'type':'f'},
+            success: function(response)
+            {
+                obj = document.getElementById(sym+"f");
+                obj.innerHTML = "<button class=\"\" onclick=\"cancel('"+sym+"')\">- Cancel</button>";
+            }
+        })
+    }
+    function cancel(sym) {
+        $.ajax({
+            type: 'post',
+            url: 'updatefavoServlet',
+            data: {'symbol':sym,'type':'c'},
+            success: function(response)
+            {
+                obj = document.getElementById(sym+"f");
+                obj.innerHTML = "<button class=\"\" onclick=\"favorite('"+sym+"')\">+ Favorite</button>";
+            }
+        })
+    }
+</script>
+
 
 <body onload="get_new_messages()">
 <header data-reactroot class="header1">
@@ -405,7 +432,6 @@
                                     <span class = s-up></span>
                                     <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
                                     <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(status.index)});</script>
-                                    <a class="stock-add"><button class="">+ Favorite</button></a>
                                 </c:when>
                                 <c:otherwise>
                                     <strong class="_close s-down">${current_comp.current}</strong>
@@ -414,8 +440,22 @@
                                     <span class = s-down></span>
                                     <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
                                     <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(status.index)});</script>
-                                    <a class="stock-add"><button class="">+ Favorite</button></a>
                                 </c:otherwise>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${current_comp.followed == 1}">
+                                        <a class="stock-add" id=${current_comp.symbol}f><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:choose>
+                                            <c:when test="${empty sessionScope.user_id}">
+                                                <a class="stock-add" href="/sign_in.jsp" id=${current_comp.symbol}f><button class="">+ Favorite</button></a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="stock-add" id=${current_comp.symbol}f><button class="" onclick="favorite('${current_comp.symbol}')">+ Favorite</button></a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:otherwise>
                                 </c:choose>
 
 

@@ -430,7 +430,14 @@
                                     <a class="stock-add" id=${current_comp.symbol}f><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a class="stock-add" id=${current_comp.symbol}f><button class="" onclick="favorite('${current_comp.symbol}')">+ Favorite</button></a>
+                                    <c:choose>
+                                        <c:when test="${empty sessionScope.user_id}">
+                                            <a class="stock-add" href="/sign_in.jsp" id=${current_comp.symbol}f><button class="">+ Favorite</button></a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a class="stock-add" id=${current_comp.symbol}f><button class="" onclick="favorite('${current_comp.symbol}')">+ Favorite</button></a>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </c:otherwise>
                                 </c:choose>
 

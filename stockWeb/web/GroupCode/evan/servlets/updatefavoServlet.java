@@ -17,6 +17,7 @@ import static evan.classes.DBTools.*;
 @WebServlet(name = "updatefavoServlet")
 public class updatefavoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String sym = request.getParameter("symbol");
         String type = request.getParameter("type");
         //favorite stock formate: AA,BB,CC,DD
@@ -24,6 +25,7 @@ public class updatefavoServlet extends HttpServlet {
         System.out.println(type);
 
         HttpSession session = request.getSession();
+
         User user = (User)session.getAttribute("user_id");
         DBTools db = new DBTools();
         if(type.equals("f")) {
