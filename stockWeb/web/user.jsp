@@ -225,6 +225,7 @@
         window.location.reload();
     }
     function get_new_messages() {
+        loadDocfirst()
         if ((${sessionScope.user_comp == null}) || (${sessionScope.where != "user"}))
             $.ajax({
                 type: 'post',
@@ -478,7 +479,62 @@
 
 
 </div>
+<div class="container">
 
+    <h4 id="0"></h4>
+    <h4 id="1"></h4>
+    <h4 id="2"></h4>
+    <h4 id="3"></h4>
+    <h4 id="4"></h4>
+    <h4 id="5"></h4>
+    <h4 id="6"></h4>
+    <h4 id="7"></h4>
+    <h4 id="8"></h4>
+    <h4 id="9"></h4>
+    <h4 id="10"></h4>
+
+    <!-- these tags will be replaced by news content, modify them to the right place!!!-->
+    <script>
+
+        function loadDoc(a,i) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    var obj = JSON.parse(this.responseText);
+                    var item = obj.articles
+                    myFunction(item,i);
+                }
+            };
+            //xhttp.open("GET", "https://api.nytimes.com/svc/mostpopular/v2/mostviewed/Business%20Day/1.json?api-key=e716033797834288814805dc70eb4907", true);
+            xhttp.open("GET", "https://newsapi.org/v2/everything?q="+a+"&from=2018-05-11&to=2018-05-12&sortBy=popularity&apiKey=3d0faee4c870480d904014c95c5759fb", true);
+            xhttp.send();
+        }
+        function myFunction(x,p) {
+            var i;
+            var out="";
+            var max = 2;
+
+            for (i = 0; i < max; i++) {
+
+                out += '<p><span><a href="' + x[i].url + '"target="_blank">' + x[i].title + "</a></span><br><img src="+ x[i].urlToImage +' alt="Error" width="210" height="140"><br><span class="small">'+x[i].description+'</span><br><span class="small">'+x[i].author+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+x[i].publishedAt+'</span><br><br>';
+            }
+            document.getElementById(p).innerHTML=out;
+
+        }
+        function loadDocfirst(){
+            //get symbols or names here to search!!!!!!
+            //modify code to search!!!
+            var terms = new Array("msft","xiaomi","apple");
+            var i;
+            for(i=0;i<terms.length;i++){
+
+                loadDoc(terms[i],i);
+            }
+
+        }
+    </script>
+
+</div>
 
 </body>
 </html>
