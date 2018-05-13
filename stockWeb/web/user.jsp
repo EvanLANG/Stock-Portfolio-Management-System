@@ -225,7 +225,12 @@
         window.location.reload();
     }
     function get_new_messages() {
-        loadDocfirst()
+        var follow = "${sessionScope.user_id.followcoms}";
+        if(follow) {
+            var arr = follow.split("#");
+            var num = Math.min(10,arr.length);
+            loadDocfirst(arr.slice(0,num));
+        }
         if ((${sessionScope.user_comp == null}) || (${sessionScope.where != "user"}))
             $.ajax({
                 type: 'post',
@@ -479,7 +484,7 @@
 
 
 </div>
-<div class="container">
+<div class="container" id="news_list">
 
     <h4 id="0"></h4>
     <h4 id="1"></h4>
@@ -505,30 +510,44 @@
                     myFunction(item,i);
                 }
             };
+            var begin = new Date();
+            var end = new Date();
+            begin.setDate(begin.getDate()-7);
+            var byear = begin.getFullYear();
+            var bmonth = begin.getMonth()+1;
+            var bday = begin.getDate();
+            var eyear = end.getFullYear();
+            var emonth = end.getMonth()+1;
+            var eday = end.getDate();
+            var bdate = byear+"-"+bmonth+"-"+bday;
+            var edate = eyear+"-"+emonth+"-"+eday;
             //xhttp.open("GET", "https://api.nytimes.com/svc/mostpopular/v2/mostviewed/Business%20Day/1.json?api-key=e716033797834288814805dc70eb4907", true);
-            xhttp.open("GET", "https://newsapi.org/v2/everything?q="+a+"&from=2018-05-11&to=2018-05-12&sortBy=popularity&apiKey=3d0faee4c870480d904014c95c5759fb", true);
+            xhttp.open("GET", "https://newsapi.org/v2/everything?q="+a+"&from="+bdate+"&to="+edate+"&sortBy=popularity&sources=abc-news&apiKey=3d0faee4c870480d904014c95c5759fb", true);
             xhttp.send();
         }
         function myFunction(x,p) {
             var i;
             var out="";
-            var max = 2;
+            var max = Math.min(2,x.length);
 
             for (i = 0; i < max; i++) {
+                if(x[i].urlToImage == null){
+                    out += '<p><span><a href="' + x[i].url + '"target="_blank">' + x[i].title + "</a></span><br>"+""+'<span class="small">'+x[i].description+'</span><br><span class="small">'+x[i].author+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+x[i].publishedAt+'</span><br><br>';
+                }else{
+                    out += '<p><span><a href="' + x[i].url + '"target="_blank">' + x[i].title + "</a></span><br><img src="+ x[i].urlToImage +' alt="Error" width="210" height="140"><br><span class="small">'+x[i].description+'</span><br><span class="small">'+x[i].author+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+x[i].publishedAt+'</span><br><br>';
+                }
 
-                out += '<p><span><a href="' + x[i].url + '"target="_blank">' + x[i].title + "</a></span><br><img src="+ x[i].urlToImage +' alt="Error" width="210" height="140"><br><span class="small">'+x[i].description+'</span><br><span class="small">'+x[i].author+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+x[i].publishedAt+'</span><br><br>';
             }
             document.getElementById(p).innerHTML=out;
 
         }
-        function loadDocfirst(){
+        function loadDocfirst(follow){
             //get symbols or names here to search!!!!!!
             //modify code to search!!!
-            var terms = new Array("msft","xiaomi","apple");
+            //var terms = new Array("msft","xiaomi","apple");
             var i;
-            for(i=0;i<terms.length;i++){
-
-                loadDoc(terms[i],i);
+            for(i=0;i<follow.length;i++){
+                loadDoc(follow[i],i);
             }
 
         }
