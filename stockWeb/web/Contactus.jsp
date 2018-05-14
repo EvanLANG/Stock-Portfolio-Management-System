@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: LANG
@@ -77,19 +78,15 @@
         }
 
         .pic1 {
-            width: 100%;
             height: 200px;
         }
 
-        .pic2 {
-            width: 40%;
-            height: 200px;
-        }
 
         .h2c {
+            background-color: black;
             list-style: none;
             font-weight: 600;
-            color: #000;
+            color: white;
             padding: 0 20px;
             margin: 0 auto;
         }
@@ -101,7 +98,7 @@
             margin-right: 30px;
         }
         .h2c a:link, .h2c a:visited {
-            color: #000;
+            color: white;
             text-decoration: none;
             display: block;
         }
@@ -109,27 +106,6 @@
             display: block;
             cursor: pointer;
             line-height: 36px;
-        }
-
-        .login-box {
-            box-sizing: border-box;
-            background-color: #fff;
-            box-shadow: 0 2px 4px 0 rgba(181,181,181,.7);
-            width: 360px;
-            right: 10px;
-            min-height: 550px;
-            z-index: 1;
-            padding: 0 5px;
-            border-top: 1px solid #f1f1f5;
-            position: relative;
-            top: 11px;
-            margin: auto;
-            text-align: center;
-        }
-
-        .username-challenge {
-            max-width: 300px;
-            margin: 0 auto;
         }
 
         .orko, body {
@@ -191,16 +167,6 @@
             zoom: 1;
         }
 
-        .sign-up {
-            position: absolute;
-            margin: 30px 5px;
-            padding: 0;
-            left: 0;
-            bottom: 20px;
-            right: 0;
-            font-size: .82353em;
-        }
-
     </style>
 </head>
 <style type="text/css">
@@ -249,9 +215,6 @@
         background: black;
     }
 
-    .hide {
-        display:none;
-    }
 
     input {
         font-family: PingFangSC-Regular,HelveticaNeue-Light,'Helvetica Neue Light','Microsoft YaHei',sans-serif;
@@ -271,11 +234,6 @@
         border-right: 1px solid #515056;
     }
 
-    .pic {
-        width: 100%;
-        height: 200px;
-    }
-
     .h2c {
         list-style: none;
         font-weight: 600;
@@ -291,7 +249,7 @@
         margin-right: 30px;
     }
     .h2c a:link, .h2c a:visited {
-        color: #000;
+        color: white;
         text-decoration: none;
         display: block;
     }
@@ -342,13 +300,27 @@
             Home
         </a></li>
 
-        <li class="" ><a class="h1c" href="sign_in.jsp" data-rapid_p="2" data-v9y="1">
-            Sign in
-        </a></li>
+        <li class="" >
+            <c:choose>
+                <c:when test="${not empty sessionScope.user_id}">
+                    <a class="h1c" id="in" href="user.jsp">${sessionScope.user_id.id}</a>
+                </c:when>
+                <c:otherwise>
+                    <a class="h1c" id="uid" href="sign_in.jsp">Sign in</a>
+                </c:otherwise>
+            </c:choose>
+        </li>
 
-        <li class="" ><a class="h1c" href="sign_up.jsp" data-rapid_p="3" data-v9y="1">
-            Sign up
-        </a></li>
+        <li class="" >
+            <c:choose>
+                <c:when test="${not empty sessionScope.user_id}">
+                    <a class="h1c" id="up" href="logoutServlet">Log out</a>
+                </c:when>
+                <c:otherwise>
+                    <a class="h1c" id="logout" href="sign_up.jsp">Sign up</a>
+                </c:otherwise>
+            </c:choose>
+        </li>
 
         <li class="line"></li>
 
@@ -360,12 +332,19 @@
         </li>
     </ul>
 
-    <img class="pic1" src="picture/background3.jpg" />
+    <div style="height:200px;"><img class="pic1" src="picture/background3.jpg" align="right" /></div>
 
     <ul class="h2c">
         <li><a class="text1" href="/index.jsp" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
         <li><a class="text1" href="rankServlet" data-rapid_p="31" data-v9y="1">Markets</a></li>
-        <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
+        <c:choose>
+            <c:when test="${not empty sessionScope.user_id}">
+                <li><a class="text1" href="/user.jsp" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
+            </c:when>
+            <c:otherwise>
+                <li><a class="text1" href="/sign_in.jsp" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
+            </c:otherwise>
+        </c:choose>
         <li><a class="text1" href="/HeadNews.jsp" data-rapid_p="31" data-v9y="1">Events</a></li>
         <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
         <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
