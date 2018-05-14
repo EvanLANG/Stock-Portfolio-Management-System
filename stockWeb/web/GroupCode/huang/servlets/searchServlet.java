@@ -3,6 +3,7 @@ package huang.servlets;
 import Chen.Class.DataFetch;
 import Chen.Class.StockDailyRecord;
 import Chen.Class.User;
+import Chen.Comparator.SimilarityComparator;
 import evan.classes.DBTools;
 
 import javax.servlet.ServletException;
@@ -13,11 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.*;
+import info.debatty.java.stringsimilarity.*;
+
+
 
 import static evan.classes.DBTools.*;
 
@@ -181,12 +182,14 @@ public class searchServlet extends HttpServlet {
 
         List<Company> companies = new ArrayList<Company>();
         List<String> recordllist = new ArrayList<String>();
+        HashMap<Double,String> map = new HashMap<Double,String>();
         List<String> symbollist = new ArrayList<String>();
         List<String> snamelist = new ArrayList<String>();
+        List<Double> simlist= new ArrayList<Double>();
         List pricelist = new ArrayList();
 
         //想要添加什么公司就在这里做处理
-        java.lang.String keyword = request.getParameter("kw");
+        java.lang.String keyword = request.getParameter("kw").toLowerCase();
         if (!keyword.equals("")) {
             try {
                 conn = getConn();
@@ -202,15 +205,21 @@ public class searchServlet extends HttpServlet {
                 ResultSet rs = pstmt.executeQuery();
 
                 while (rs.next()) {
-                    java.lang.String symbol = rs.getString("symbol");
-                    String sname = rs.getString("sname");
+                    java.lang.String symbol = rs.getString("symbol").toLowerCase();
+                    String sname = rs.getString("sname").toLowerCase();
+                    JaroWinkler jw = new JaroWinkler();
                     //boolean y = symbol.contains(keyword);
                     //boolean m = sname.contains(keyword);
-                    boolean y = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE).matcher(symbol).find();
-                    boolean m = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE).matcher(sname).find();
-                    if (y||m) {
-                        symbollist.add(symbol);
-                        snamelist.add(sname);
+                    double s1 = jw.similarity(keyword, symbol);
+                    double s2 = jw.similarity(keyword, sname);
+                    //boolean y = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE).matcher(symbol).find();
+                    //boolean m = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE).matcher(sname).find();
+                    if (s1>0.5||s2>0.5) {
+                        double s = Math.max(s1,s2);
+                        //symbollist.add(symbol);
+                        //snamelist.add(sname);
+                        map.put(s,symbol+"#"+sname);
+                        simlist.add(s);
                     }
                 }
                 pstmt.close();
@@ -220,6 +229,12 @@ public class searchServlet extends HttpServlet {
                     conn.close();
                 }catch(SQLException E){; }
             }
+        }
+        Collections.sort(simlist, new SimilarityComparator());
+        for(int i=0;i<simlist.size();i++){
+            String[] s = map.get(simlist.get(i)).split("#");
+            symbollist.add(s[0]);
+            snamelist.add(s[1]);
         }
 
         System.out.println(symbollist.size());

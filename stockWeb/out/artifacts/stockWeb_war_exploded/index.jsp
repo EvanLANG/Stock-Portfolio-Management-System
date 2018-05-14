@@ -132,12 +132,12 @@
     border-right: 1px solid #515056;
   }
 
-  .pic {
-    width: 100%;
+  .pic2 {
     height: 200px;
   }
 
   .h2c {
+      background-color: black;
     list-style: none;
     font-weight: 600;
     color: #000;
@@ -148,11 +148,11 @@
     -webkit-transition: opacity .3s;
     transition: opacity .3s;
     display: inline-block;
-    padding-bottom: 4px;
+
     margin-right: 30px;
   }
   .h2c a:link, .h2c a:visited {
-    color: #000;
+    color: white;
     text-decoration: none;
     display: block;
   }
@@ -179,6 +179,7 @@
     position:relative;
     margin-left: auto;
     margin-right: auto;
+      background-image: url(picture/background.jpg)
   }
 
 
@@ -191,6 +192,7 @@
       -webkit-margin-end: 0px;
       font-weight: bold;
   }
+
 </style>
 
 
@@ -211,6 +213,33 @@
                     }
                 });
             }
+    }
+</script>
+
+<script type="text/javascript">
+    function favorite(sym) {
+        $.ajax({
+            type: 'post',
+            url: 'updatefavoServlet',
+            data: {'symbol':sym,'type':'f'},
+            success: function(response)
+            {
+                obj = document.getElementById(sym+"f");
+                obj.innerHTML = "<button class=\"\" onclick=\"cancel('"+sym+"')\">- Cancel</button>";
+            }
+        })
+    }
+    function cancel(sym) {
+        $.ajax({
+            type: 'post',
+            url: 'updatefavoServlet',
+            data: {'symbol':sym,'type':'c'},
+            success: function(response)
+            {
+                obj = document.getElementById(sym+"f");
+                obj.innerHTML = "<button class=\"\" onclick=\"favorite('"+sym+"')\">+ Favorite</button>";
+            }
+        })
     }
 </script>
 
@@ -258,18 +287,41 @@
     </li>
   </ul>
 
-  <img class="pic" src="picture/background3.jpg" />
+  <div style="height:200px;"><img class="pic2" src="picture/background3.jpg" align="right" /></div>
 
   <ul class="h2c">
     <li><a class="text1" href="/index.jsp" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
-    <li><a class="text1" href="rankServlet" data-rapid_p="31" data-v9y="1">Markets</a></li>
+      <li><a class="text1" href="rankServlet" data-rapid_p="31" data-v9y="1">Markets</a></li>
+
+     <c:choose>
+          <c:when test="${not empty sessionScope.user_id}">
+              <li><a class="text1" href="/user.jsp" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
+          </c:when>
+         <c:otherwise>
+             <li><a class="text1" href="/sign_in.jsp" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
+         </c:otherwise>
+     </c:choose>
+
     <li><a class="text1" href="/user.jsp" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
     <li><a class="text1" href="/HeadNews.jsp" data-rapid_p="31" data-v9y="1">Events</a></li>
     <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
     <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
   </ul>
+    <div style="width:100%;">
+        <script>
+            (function() {
+                var cx = '017212697942039301577:vp-tqdegd6g';
+                var gcse = document.createElement('script');
+                gcse.type = 'text/javascript';
+                gcse.async = true;
+                gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(gcse, s);
+            })();
+        </script>
+        <gcse:search></gcse:search>
+    </div>
 </header>
-
 
 
 
@@ -405,7 +457,6 @@
                                     <span class = s-up></span>
                                     <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
                                     <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(status.index)});</script>
-                                    <a class="stock-add"><button class="">+ Favorite</button></a>
                                 </c:when>
                                 <c:otherwise>
                                     <strong class="_close s-down">${current_comp.current}</strong>
@@ -414,8 +465,22 @@
                                     <span class = s-down></span>
                                     <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
                                     <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(status.index)});</script>
-                                    <a class="stock-add"><button class="">+ Favorite</button></a>
                                 </c:otherwise>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${current_comp.followed == 1}">
+                                        <a class="stock-add" id=${current_comp.symbol}f><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:choose>
+                                            <c:when test="${empty sessionScope.user_id}">
+                                                <a class="stock-add" href="/sign_in.jsp" id=${current_comp.symbol}f><button class="">+ Favorite</button></a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="stock-add" id=${current_comp.symbol}f><button class="" onclick="favorite('${current_comp.symbol}')">+ Favorite</button></a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:otherwise>
                                 </c:choose>
 
 
