@@ -37,6 +37,10 @@ public class updatefavoServlet extends HttpServlet {
         user = new User();
         user.setUsername(name);
         getUser(user);
+        if(user.getFollow()!= null){
+            String followcoms = getFollows(user.getFollow());
+            user.setFollowcoms(followcoms);
+        }
         if(user.getFollowString()!= null){
             String followcoms = getFollows(user.getFollow());
             user.setFollowcoms(followcoms);

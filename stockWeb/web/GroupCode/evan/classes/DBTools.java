@@ -26,7 +26,7 @@ public class DBTools {
         String driver = "org.postgresql.Driver";
         String url = "jdbc:postgresql://localhost:5432/9900stockportfolio?useSSL=true";
         String username = "postgres";
-        String password = "750300";
+        String password = "921616";
         Connection conn = null;
         try {
             Class.forName(driver); //classLoader
@@ -460,31 +460,37 @@ public class DBTools {
         Connection conn = getConn();
         String output = "";
         PreparedStatement pstmt;
-        for(String sym: list) {
-            String sql = "select sname from symbols where symbol ='"+sym+"'";
-            try {
+        try {
+            for (String sym : list) {
+                String sql = "select sname from symbols where symbol ='" + sym + "'";
                 pstmt = (PreparedStatement) conn.prepareStatement(sql);
                 //DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
                     String sname = rs.getString("sname");
-                    sname = sname.replace(",","");
-                    sname = sname.replace(".com","");
-                    String [] tuple = sname.split(" ");
+                    sname = sname.replace(",", "");
+                    sname = sname.replace(".com", "");
+                    String[] tuple = sname.split(" ");
                     String finals = "";
-                    for(int i = 0;i<tuple.length-1;i++){
-                        finals += tuple[i]+" ";
+                    int len = 0;
+                    if (tuple.length > 1) {
+                        len = tuple.length - 1;
+                    } else {
+                        len = tuple.length;
                     }
-                    output+=finals.substring(0,finals.length()-1).trim()+"#";
+                    for (int i = 0; i < len; i++) {
+                        finals += tuple[i] + " ";
+                    }
+                    output += finals.substring(0, finals.length() - 1).trim() + "#";
                 }
-                conn.close();
-            } catch (SQLException e) {
+            }
+            conn.close();
+        }catch (SQLException e) {
                 try {
                     conn.close();
                 } catch (SQLException E) {
-                    ;
+                    System.out.println('1');
                 }
-            }
         }
         return output.substring(0,output.length()-1);
     }

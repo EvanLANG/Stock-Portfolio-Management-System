@@ -403,17 +403,81 @@
         .bets-name {
             font-family: DIN,"Microsoft YaHei",Arial,sans-serif;
         }
-        .content_left{  width:21%;  min-height:800px;  float:left;  text-align:left;
-            border-right:1px solid #BDBDBD;  border-left:1px solid #BDBDBD;
-            border-bottom:1px solid #BDBDBD;  margin:0;  }
-        .content_right{  width:75%;  min-height:800px;  float:right;  margin:0;  text-align:left;  background-color: #f7faff;}
+        .content_left{  width:35%;  min-height:800px;  float:left;  text-align:left;
+            border-left:1px solid #BDBDBD;
+            margin:0;  }
+        .content_right{  width:63%;  min-height:800px;  float:right;  margin:0;  text-align:left;  background-color: #f7faff;}
     </style>
 
-    <div class="content_left">
-        <ul class="list-group">
-            <li class="list-group-item">Name: ${sessionScope.user_id.id}</li>
-            <li class="list-group-item">Email: ${sessionScope.user_id.email}</li>
-        </ul>
+    <div class="content_left" id="news_list">
+
+        <h4 id="0"></h4>
+        <h4 id="1"></h4>
+        <h4 id="2"></h4>
+        <h4 id="3"></h4>
+        <h4 id="4"></h4>
+        <h4 id="5"></h4>
+        <h4 id="6"></h4>
+        <h4 id="7"></h4>
+        <h4 id="8"></h4>
+        <h4 id="9"></h4>
+        <h4 id="10"></h4>
+
+        <!-- these tags will be replaced by news content, modify them to the right place!!!-->
+        <script>
+
+            function loadDoc(a,i) {
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var obj = JSON.parse(this.responseText);
+                        var item = obj.articles
+                        myFunction(item,i);
+                    }
+                };
+                var begin = new Date();
+                var end = new Date();
+                begin.setDate(begin.getDate()-7);
+                var byear = begin.getFullYear();
+                var bmonth = begin.getMonth()+1;
+                var bday = begin.getDate();
+                var eyear = end.getFullYear();
+                var emonth = end.getMonth()+1;
+                var eday = end.getDate();
+                var bdate = byear+"-"+bmonth+"-"+bday;
+                var edate = eyear+"-"+emonth+"-"+eday;
+                //xhttp.open("GET", "https://api.nytimes.com/svc/mostpopular/v2/mostviewed/Business%20Day/1.json?api-key=e716033797834288814805dc70eb4907", true);
+                xhttp.open("GET", "https://newsapi.org/v2/everything?q="+a+"&from="+bdate+"&to="+edate+"&sortBy=popularity&sources=abc-news&apiKey=3d0faee4c870480d904014c95c5759fb", true);
+                xhttp.send();
+            }
+            function myFunction(x,p) {
+                var i;
+                var out="";
+                var max = Math.min(2,x.length);
+
+                for (i = 0; i < max; i++) {
+                    if(x[i].urlToImage == null){
+                        out += '<p><span><a href="' + x[i].url + '"target="_blank">' + x[i].title + "</a></span><br>"+""+'<span class="small">'+x[i].description+'</span><br><span class="small">'+x[i].author+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+x[i].publishedAt+'</span><br><br>';
+                    }else{
+                        out += '<p><span><a href="' + x[i].url + '"target="_blank">' + x[i].title + "</a></span><br><img src="+ x[i].urlToImage +' alt="Error" width="210" height="140"><br><span class="small">'+x[i].description+'</span><br><span class="small">'+x[i].author+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+x[i].publishedAt+'</span><br><br>';
+                    }
+
+                }
+                document.getElementById(p).innerHTML=out;
+
+            }
+            function loadDocfirst(follow){
+                //get symbols or names here to search!!!!!!
+                //modify code to search!!!
+                //var terms = new Array("msft","xiaomi","apple");
+                var i;
+                for(i=0;i<follow.length;i++){
+                    loadDoc(follow[i],i);
+                }
+
+            }
+        </script>
+
     </div>
 
     <div class="content_right" >
@@ -491,76 +555,7 @@
 
 
 </div>
-<div class="container" id="news_list">
 
-    <h4 id="0"></h4>
-    <h4 id="1"></h4>
-    <h4 id="2"></h4>
-    <h4 id="3"></h4>
-    <h4 id="4"></h4>
-    <h4 id="5"></h4>
-    <h4 id="6"></h4>
-    <h4 id="7"></h4>
-    <h4 id="8"></h4>
-    <h4 id="9"></h4>
-    <h4 id="10"></h4>
-
-    <!-- these tags will be replaced by news content, modify them to the right place!!!-->
-    <script>
-
-        function loadDoc(a,i) {
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    var obj = JSON.parse(this.responseText);
-                    var item = obj.articles
-                    myFunction(item,i);
-                }
-            };
-            var begin = new Date();
-            var end = new Date();
-            begin.setDate(begin.getDate()-7);
-            var byear = begin.getFullYear();
-            var bmonth = begin.getMonth()+1;
-            var bday = begin.getDate();
-            var eyear = end.getFullYear();
-            var emonth = end.getMonth()+1;
-            var eday = end.getDate();
-            var bdate = byear+"-"+bmonth+"-"+bday;
-            var edate = eyear+"-"+emonth+"-"+eday;
-            //xhttp.open("GET", "https://api.nytimes.com/svc/mostpopular/v2/mostviewed/Business%20Day/1.json?api-key=e716033797834288814805dc70eb4907", true);
-            xhttp.open("GET", "https://newsapi.org/v2/everything?q="+a+"&from="+bdate+"&to="+edate+"&sortBy=popularity&sources=abc-news&apiKey=3d0faee4c870480d904014c95c5759fb", true);
-            xhttp.send();
-        }
-        function myFunction(x,p) {
-            var i;
-            var out="";
-            var max = Math.min(2,x.length);
-
-            for (i = 0; i < max; i++) {
-                if(x[i].urlToImage == null){
-                    out += '<p><span><a href="' + x[i].url + '"target="_blank">' + x[i].title + "</a></span><br>"+""+'<span class="small">'+x[i].description+'</span><br><span class="small">'+x[i].author+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+x[i].publishedAt+'</span><br><br>';
-                }else{
-                    out += '<p><span><a href="' + x[i].url + '"target="_blank">' + x[i].title + "</a></span><br><img src="+ x[i].urlToImage +' alt="Error" width="210" height="140"><br><span class="small">'+x[i].description+'</span><br><span class="small">'+x[i].author+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+x[i].publishedAt+'</span><br><br>';
-                }
-
-            }
-            document.getElementById(p).innerHTML=out;
-
-        }
-        function loadDocfirst(follow){
-            //get symbols or names here to search!!!!!!
-            //modify code to search!!!
-            //var terms = new Array("msft","xiaomi","apple");
-            var i;
-            for(i=0;i<follow.length;i++){
-                loadDoc(follow[i],i);
-            }
-
-        }
-    </script>
-
-</div>
 
 </body>
 </html>
