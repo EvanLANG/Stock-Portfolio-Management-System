@@ -402,7 +402,12 @@ public class DBTools {
     }
     public static void getUser(User user) {
         Connection conn = getConn();
-        String theUsername = user.getUsername();
+        String theUsername;
+        if(user.getUsername()==null){
+            theUsername = "";
+        } else{
+            theUsername =user.getUsername();
+        }
         String sql = "select * from users where uname = '" + theUsername+"'";
         PreparedStatement pstmt;
         try {
