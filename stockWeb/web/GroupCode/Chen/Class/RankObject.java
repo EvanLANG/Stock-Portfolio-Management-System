@@ -2,12 +2,18 @@ package Chen.Class;
 
 public class RankObject {
     private String sym;
+    private String name;
     private float value;
+    private double sim;
     private int followNum;
     private float riseAndFall;
     public RankObject(){;}
     public String getSym() {
         return sym;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public float getValue() {
@@ -26,6 +32,10 @@ public class RankObject {
         this.sym = sym;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setValue(float value) {
         this.value = value;
     }
@@ -36,5 +46,13 @@ public class RankObject {
 
     public void setRiseAndFall(float riseAndFall) {
         this.riseAndFall = riseAndFall;
+    }
+
+    public void setSim(double sim) {
+        this.sim = sim;
+    }
+
+    public double getSim() {
+        return sim;
     }
 }

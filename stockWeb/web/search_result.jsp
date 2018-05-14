@@ -403,7 +403,7 @@
                     <div class="stock-info">
                         <div class="stock-bets">
                             <h1>
-                                <a class="bets-name" href="">${current_comp.symbol}</a>
+                                <a class="bets-name" href="${current_comp.url}" target="_blank">${current_comp.symbol}</a>
                             </h1>
                             <div class="price s-stop ">
 

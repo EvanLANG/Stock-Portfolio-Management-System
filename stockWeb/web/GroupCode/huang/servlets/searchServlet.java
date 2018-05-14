@@ -1,6 +1,7 @@
 package huang.servlets;
 
 import Chen.Class.DataFetch;
+import Chen.Class.RankObject;
 import Chen.Class.StockDailyRecord;
 import Chen.Class.User;
 import Chen.Comparator.SimilarityComparator;
@@ -37,7 +38,7 @@ public class searchServlet extends HttpServlet {
         super();
         // TODO Auto-generated constructor stub
     }
-    private void SearchFunction(HttpSession session,List<String> symbollist,List<String> snamelist){
+    private void SearchFunction(HttpSession session,List<String> symbollist,List<String> snamelist,List<String> urllist){
         List<Company> companies = new ArrayList<Company>();
         List<String> recordllist = new ArrayList<String>();
         List pricelist = new ArrayList();
@@ -82,6 +83,7 @@ public class searchServlet extends HttpServlet {
             //声明
             String Sym = symbollist.get(i);
             String sname = snamelist.get(i);
+            String url = urllist.get(i);
             DataFetch intra_data = new DataFetch(Sym);
             DataFetch daily_data = new DataFetch(Sym);
             //提取intrading day
@@ -97,6 +99,7 @@ public class searchServlet extends HttpServlet {
             new_com.setCurrent(test.close);
             new_com.setSymbol(Sym);
             new_com.setComname(sname);
+            new_com.setUrl(url);
             //提取daily
             daily_data.Data = null;//获取全部数据列表
             if(daily_map.get(Sym)!=null&&daily_map.get(Sym).Data.size()!=0){
@@ -182,10 +185,10 @@ public class searchServlet extends HttpServlet {
 
         List<Company> companies = new ArrayList<Company>();
         List<String> recordllist = new ArrayList<String>();
-        HashMap<Double,String> map = new HashMap<Double,String>();
         List<String> symbollist = new ArrayList<String>();
         List<String> snamelist = new ArrayList<String>();
-        List<Double> simlist= new ArrayList<Double>();
+        List<String> urllist = new ArrayList<String>();
+        List<RankObject> simlist= new ArrayList<RankObject>();
         List pricelist = new ArrayList();
 
         //想要添加什么公司就在这里做处理
@@ -198,28 +201,33 @@ public class searchServlet extends HttpServlet {
                     request.getRequestDispatcher("/index.jsp").forward(request, response);
                 }
                 String sql;
-                sql = "SELECT symbol, sname FROM symbols";
+                sql = "SELECT symbol, sname, quote FROM symbols";
                 //尚未搭建，username password
                 PreparedStatement pstmt;
                 pstmt = (PreparedStatement)conn.prepareStatement(sql);
                 ResultSet rs = pstmt.executeQuery();
 
                 while (rs.next()) {
-                    java.lang.String symbol = rs.getString("symbol").toLowerCase();
-                    String sname = rs.getString("sname").toLowerCase();
+                    java.lang.String symbol = rs.getString("symbol");
+                    String sname = rs.getString("sname");
+                    String url  = rs.getString("quote");
                     JaroWinkler jw = new JaroWinkler();
                     //boolean y = symbol.contains(keyword);
                     //boolean m = sname.contains(keyword);
-                    double s1 = jw.similarity(keyword, symbol);
-                    double s2 = jw.similarity(keyword, sname);
+                    double s1 = jw.similarity(keyword, symbol.toLowerCase());
+                    double s2 = jw.similarity(keyword, sname.toLowerCase());
                     //boolean y = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE).matcher(symbol).find();
                     //boolean m = Pattern.compile(keyword, Pattern.CASE_INSENSITIVE).matcher(sname).find();
-                    if (s1>0.5||s2>0.5) {
+                    if (s1>0.7||s2>0.7) {
                         double s = Math.max(s1,s2);
                         //symbollist.add(symbol);
                         //snamelist.add(sname);
-                        map.put(s,symbol+"#"+sname);
-                        simlist.add(s);
+                        RankObject simobject = new RankObject();
+                        simobject.setSym(symbol);
+                        simobject.setName(sname);
+                        simobject.setSim(s);
+                        simlist.add(simobject);
+                        urllist.add(url);
                     }
                 }
                 pstmt.close();
@@ -232,14 +240,11 @@ public class searchServlet extends HttpServlet {
         }
         Collections.sort(simlist, new SimilarityComparator());
         for(int i=0;i<simlist.size();i++){
-            String[] s = map.get(simlist.get(i)).split("#");
-            symbollist.add(s[0]);
-            snamelist.add(s[1]);
+            symbollist.add(simlist.get(i).getSym());
+            snamelist.add(simlist.get(i).getName());
         }
-
-        System.out.println(symbollist.size());
         HttpSession session = request.getSession();
-        if (symbollist.size()>0) { SearchFunction(session,symbollist,snamelist); }
+        if (symbollist.size()>0) { SearchFunction(session,symbollist,snamelist,urllist); }
         else {session.setAttribute("comp",null);}
         response.sendRedirect("/search_result.jsp");
 
