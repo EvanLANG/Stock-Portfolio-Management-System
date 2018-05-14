@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: huang
@@ -100,19 +101,14 @@
         }
 
         .pic1 {
-            width: 100%;
-            height: 200px;
-        }
-
-        .pic2 {
-            width: 40%;
             height: 200px;
         }
 
         .h2c {
+            background-color: black;
             list-style: none;
             font-weight: 600;
-            color: #000;
+            color: white;
             padding: 0 20px;
             margin: 0 auto;
         }
@@ -124,7 +120,7 @@
             margin-right: 30px;
         }
         .h2c a:link, .h2c a:visited {
-            color: #000;
+            color: white;
             text-decoration: none;
             display: block;
         }
@@ -226,6 +222,17 @@
             font-size: .82353em;
         }
 
+        .mainContext
+        {
+            width: 100%;
+            margin:0;
+            padding: 0;
+            position:relative;
+            margin-left: auto;
+            margin-right: auto;
+            background-image: url(picture/background.jpg)
+        }
+
     </style>
 </head>
 
@@ -257,18 +264,25 @@
         </li>
     </ul>
 
-    <img class="pic1" src="picture/background3.jpg" />
+    <div style="height:200px;"><img class="pic1" src="picture/background3.jpg" align="right" /></div>
 
     <ul class="h2c">
         <li><a class="text1" href="/index.jsp" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
         <li><a class="text1" href="rankServlet" data-rapid_p="31" data-v9y="1">Markets</a></li>
-        <li><a class="text1" href="" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
+        <c:choose>
+            <c:when test="${not empty sessionScope.user_id}">
+                <li><a class="text1" href="/user.jsp" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
+            </c:when>
+            <c:otherwise>
+                <li><a class="text1" href="/sign_in.jsp" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
+            </c:otherwise>
+        </c:choose>
         <li><a class="text1" href="/HeadNews.jsp" data-rapid_p="31" data-v9y="1">Events</a></li>
         <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
         <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
     </ul>
 </header>
-
+<div class="mainContext">
     <div class="login-box">
         <div class="login-logo"><img src="picture/Chicken.png" alt="Yahoo" class="logo" width="200" height="">
         </div>
@@ -300,7 +314,7 @@
         </form>
 
     </div>
-
+</div>
 </body>
 
 
