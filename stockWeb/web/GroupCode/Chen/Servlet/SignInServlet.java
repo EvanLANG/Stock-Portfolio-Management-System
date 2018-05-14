@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 import java.util.*;
 
 import static evan.classes.DBTools.AccountExist;
+import static evan.classes.DBTools.getFollows;
 import static evan.classes.DBTools.getUser;
 
 @WebServlet(name = "SignInServlet")
@@ -26,6 +27,10 @@ public class SignInServlet extends HttpServlet {
             user.setUsername(username);
             //user.setPassword(password);
             getUser(user);
+            if(user.getFollow()!= null){
+                String followcoms = getFollows(user.getFollow());
+                user.setFollowcoms(followcoms);
+            }
             /*if(user.getStatus()==0){
                 response.setHeader("Pragma", "No-cache");
                 response.setHeader("Cache-Control", "no-cache");

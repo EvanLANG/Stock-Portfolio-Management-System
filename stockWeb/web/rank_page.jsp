@@ -93,7 +93,6 @@
                 success: function(response)
                 {
                     obj = document.getElementById(sym+"fn");
-                    alert(parseInt(obj.innerHTML));
                     if (obj != null){
                         obj.innerHTML = parseInt(obj.innerHTML)-1+"";
                     }

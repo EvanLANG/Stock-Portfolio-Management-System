@@ -33,6 +33,12 @@ public class updatefavoServlet extends HttpServlet {
         }else{
             db.cancelfavo(user, sym);
         }
+        user = new User();
+        getUser(user);
+        if(user.getFollowString()!= null){
+            String followcoms = getFollows(user.getFollow());
+            user.setFollowcoms(followcoms);
+        }
         session.setAttribute("user_id",user);
         PrintWriter writer = response.getWriter();
         writer.print("success.");

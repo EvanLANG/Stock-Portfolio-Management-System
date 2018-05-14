@@ -10,6 +10,7 @@ public class User {
     //private String dateofbirth;//'xxxx-xx-xx'
     private String email;
     private String follow;
+    private String followcoms;
     public User(){
         ;
     }
@@ -41,6 +42,12 @@ public class User {
             String[] list = follow.split("#");
             return list;
         }
+    }
+    public void setFollowcoms(String n){
+        followcoms = n;
+    }
+    public String getFollowcoms(){
+            return followcoms;
     }
     public void addFollow(String sym){
         follow += "#"+sym;
