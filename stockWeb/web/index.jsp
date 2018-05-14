@@ -179,6 +179,7 @@
     position:relative;
     margin-left: auto;
     margin-right: auto;
+      background-image: url(picture/background.jpg)
   }
 
 
