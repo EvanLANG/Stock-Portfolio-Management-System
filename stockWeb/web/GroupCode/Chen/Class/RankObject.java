@@ -7,6 +7,7 @@ public class RankObject {
     private double sim;
     private int followNum;
     private float riseAndFall;
+    private String url;
     public RankObject(){;}
     public String getSym() {
         return sym;
@@ -54,5 +55,13 @@ public class RankObject {
 
     public double getSim() {
         return sim;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String value) {
+        url = value;
     }
 }

@@ -60,6 +60,9 @@ public class searchServlet extends HttpServlet {
                     result.add(readData(rs));
                 }
                 intra_data.Data = result;
+                if(intra_data.Data.size()<=2){
+                    continue;
+                }
                 intra_map.put(Sym,intra_data);
                 result = new ArrayList<StockDailyRecord>();
                 sql = "select * from "+Sym+"_daily order by timestamp DESC";
@@ -69,6 +72,10 @@ public class searchServlet extends HttpServlet {
                     result.add(readData(rs));
                 }
                 daily_data.Data = result;
+                if(daily_data.Data.size()<=2){
+                    daily_map.put(Sym,null);
+                    continue;
+                }
                 daily_map.put(Sym,daily_data);
             }
             pstmt.close();
@@ -84,6 +91,9 @@ public class searchServlet extends HttpServlet {
             String Sym = symbollist.get(i);
             String sname = snamelist.get(i);
             String url = urllist.get(i);
+            if(daily_map.get(Sym)==null||intra_map.get(Sym)==null){
+                continue;
+            }
             DataFetch intra_data = new DataFetch(Sym);
             DataFetch daily_data = new DataFetch(Sym);
             //提取intrading day
@@ -96,6 +106,9 @@ public class searchServlet extends HttpServlet {
             String current_day = test.TradeDate.substring(0, 10);
 
             Company new_com = getIntraVolumeLowHigh(intra_data);//获取处理过的数据
+            if(new_com == null){
+                continue;
+            }
             new_com.setCurrent(test.close);
             new_com.setSymbol(Sym);
             new_com.setComname(sname);
@@ -226,8 +239,8 @@ public class searchServlet extends HttpServlet {
                         simobject.setSym(symbol);
                         simobject.setName(sname);
                         simobject.setSim(s);
+                        simobject.setUrl(url);
                         simlist.add(simobject);
-                        urllist.add(url);
                     }
                 }
                 pstmt.close();
@@ -239,9 +252,10 @@ public class searchServlet extends HttpServlet {
             }
         }
         Collections.sort(simlist, new SimilarityComparator());
-        for(int i=0;i<simlist.size();i++){
+        for(int i=0;i<Math.min(simlist.size(),20);i++){
             symbollist.add(simlist.get(i).getSym());
             snamelist.add(simlist.get(i).getName());
+            urllist.add(simlist.get(i).getUrl());
         }
         HttpSession session = request.getSession();
         if (symbollist.size()>0) { SearchFunction(session,symbollist,snamelist,urllist); }

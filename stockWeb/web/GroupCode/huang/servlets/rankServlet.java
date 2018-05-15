@@ -55,6 +55,9 @@ public class rankServlet extends HttpServlet {
             String current_day = test.TradeDate.substring(0, 10);
 
             Company new_com = getIntraVolumeLowHigh(intra_data);//获取处理过的数据
+            if(new_com == null){
+                continue;
+            }
             new_com.setCurrent(test.close);
             new_com.setSymbol(Sym);
             //提取daily

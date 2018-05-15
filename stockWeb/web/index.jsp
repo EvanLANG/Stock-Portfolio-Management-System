@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%--
   Created by IntelliJ IDEA.
   User: Chen
@@ -61,7 +62,53 @@
 
             ctx.stroke();
         }
+        function PaintMonthlyLine(sym, data){
+            var cv = document.getElementById(sym);
+            cv.width = 300;
+            cv.height = 80;
+            cv.style.background = "#f7faff";
+            var ctx = cv.getContext("2d");
+            var color_up = "green";
+            var color_down = "#f00";
+            var maxNum = Math.max.apply(null, data);   //求数组中的最大值
+            var times = data[0]/(Math.max.apply(null, data) - Math.min.apply(null, data)),
+                xLength = cv.width,    //x轴的长度
+                yLength = cv.height,  //y轴的长度
+                x0 = 0,  //原点x轴坐标
+                y0 = (1 - data[0]/maxNum) * yLength * times,  //原点y轴坐标
+                yArrow_x = cv.width,  //y轴箭头处坐标x
+                yArrow_y = y0, //y轴箭头处坐标y
+                pointsWidth = xLength/(data.length + 1);    //折线上每个点之间的距离
+            ctx.beginPath();//控制绘制的折线不受坐标轴样式属性的影响
 
+            //绘制y轴
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(yArrow_x, yArrow_y);
+            ctx.strokeStyle = "#92a0ac";
+            //中断（坐标轴和折线的）连接
+            ctx.stroke();
+
+            //绘制折线
+            for (var i = 0; i < data.length; i++) {
+                var pointX =  (i + 1) * pointsWidth;
+                var pointY = (1 - data[i]/maxNum) * yLength * times;
+
+                if (pointY > (1 - data[0]/maxNum) * yLength * times) {
+                    ctx.strokeStyle = color_down;
+                } else {
+                    ctx.strokeStyle = color_up;
+                }
+
+                ctx.lineWidth = pointsWidth - 2;
+                ctx.beginPath();
+                ctx.moveTo(pointX,(1 - data[0]/maxNum) * yLength * times);
+                ctx.lineTo(pointX,pointY);
+                ctx.closePath();
+                ctx.stroke();
+            }
+
+            ctx.stroke();
+        }
     </script>
 </head>
 <style type="text/css">
@@ -302,7 +349,6 @@
          </c:otherwise>
      </c:choose>
 
-    <li><a class="text1" href="/user.jsp" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
     <li><a class="text1" href="/HeadNews.jsp" data-rapid_p="31" data-v9y="1">Events</a></li>
     <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
     <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
@@ -378,8 +424,14 @@
         font-weight: 700;
     }
     .s-stop {
-             color: #999;
+        color: #999;
          }
+    .s-month {
+        color: #999;
+        align:"center";
+        text_align:center;
+        width:100%;
+    }
     .s-up {
         color: #1dbf60;
     }
@@ -467,24 +519,21 @@
                                     <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(status.index)});</script>
                                 </c:otherwise>
                                 </c:choose>
-                                <c:choose>
-                                    <c:when test="${current_comp.followed == 1}">
-                                        <a class="stock-add" id=${current_comp.symbol}f><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:choose>
-                                            <c:when test="${empty sessionScope.user_id}">
-                                                <a class="stock-add" href="/sign_in.jsp" id=${current_comp.symbol}f><button class="">+ Favorite</button></a>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a class="stock-add" id=${current_comp.symbol}f><button class="" onclick="favorite('${current_comp.symbol}')">+ Favorite</button></a>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </c:otherwise>
-                                </c:choose>
-
-
+                            </div><br>
+                            <div class="price s-month " align="center">
+                            <c:choose>
+                            <c:when test="${fn:length(sessionScope.mpricelist.get(status.index))>0}">
+                                    <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}_monthly"></canvas></a>
+                                    <script>PaintMonthlyLine('${current_comp.symbol}_monthly', ${sessionScope.mpricelist.get(status.index)});</script>
+                            </c:when>
+                                <c:otherwise>
+                                    No Monthly Data.
+                                </c:otherwise>
+                            </c:choose>
                             </div>
+                            <br>
+
+
 
                             <div class="bets-content">
 

@@ -13,6 +13,7 @@
 
 <head>
     <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resource/layer-v3.1.1/layer/layer.js"></script>
     <script type="text/javascript">
         function PaintLine(sym, data){
             var cv = document.getElementById(sym);
@@ -232,6 +233,17 @@
                 obj.innerHTML = "<button class=\"\" onclick=\"favorite('"+sym+"')\">+ Favorite</button>";
             }
         })
+
+    }
+    function detail(url) {
+        layer.open({
+            type: 2,
+            title: false,
+            maxmin: true,
+            shadeClose: true, //点击遮罩关闭层
+            area : ['800px' , '520px'],
+            content: url
+        });
     }
 </script>
 
@@ -296,6 +308,20 @@
     <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
     <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
   </ul>
+    <div style="width:100%;">
+        <script>
+            (function() {
+                var cx = '017212697942039301577:vp-tqdegd6g';
+                var gcse = document.createElement('script');
+                gcse.type = 'text/javascript';
+                gcse.async = true;
+                gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(gcse, s);
+            })();
+        </script>
+        <gcse:search></gcse:search>
+    </div>
 </header>
 
 
@@ -411,7 +437,7 @@
                     <div class="stock-info">
                         <div class="stock-bets">
                             <h1>
-                                <a class="bets-name" href="${current_comp.url}" target="_blank">${current_comp.symbol}</a>
+                                <a class="bets-name" href="${current_comp.url}/real-time" target="_blank">${current_comp.symbol}</a>
                             </h1>
                             <div class="price s-stop ">
 

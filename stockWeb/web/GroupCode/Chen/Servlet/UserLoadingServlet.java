@@ -29,29 +29,40 @@ public class UserLoadingServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User)session.getAttribute("user_id");
         getUser(user);
-        System.out.print( user.getFollowString());
+        if(user.getFollow()!= null){
+            String followcoms = getFollows(user.getFollow());
+            user.setFollowcoms(followcoms);
+        }
         List<Company> companies = new ArrayList<Company>();
         String[] symbollist = user.getFollow();
+        String[] snamelist = user.getFollowcoms().split("#");
         List pricelist = new ArrayList();
+        List mpricelist = new ArrayList();
         if(symbollist == null){
             session.setAttribute("user_pricelist", new ArrayList());
             session.setAttribute("user_comp", new ArrayList());
             session.setAttribute("user_complist", new ArrayList());
             session.setAttribute("where", "user");
         }else {
-            for (String Sym : symbollist) {
+            for (int i=0;i<symbollist.length;i++) {
                 //声明
-                System.out.print(Sym);
+                String Sym = symbollist[i];
+                String name = snamelist[i];
                 DataFetch intra_data = new DataFetch(Sym);
                 DataFetch daily_data = new DataFetch(Sym);
+                DataFetch monthly_data = new DataFetch(Sym);
                 //提取intrading day
                 intra_data.Data = getIntraday(Sym);//获取全部数据列表
                 StockDailyRecord test = intra_data.Data.get(0);
                 String current_day = test.TradeDate.substring(0, 10);
 
                 Company new_com = getIntraVolumeLowHigh(intra_data);//获取处理过的数据
+                if(new_com == null){
+                    continue;
+                }
                 new_com.setCurrent(test.close);
                 new_com.setSymbol(Sym);
+                new_com.setComname(name);
                 //提取daily
                 daily_data.Data = getDaily(Sym);//获取全部数据列表
                 StockDailyRecord test1 = daily_data.Data.get(0);
@@ -59,7 +70,7 @@ public class UserLoadingServlet extends HttpServlet {
                 //System.out.println(test1.TradeDate + ","+test1.close);
                 //System.out.println(test2.TradeDate + ","+test2.close);
 
-
+                monthly_data.Data = getMonthly(Sym);
                 float close;
                 //昨日闭盘价
                 if (test1.TradeDate.equals(current_day)) {
@@ -111,8 +122,16 @@ public class UserLoadingServlet extends HttpServlet {
                 }
                 Collections.reverse(current_price);
                 pricelist.add(current_price);
+                List monthly_price = new ArrayList();
+                if(monthly_data.Data.size()>=2) {
+                    for (StockDailyRecord current : monthly_data.Data) {
+                        monthly_price.add(current.close);
+                    }
+                }
+                Collections.reverse(monthly_price);
+                mpricelist.add(monthly_price);
             }
-
+            session.setAttribute("user_mpricelist", mpricelist);
             session.setAttribute("user_pricelist", pricelist);
             session.setAttribute("user_comp", companies);
             session.setAttribute("user_complist", symbollist);

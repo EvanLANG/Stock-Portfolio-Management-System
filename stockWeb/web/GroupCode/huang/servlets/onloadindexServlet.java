@@ -13,9 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static evan.classes.DBTools.getDaily;
-import static evan.classes.DBTools.getIntraVolumeLowHigh;
-import static evan.classes.DBTools.getIntraday;
+import static evan.classes.DBTools.*;
 
 @WebServlet(name = "onloadindexServlet")
 public class onloadindexServlet extends HttpServlet {
@@ -30,6 +28,7 @@ public class onloadindexServlet extends HttpServlet {
         List<Company> companies = new ArrayList<Company>();
         List<String> symbollist = new ArrayList<String>();
         List pricelist = new ArrayList();
+        List mpricelist = new ArrayList();
 
         //想要添加什么公司就在这里做处理
         symbollist.add("MSFT");
@@ -44,12 +43,16 @@ public class onloadindexServlet extends HttpServlet {
             //声明
             DataFetch intra_data = new DataFetch(Sym);
             DataFetch daily_data = new DataFetch(Sym);
+            DataFetch monthly_data = new DataFetch(Sym);
             //提取intrading day
             intra_data.Data = getIntraday(Sym);//获取全部数据列表
             StockDailyRecord test = intra_data.Data.get(0);
             String current_day = test.TradeDate.substring(0,10);
 
             Company new_com = getIntraVolumeLowHigh(intra_data);//获取处理过的数据
+            if(new_com == null){
+                continue;
+            }
             new_com.setCurrent(test.close);
             new_com.setSymbol(Sym);
             //提取daily
@@ -58,7 +61,7 @@ public class onloadindexServlet extends HttpServlet {
             StockDailyRecord test2 = daily_data.Data.get(1);
             //System.out.println(test1.TradeDate + ","+test1.close);
             //System.out.println(test2.TradeDate + ","+test2.close);
-
+            monthly_data.Data = getMonthly(Sym);
 
             float close;
             //昨日闭盘价
@@ -99,9 +102,18 @@ public class onloadindexServlet extends HttpServlet {
             }
             Collections.reverse(current_price);
             pricelist.add(current_price);
+            List monthly_price = new ArrayList();
+            if(monthly_data.Data.size()>=2) {
+                for (StockDailyRecord current : monthly_data.Data) {
+                    monthly_price.add(current.close);
+                }
+            }
+            Collections.reverse(monthly_price);
+            mpricelist.add(monthly_price);
         }
 
         session.setAttribute("pricelist", pricelist);
+        session.setAttribute("mpricelist", mpricelist);
         session.setAttribute("comp", companies);
         session.setAttribute("index_comp", companies);
         session.setAttribute("complist", symbollist);

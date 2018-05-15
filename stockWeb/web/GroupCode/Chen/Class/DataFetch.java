@@ -36,6 +36,8 @@ public class DataFetch {
             if(urlConnection instanceof HttpURLConnection)
             {
                 connection = (HttpURLConnection) urlConnection;
+                connection.setConnectTimeout(20000);
+                connection.setReadTimeout(20000);
             }
             else
             {
@@ -53,7 +55,6 @@ public class DataFetch {
         {
             e.printStackTrace();
         }
-        System.out.println("Json string got.\n");
         return urlString;
     }
     public void IntraData(String ul,String interval) {
@@ -75,11 +76,8 @@ public class DataFetch {
             String TimeSeries = jsonObject.getString("Time Series (" + interval + ")");
             JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
             //迭代器可选择
-            System.out.println("Iterating begins.\n");
             JsonInterator(TimeSeriesObj);
-            System.out.println("Iterating finished.\n");
             getIntraVolumeLowHigh();
-            System.out.println("Intra data obtained.\n");
         }catch(Exception e){
             Dataerror = true;
         }
@@ -153,7 +151,6 @@ public class DataFetch {
             JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
             //可选迭代器
             JsonInterator(TimeSeriesObj);
-            System.out.println("Daily data obtained.\n");
         }catch(Exception e){
             Dataerror = true;
         }
@@ -185,6 +182,7 @@ public class DataFetch {
             String TimeSeries = jsonObject.getString("Monthly Time Series");
             JSONObject TimeSeriesObj = JSONObject.fromObject(TimeSeries);
             JsonInterator(TimeSeriesObj);
+            Data.remove(0);
         }catch(Exception e){
             Dataerror = true;
         }

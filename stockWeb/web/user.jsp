@@ -6,10 +6,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resource/layer-v3.1.1/layer/layer.js"></script>
     <script type="text/javascript">
         function PaintLine(sym, data){
             var cv = document.getElementById(sym);
@@ -21,6 +23,53 @@
             var color_down = "#f00";
             var maxNum = Math.max.apply(null, data);    //求数组中的最大值
             var times = 35,
+                xLength = cv.width,    //x轴的长度
+                yLength = cv.height,  //y轴的长度
+                x0 = 0,  //原点x轴坐标
+                y0 = (1 - data[0]/maxNum) * yLength * times,  //原点y轴坐标
+                yArrow_x = cv.width,  //y轴箭头处坐标x
+                yArrow_y = y0, //y轴箭头处坐标y
+                pointsWidth = xLength/(data.length + 1);    //折线上每个点之间的距离
+            ctx.beginPath();//控制绘制的折线不受坐标轴样式属性的影响
+
+            //绘制y轴
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(yArrow_x, yArrow_y);
+            ctx.strokeStyle = "#92a0ac";
+            //中断（坐标轴和折线的）连接
+            ctx.stroke();
+
+            //绘制折线
+            for (var i = 0; i < data.length; i++) {
+                var pointX =  (i + 1) * pointsWidth;
+                var pointY = (1 - data[i]/maxNum) * yLength * times;
+
+                if (pointY > (1 - data[0]/maxNum) * yLength * times) {
+                    ctx.strokeStyle = color_down;
+                } else {
+                    ctx.strokeStyle = color_up;
+                }
+
+                ctx.lineWidth = pointsWidth - 2;
+                ctx.beginPath();
+                ctx.moveTo(pointX,(1 - data[0]/maxNum) * yLength * times);
+                ctx.lineTo(pointX,pointY);
+                ctx.closePath();
+                ctx.stroke();
+            }
+
+            ctx.stroke();
+        }
+        function PaintMonthlyLine(sym, data){
+            var cv = document.getElementById(sym);
+            cv.width = 300;
+            cv.height = 80;
+            cv.style.background = "#f7faff";
+            var ctx = cv.getContext("2d");
+            var color_up = "green";
+            var color_down = "#f00";
+            var maxNum = Math.max.apply(null, data);   //求数组中的最大值
+            var times = data[0]/(Math.max.apply(null, data) - Math.min.apply(null, data)),
                 xLength = cv.width,    //x轴的长度
                 yLength = cv.height,  //y轴的长度
                 x0 = 0,  //原点x轴坐标
@@ -188,7 +237,7 @@
         position:relative;
         margin-left: auto;
         margin-right: auto;
-        background-color: white;
+        background-image: url(picture/background.jpg)
     }
 
 
@@ -225,12 +274,12 @@
         window.location.reload();
     }
     function get_new_messages() {
-        var follow = "${sessionScope.user_id.followcoms}";
-        if(follow) {
-            var arr = follow.split("#");
-            var num = Math.min(10,arr.length);
-            loadDocfirst(arr.slice(0,num));
-        }
+        //var follow = "${sessionScope.user_id.followcoms}";
+        //if(follow) {
+        //    var arr = follow.split("#");
+         //   var num = Math.min(10,arr.length);
+        //    loadDocfirst(arr.slice(0,num));
+        //}
         if ((${sessionScope.user_comp == null}) || (${sessionScope.where != "user"}))
             $.ajax({
                 type: 'post',
@@ -241,6 +290,57 @@
                     setTimeout(myreload(),6000);
                 }
             });
+    }
+    function display_news(company) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var obj = JSON.parse(this.responseText);
+                var x = obj.articles
+                show_news(x);
+            }
+        };
+        var begin = new Date();
+        var end = new Date();
+        begin.setDate(begin.getDate() - 30);
+        var byear = begin.getFullYear();
+        var bmonth = begin.getMonth() + 1;
+        var bday = begin.getDate();
+        var eyear = end.getFullYear();
+        var emonth = end.getMonth() + 1;
+        var eday = end.getDate();
+        var bdate = byear + "-" + bmonth + "-" + bday;
+        var edate = eyear + "-" + emonth + "-" + eday;
+        //xhttp.open("GET", "https://api.nytimes.com/svc/mostpopular/v2/mostviewed/Business%20Day/1.json?api-key=e716033797834288814805dc70eb4907", true);
+        xhttp.open("GET", "https://newsapi.org/v2/everything?q=" + company + "&sources=google-news,abc-news,bbc-news,business-insider&sortBy=popularity&from="+bdate+"&to="+edate+"&apiKey=3d0faee4c870480d904014c95c5759fb", true);
+        xhttp.send();
+    }
+    function show_news(x) {
+        var i;
+        var out='<style>' +
+            '#sansserif{font-family:Arial,Helvetica,sans-serif;}' +
+            '</style>';
+
+        for (i = 0; i < x.length; i++) {
+            if(x[i].urlToImage == null){
+                out += '<p><span><a style="display:block"  href="' + x[i].url + '"target="_blank" id="sansserif">  ' + x[i].title + "</a></span><br>"+""+'<span id="sansserif" >  '+x[i].description+'</span><br><span class="small" id="sansserif">  '+x[i].author+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+x[i].publishedAt+'</span><br><br>';
+            }else{
+                out += '<p><span><a style="display:block"  href="' + x[i].url + '"target="_blank" id="sansserif">  ' + x[i].title + '</a></span><br><img  src='+ x[i].urlToImage +' alt="Error" width="210" height="140" ><br><span class="small" id="sansserif">  '+x[i].description+'</span><br><span class="small" id="sansserif">  '+x[i].author+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+x[i].publishedAt+'</span><br><br>';
+            }
+
+        }
+        layer.open({
+            type: 1,
+            shade: 0,
+            resize:false,
+            offset: ['50px', ''],
+            title:  ['Related News', 'font-size:15px;'],
+            moveType: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['600px', '450px'], //宽高
+            content: '<div style="padding:20px;">'+out+'</div>'
+        });
+
     }
 </script>
 
@@ -305,6 +405,20 @@
         <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
         <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
     </ul>
+    <div style="width:100%;">
+        <script>
+            (function() {
+                var cx = '017212697942039301577:vp-tqdegd6g';
+                var gcse = document.createElement('script');
+                gcse.type = 'text/javascript';
+                gcse.async = true;
+                gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(gcse, s);
+            })();
+        </script>
+        <gcse:search></gcse:search>
+    </div>
 </header>
 
 
@@ -365,6 +479,10 @@
         .s-stop {
             color: #999;
         }
+        .s-month {
+            color: #999;
+            align:"center";
+        }
         .s-up {
             color: #1dbf60;
         }
@@ -381,7 +499,7 @@
             text-align: -webkit-match-parent;
         }
         .stock-info .stock-add button {
-            width: 200px;
+            width: 100px;
             height: 40px;
             background-color: #2e85ff;
             border: 0;
@@ -403,84 +521,14 @@
         .bets-name {
             font-family: DIN,"Microsoft YaHei",Arial,sans-serif;
         }
-        .content_left{  width:35%;  min-height:800px;  float:left;  text-align:left;
+        .content_left{  width:28%;  min-height:800px;  float:left;  text-align:left;
             border-left:1px solid #BDBDBD;
-            margin:0;  }
-        .content_right{  width:63%;  min-height:800px;  float:right;  margin:0;  text-align:left;  background-color: #f7faff;}
+            margin:0;
+            background-color: #f7faff;}
+        .content_right{  width:69%;  min-height:800px;  float:right;  margin:0;  text-align:left;  background-color: #f7faff;}
     </style>
 
-    <div class="content_left" id="news_list">
-
-        <h4 id="0"></h4>
-        <h4 id="1"></h4>
-        <h4 id="2"></h4>
-        <h4 id="3"></h4>
-        <h4 id="4"></h4>
-        <h4 id="5"></h4>
-        <h4 id="6"></h4>
-        <h4 id="7"></h4>
-        <h4 id="8"></h4>
-        <h4 id="9"></h4>
-        <h4 id="10"></h4>
-
-        <!-- these tags will be replaced by news content, modify them to the right place!!!-->
-        <script>
-
-            function loadDoc(a,i) {
-                var xhttp = new XMLHttpRequest();
-                xhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        var obj = JSON.parse(this.responseText);
-                        var item = obj.articles
-                        myFunction(item,i);
-                    }
-                };
-                var begin = new Date();
-                var end = new Date();
-                begin.setDate(begin.getDate()-7);
-                var byear = begin.getFullYear();
-                var bmonth = begin.getMonth()+1;
-                var bday = begin.getDate();
-                var eyear = end.getFullYear();
-                var emonth = end.getMonth()+1;
-                var eday = end.getDate();
-                var bdate = byear+"-"+bmonth+"-"+bday;
-                var edate = eyear+"-"+emonth+"-"+eday;
-                //xhttp.open("GET", "https://api.nytimes.com/svc/mostpopular/v2/mostviewed/Business%20Day/1.json?api-key=e716033797834288814805dc70eb4907", true);
-                xhttp.open("GET", "https://newsapi.org/v2/everything?q="+a+"&from="+bdate+"&to="+edate+"&sortBy=popularity&sources=abc-news&apiKey=3d0faee4c870480d904014c95c5759fb", true);
-                xhttp.send();
-            }
-            function myFunction(x,p) {
-                var i;
-                var out="";
-                var max = Math.min(2,x.length);
-
-                for (i = 0; i < max; i++) {
-                    if(x[i].urlToImage == null){
-                        out += '<p><span><a href="' + x[i].url + '"target="_blank">' + x[i].title + "</a></span><br>"+""+'<span class="small">'+x[i].description+'</span><br><span class="small">'+x[i].author+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+x[i].publishedAt+'</span><br><br>';
-                    }else{
-                        out += '<p><span><a href="' + x[i].url + '"target="_blank">' + x[i].title + "</a></span><br><img src="+ x[i].urlToImage +' alt="Error" width="210" height="140"><br><span class="small">'+x[i].description+'</span><br><span class="small">'+x[i].author+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp'+x[i].publishedAt+'</span><br><br>';
-                    }
-
-                }
-                document.getElementById(p).innerHTML=out;
-
-            }
-            function loadDocfirst(follow){
-                //get symbols or names here to search!!!!!!
-                //modify code to search!!!
-                //var terms = new Array("msft","xiaomi","apple");
-                var i;
-                for(i=0;i<follow.length;i++){
-                    loadDoc(follow[i],i);
-                }
-
-            }
-        </script>
-
-    </div>
-
-    <div class="content_right" >
+    <div id="content_mid" class="mainContext" >
         <c:choose>
             <c:when test="${empty sessionScope.index_comp || sessionScope.where!='user'}">
                 <img alt="" src="picture/loading.gif" style="vertical-align: middle" />
@@ -515,8 +563,20 @@
                                         <script>PaintLine('${current_comp.symbol}', ${sessionScope.user_pricelist.get(status.index)});</script>
                                     </c:otherwise>
                                 </c:choose>
+                                <a class="stock-add"><button class="" onclick="display_news('${current_comp.comname}')">News</button></a>
+                            </div>
 
 
+                            <div class="price s-month " align="center">
+                                <c:choose>
+                                    <c:when test="${fn:length(sessionScope.user_mpricelist.get(status.index))>0}">
+                                        <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}_monthly"></canvas></a>
+                                        <script>PaintMonthlyLine('${current_comp.symbol}_monthly', ${sessionScope.user_mpricelist.get(status.index)});</script>
+                                    </c:when>
+                                    <c:otherwise>
+                                        No Monthly Data.
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
 
                             <div class="bets-content">

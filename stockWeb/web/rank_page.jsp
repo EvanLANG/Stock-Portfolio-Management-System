@@ -112,6 +112,7 @@
             })
         }
     </script>
+
 </head>
 <style type="text/css">
     ._1SQmm {
@@ -321,6 +322,20 @@
         <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
         <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
     </ul>
+    <div style="width:100%;">
+        <script>
+            (function() {
+                var cx = '017212697942039301577:vp-tqdegd6g';
+                var gcse = document.createElement('script');
+                gcse.type = 'text/javascript';
+                gcse.async = true;
+                gcse.src = 'https://cse.google.com/cse.js?cx=' + cx;
+                var s = document.getElementsByTagName('script')[0];
+                s.parentNode.insertBefore(gcse, s);
+            })();
+        </script>
+        <gcse:search></gcse:search>
+    </div>
 </header>
 
 <div id="container" class="mainContext">

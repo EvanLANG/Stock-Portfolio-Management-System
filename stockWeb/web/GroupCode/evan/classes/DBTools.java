@@ -6,6 +6,7 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 //import Chen.Class.StockDailyRecord;
@@ -168,11 +169,18 @@ public class DBTools {
         Connection conn = getConn();
         ArrayList<StockDailyRecord> result = new ArrayList<StockDailyRecord>();
         String sql = "select * from "+symbol+"_monthly order by timestamp DESC";
+        Calendar now = Calendar.getInstance();
         PreparedStatement pstmt;
         try {
             pstmt = (PreparedStatement)conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
+            int year = now.get(Calendar.YEAR);
+            int new_year = 0;
             while (rs.next()) {
+                new_year = Integer.parseInt(rs.getString("timestamp").substring(0,4));
+                if(year-new_year>1){
+                    break;
+                }
                 result.add(readData(rs));
             }
             conn.close();
@@ -223,22 +231,26 @@ public class DBTools {
         StockDailyRecord first_day = Data.get(0);
         String day = first_day.TradeDate.substring(0,10);
         int index = 0;
-        while(true){
-            StockDailyRecord current = Data.get(index);
-            if(current.TradeDate.substring(0,10).equals(day)){
-                data.TotalV += current.volume;
-                if(current.high>data.current_high){
-                    data.current_high = current.high;
+        try {
+            while (true) {
+                StockDailyRecord current = Data.get(index);
+                if (current.TradeDate.substring(0, 10).equals(day)) {
+                    data.TotalV += current.volume;
+                    if (current.high > data.current_high) {
+                        data.current_high = current.high;
+                    }
+                    if (current.low < data.current_low) {
+                        data.current_low = current.low;
+                    }
+                    index++;
+                    //System.out.println("index:"+index+",");
+                } else {
+                    data.newest_open = Data.get(index - 1).open;
+                    break;
                 }
-                if(current.low < data.current_low){
-                    data.current_low = current.low;
-                }
-                index++;
-                //System.out.println("index:"+index+",");
-            }else{
-                data.newest_open = Data.get(index-1).open;
-                break;
             }
+        }catch(Exception e){
+            return null;
         }
         com.setSymbol(data.Symbol);
         //从今日开盘到目前为止累积的交易总量
