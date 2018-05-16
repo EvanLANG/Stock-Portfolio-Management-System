@@ -42,6 +42,7 @@ public class searchServlet extends HttpServlet {
         List<Company> companies = new ArrayList<Company>();
         List<String> recordllist = new ArrayList<String>();
         List pricelist = new ArrayList();
+        List mpricelist = new ArrayList();
         User user = (User)session.getAttribute("user_id");
         DBTools db = new DBTools();
         Connection conn = getConn();
@@ -96,6 +97,7 @@ public class searchServlet extends HttpServlet {
             }
             DataFetch intra_data = new DataFetch(Sym);
             DataFetch daily_data = new DataFetch(Sym);
+            DataFetch monthly_data = new DataFetch(Sym);
             //提取intrading day
             intra_data.Data = null;
             if(intra_map.get(Sym)!=null&&intra_map.get(Sym).Data.size()!=0){
@@ -123,7 +125,7 @@ public class searchServlet extends HttpServlet {
             //System.out.println(test1.TradeDate + ","+test1.close);
             //System.out.println(test2.TradeDate + ","+test2.close);
 
-
+            monthly_data.Data = getMonthly(Sym);
             float close;
             //昨日闭盘价
             if (test1.TradeDate.equals(current_day)) {
@@ -173,8 +175,16 @@ public class searchServlet extends HttpServlet {
             }
             Collections.reverse(current_price);
             pricelist.add(current_price);
+            List monthly_price = new ArrayList();
+            if(monthly_data.Data.size()>=2) {
+                for (StockDailyRecord current : monthly_data.Data) {
+                    monthly_price.add(current.close);
+                }
+            }
+            Collections.reverse(monthly_price);
+            mpricelist.add(monthly_price);
         }
-
+        session.setAttribute("mpricelist", mpricelist);
         session.setAttribute("pricelist", pricelist);
         session.setAttribute("comp", companies);
         session.setAttribute("complist", symbollist);

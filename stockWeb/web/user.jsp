@@ -16,55 +16,8 @@
         function PaintLine(sym, data){
             var cv = document.getElementById(sym);
             cv.width = 300;
-            cv.height = 60;
-            cv.style.background = "#f7faff";
-            var ctx = cv.getContext("2d");
-            var color_up = "green";
-            var color_down = "#f00";
-            var maxNum = Math.max.apply(null, data);    //求数组中的最大值
-            var times = 35,
-                xLength = cv.width,    //x轴的长度
-                yLength = cv.height,  //y轴的长度
-                x0 = 0,  //原点x轴坐标
-                y0 = (1 - data[0]/maxNum) * yLength * times,  //原点y轴坐标
-                yArrow_x = cv.width,  //y轴箭头处坐标x
-                yArrow_y = y0, //y轴箭头处坐标y
-                pointsWidth = xLength/(data.length + 1);    //折线上每个点之间的距离
-            ctx.beginPath();//控制绘制的折线不受坐标轴样式属性的影响
-
-            //绘制y轴
-            ctx.moveTo(x0, y0);
-            ctx.lineTo(yArrow_x, yArrow_y);
-            ctx.strokeStyle = "#92a0ac";
-            //中断（坐标轴和折线的）连接
-            ctx.stroke();
-
-            //绘制折线
-            for (var i = 0; i < data.length; i++) {
-                var pointX =  (i + 1) * pointsWidth;
-                var pointY = (1 - data[i]/maxNum) * yLength * times;
-
-                if (pointY > (1 - data[0]/maxNum) * yLength * times) {
-                    ctx.strokeStyle = color_down;
-                } else {
-                    ctx.strokeStyle = color_up;
-                }
-
-                ctx.lineWidth = pointsWidth - 2;
-                ctx.beginPath();
-                ctx.moveTo(pointX,(1 - data[0]/maxNum) * yLength * times);
-                ctx.lineTo(pointX,pointY);
-                ctx.closePath();
-                ctx.stroke();
-            }
-
-            ctx.stroke();
-        }
-        function PaintMonthlyLine(sym, data){
-            var cv = document.getElementById(sym);
-            cv.width = 300;
-            cv.height = 80;
-            cv.style.background = "#f7faff";
+            cv.height = 100;
+            cv.style.background = "#fff";
             var ctx = cv.getContext("2d");
             var color_up = "green";
             var color_down = "#f00";
@@ -77,15 +30,18 @@
                 yArrow_x = cv.width,  //y轴箭头处坐标x
                 yArrow_y = y0, //y轴箭头处坐标y
                 pointsWidth = xLength/(data.length + 1);    //折线上每个点之间的距离
+            if (data.length==0) {ctx.font="25px Arial";  ctx.strokeText("No Daily data", 150,20); return;}
+            ctx.globalAlpha = 0.25;
+            ctx.font="50px Arial";  ctx.strokeText("Daily data", 20,65);
             ctx.beginPath();//控制绘制的折线不受坐标轴样式属性的影响
-
             //绘制y轴
+            ctx.globalAlpha = 1;
             ctx.moveTo(x0, y0);
             ctx.lineTo(yArrow_x, yArrow_y);
             ctx.strokeStyle = "#92a0ac";
             //中断（坐标轴和折线的）连接
             ctx.stroke();
-
+            ctx.globalAlpha = 0.6;
             //绘制折线
             for (var i = 0; i < data.length; i++) {
                 var pointX =  (i + 1) * pointsWidth;
@@ -104,8 +60,66 @@
                 ctx.closePath();
                 ctx.stroke();
             }
-
+        }
+        function PaintMonthlyLine(sym, data){
+            var cv = document.getElementById(sym);
+            cv.width = 300;
+            cv.height = 100;
+            cv.style.background = "#fff";
+            var ctx = cv.getContext("2d");
+            var color_up = "green";
+            var color_down = "#f00";
+            var maxNum = Math.max.apply(null, data);   //求数组中的最大值
+            var times = data[0]/(Math.max.apply(null, data) - Math.min.apply(null, data)),
+                xLength = cv.width,    //x轴的长度
+                yLength = cv.height,  //y轴的长度
+                x0 = 0,  //原点x轴坐标
+                y0 = (1 - data[0]/maxNum) * yLength * times,  //原点y轴坐标
+                yArrow_x = cv.width,  //y轴箭头处坐标x
+                yArrow_y = y0, //y轴箭头处坐标y
+                pointsWidth = xLength/(data.length + 1);    //折线上每个点之间的距离
+            if (data.length==0) {ctx.font="25px Arial";  ctx.strokeText("No Monthly data", 50,30); return;}
+            ctx.globalAlpha = 0.25;
+            ctx.font="50px Arial";  ctx.strokeText("Monthly data", 10,65);
+            ctx.beginPath();//控制绘制的折线不受坐标轴样式属性的影响
+            //绘制y轴
+            ctx.globalAlpha = 1;
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(yArrow_x, yArrow_y);
+            ctx.strokeStyle = "#92a0ac";
+            //中断（坐标轴和折线的）连接
             ctx.stroke();
+
+            ctx.globalAlpha = 0.6;
+            //绘制折线
+            for (var i = 0; i < data.length; i++) {
+                var pointX =  (i + 1) * pointsWidth;
+                var pointY = (1 - data[i]/maxNum) * yLength * times;
+
+                if (pointY > (1 - data[0]/maxNum) * yLength * times) {
+                    ctx.strokeStyle = color_down;
+                } else {
+                    ctx.strokeStyle = color_up;
+                }
+
+                ctx.lineWidth = pointsWidth - 2;
+                ctx.beginPath();
+                ctx.moveTo(pointX,(1 - data[0]/maxNum) * yLength * times);
+                ctx.lineTo(pointX,pointY);
+                ctx.closePath();
+                ctx.stroke();
+            }
+        }
+
+        function changegraph(sig, sym, data, data2){
+            ch=document.getElementById(sym + '_graph');
+            if (sig == 'M') {
+                PaintMonthlyLine(sym, data);
+                ch.innerHTML="<button onclick=\"changegraph('D','"+sym+"',["+data2+"],["+data+"])\">To Daily</button>";
+            }else {
+                PaintLine(sym, data);
+                ch.innerHTML="<button onclick=\"changegraph('M','"+sym+"',["+data2+"],["+data+"])\">To Monthly</button>";
+            }
         }
         function cancel(sym) {
             $.ajax({
@@ -138,11 +152,11 @@
         font-family: PingFangSC-Regular,HelveticaNeue-Light,'Helvetica Neue Light','Microsoft YaHei',sans-serif;
     }
     .Bgc {
-        background-color: black;
+        background-color: white;
     }
     .h1c {
         padding: 3.33333px;
-        color: white;
+        color: black;
     }
 
     .header1 {
@@ -163,9 +177,12 @@
         width: 450px;
         height: 26px;
         transition: color .3s,border .3s;
-        color: white;
-        border-bottom: 1px solid #aaa;
-        background: black;
+        color: black;
+        border-bottom: 1px solid #d6d6d6;
+        border-top: 1px solid #d6d6d6;
+        border-left: 1px solid #d6d6d6;
+        border-right: 1px solid #d6d6d6;
+        background: #ffffff;
     }
 
     .hide {
@@ -179,10 +196,11 @@
     }
 
     .btn {
-        background:url("picture/search.jpg")
-        no-repeat left top;
+        background:url("picture/search.jpg");
+        background-size: cover;
+        no-repeat:left top;
         padding-bottom:4px;
-        width: 20px;
+        width: 22px;
     }
 
     li.line {
@@ -195,12 +213,13 @@
     }
 
     .h2c {
-        background-color: black;
+        background-color: white;
         list-style: none;
-        font-weight: 600;
-        color: white;
-        padding: 0 20px;
-        margin: 0 auto;
+    <%--font-weight: 600;--%>
+    color: #000;
+    padding: 0 20px;
+    margin: 0 auto;
+    border-bottom: 1px solid #f1f1f1;
     }
     .h2c>li {
         -webkit-transition: opacity .3s;
@@ -210,22 +229,23 @@
         margin-right: 30px;
     }
     .h2c a:link, .h2c a:visited {
-        color: white;
+        color: #030303;
         text-decoration: none;
         display: block;
     }
     .text1 {
+    font-family:Arial,Helvetica,sans-serif;<%--marked --%>
         display: block;
         cursor: pointer;
+        color:black;
         line-height: 36px;
     }
     #content_mid {
         margin-left: auto;
         margin-right: auto;
-        width: 60%;
+        width: 70%;
         text-align: center;
-        border-right: 1px solid #BDBDBD;
-        border-left: 1px solid #BDBDBD;
+
         background-color: white;
     }
 
@@ -334,7 +354,7 @@
             shade: 0,
             resize:false,
             offset: ['50px', ''],
-            title:  ['Related News', 'font-size:15px;'],
+            title:  ['Related News', 'font-size:15px;font-family:Arial,Helvetica,sans-serif;'],
             moveType: 1,
             skin: 'layui-layer-rim', //加上边框
             area: ['600px', '450px'], //宽高
@@ -350,7 +370,7 @@
     <ul class="_1SQmm Bgc">
 
         <li class=""><a class="h1c" id="home" href="index.jsp" data-rapid_p="1" data-v9y="1">
-            <svg width="18" height="18" viewBox="0 0 32 32" style="fill: white;">
+            <svg width="18" height="18" viewBox="0 0 32 32" style="fill: black;">
                 <path d="M16.153 3.224L0 16.962h4.314v11.814h9.87v-8.003h3.934v8.003h9.84V16.962H32"></path>
             </svg>
             Home
@@ -381,14 +401,14 @@
         <li class="line"></li>
 
         <li id="min-search">
-            <form id="formUrl" action="searchServlet" method="get" target="_blank" >
-                <input id="pin-input" class="pin-input" type="text" name="kw" placeholder="Search for symbols...">
+            <form id="formUrl" action="searchServlet" method="get" >
+                <input id="pin-input" class="pin-input" type="text" name="kw" placeholder="Search for stocks...">
                 <input class="btn" type="button" id="topSearchSubmit" data-eid="qd_A62" onclick="submit()">
             </form>
         </li>
     </ul>
 
-    <div style="height:200px;"><img class="pic" src="picture/background3.jpg" align="right" /></div>
+    <div style="height:200px;"><img class="pic" style="width:100%; height:100%;" src="picture/background3.jpg"  /></div>
 
     <ul class="h2c">
         <li><a class="text1" href="/index.jsp" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
@@ -431,8 +451,7 @@
         .stock-info {
             text-align: left;
             padding: 10px 20px;
-            background-color: #f7faff;
-            border-top: #e9edf0 solid 2px;
+            background-color: #ffffff;
         }
         .stock-info .stock-bets h1 a {
             color: #333;
@@ -456,9 +475,10 @@
 
         .stock-info .bets-content {
             margin-top: 20px;
-            border-top: #e9edf0 solid 1px;
+        <%--border-top: #e9edf0 solid 1px;--%>
             padding: 14px 0;
             height: 40px;
+            border-bottom: 1px solid #f0ecf0;
         }
 
         .stock-info .bets-content .bets-col-9 dl {
@@ -479,10 +499,6 @@
         .s-stop {
             color: #999;
         }
-        .s-month {
-            color: #999;
-            align:"center";
-        }
         .s-up {
             color: #1dbf60;
         }
@@ -499,12 +515,12 @@
             text-align: -webkit-match-parent;
         }
         .stock-info .stock-add button {
-            width: 100px;
-            height: 40px;
-            background-color: #2e85ff;
-            border: 0;
-            border-radius: 4px;
-            font-size: 16px;
+            width: 80px;
+            height: 30px;
+            background-color: #1dbf60;
+            border: 20;
+            border-radius: 5px;
+            font-size: 10px;
             color: #FFF;
             cursor: pointer;
         }
@@ -521,11 +537,23 @@
         .bets-name {
             font-family: DIN,"Microsoft YaHei",Arial,sans-serif;
         }
-        .content_left{  width:28%;  min-height:800px;  float:left;  text-align:left;
-            border-left:1px solid #BDBDBD;
-            margin:0;
-            background-color: #f7faff;}
-        .content_right{  width:69%;  min-height:800px;  float:right;  margin:0;  text-align:left;  background-color: #f7faff;}
+        button {
+            width: 80px;
+            height: 30px;
+            background-color: #1dbf60;
+            border: 20;
+            border-radius: 5px;
+            font-size: 10px;
+            color: #FFF;
+            cursor: pointer;
+        }
+        .ranktop{
+            padding-top: 30px;
+            font-family:Arial,Helvetica,sans-serif;<%--marked --%>
+            font-size:25px;
+            font-weight:600;
+        }
+
     </style>
 
     <div id="content_mid" class="mainContext" >
@@ -551,33 +579,24 @@
                                         <span class = s-up>${current_comp.change}</span>
                                         <span class = s-up>${current_comp.change_percent}%</span>
                                         <span class = s-up></span>
-                                        <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
-                                        <script>PaintLine('${current_comp.symbol}', ${sessionScope.user_pricelist.get(status.index)});</script>
                                     </c:when>
                                     <c:otherwise>
                                         <strong class="_close s-down">${current_comp.current}</strong>
                                         <span class = s-down>${current_comp.change}</span>
                                         <span class = s-down>${current_comp.change_percent}%</span>
                                         <span class = s-down></span>
-                                        <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
-                                        <script>PaintLine('${current_comp.symbol}', ${sessionScope.user_pricelist.get(status.index)});</script>
                                     </c:otherwise>
                                 </c:choose>
-                                <a class="stock-add"><button class="" onclick="display_news('${current_comp.comname}')">News</button></a>
+                                <a class="stock-chart">
+                                    <canvas width="300" height="100" id="${current_comp.symbol}"></canvas>
+                                    <script>PaintLine('${current_comp.symbol}', ${sessionScope.user_pricelist.get(status.index)});</script>
+                                    <a style="" id="${current_comp.symbol}_graph">
+                                        <button onclick="changegraph('M', '${current_comp.symbol}',${sessionScope.user_mpricelist.get(status.index)},${sessionScope.user_pricelist.get(status.index)} )">To Monthly</button>
+                                    </a>
+                                </a>
+                                <a class="stock-add"><button  onclick="display_news('${current_comp.comname}')">News</button></a>
                             </div>
 
-
-                            <div class="price s-month " align="center">
-                                <c:choose>
-                                    <c:when test="${fn:length(sessionScope.user_mpricelist.get(status.index))>0}">
-                                        <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}_monthly"></canvas></a>
-                                        <script>PaintMonthlyLine('${current_comp.symbol}_monthly', ${sessionScope.user_mpricelist.get(status.index)});</script>
-                                    </c:when>
-                                    <c:otherwise>
-                                        No Monthly Data.
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
 
                             <div class="bets-content">
 
@@ -602,7 +621,7 @@
                                     <dl><dt>Open</dt><dd class="">${current_comp.open}</dd></dl>
                                     <dl><dt>Close</dt><dd>${current_comp.close}</dd></dl>
                                     <dl><dt>Volume</dt><dd>${current_comp.volume}</dd></dl>
-                                    <a class="stock-add"><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
+                                    <a class="stock-add"><button  onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
                                 </div>
                             </div>
                         </div>

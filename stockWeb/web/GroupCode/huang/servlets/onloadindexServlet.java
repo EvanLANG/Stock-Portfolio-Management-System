@@ -92,13 +92,16 @@ public class onloadindexServlet extends HttpServlet {
             String day = first_day.TradeDate.substring(0,10);
             int index = 0;
             List current_price = new ArrayList();
-            while(true){
+            while (true) {
                 StockDailyRecord current = intra_data.Data.get(index);
-                if(current.TradeDate.substring(0,10).equals(day)){
+                if (current.TradeDate.substring(0, 10).equals(day)) {
                     current_price.add(current.close);
                     index++;
                     //System.out.println("index:"+index+",");
-                }else{ index--;  break; }
+                } else {
+                    current_price.add(current.close);
+                    break;
+                }
             }
             Collections.reverse(current_price);
             pricelist.add(current_price);

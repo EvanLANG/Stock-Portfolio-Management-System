@@ -1,5 +1,6 @@
 package evan.classes;
 
+import java.math.BigDecimal;
 import java.sql.*;
 //import java.text.DateFormat;
 //import java.text.SimpleDateFormat;
@@ -262,11 +263,12 @@ public class DBTools {
         com.setLow(data.current_low);
         return com;
     }
-    public static int insertusers(String email, String uid, String uname, String upasswd, String risklevel, String favo, String birthdate, String gender) {
+
+    public static int insertusers(String email, String uid, String uname, String upasswd) {
         Connection conn = getConn();
         //String id = null;
         int i = 0;
-        String sql = "insert into users" + "(email,uid,uname,upasswd,risklevel,favo,birthdate,gender) values(?,?,?,?,?,?,?,?)";
+        String sql = "insert into users" + "(email,uid,uname,upasswd) values(?,?,?,?)";
         PreparedStatement pstmt;
         try {
             pstmt = (PreparedStatement) conn.prepareStatement(sql);
@@ -274,10 +276,10 @@ public class DBTools {
             pstmt.setString(2, uid);
             pstmt.setString(3, uname);
             pstmt.setString(4, upasswd);
-            pstmt.setString(5, risklevel);
-            pstmt.setString(6, favo);
-            pstmt.setString(7, birthdate);
-            pstmt.setString(8, gender);
+            //pstmt.setString(5, risklevel);
+            //pstmt.setString(6, favo);
+            //pstmt.setString(7, birthdate);
+            //pstmt.setString(8, gender);
 
             i = pstmt.executeUpdate();
             pstmt.close();
@@ -585,25 +587,37 @@ public class DBTools {
         Connection conn = getConn();
         List<RankObject> list = new ArrayList<RankObject>();
         ArrayList<String> namelist = getSymbols();
-        String sql="";
+        //String sql = "insert into " + id + "(timestamp,open,high,low,close,volume) values(?,?,?,?,?,?)";
         PreparedStatement pstmt = null;
         try {
-            for(String symbol:namelist) {
-                sql = "select * from " + symbol + "_daily order by timestamp DESC";
-                pstmt = (PreparedStatement) conn.prepareStatement(sql);
-                ResultSet rs = pstmt.executeQuery();
-                RankObject object = new RankObject();
-                object.setSym(symbol);
-                while (rs.next()) {
-                    float open = rs.getFloat("open");
-                    float close = rs.getFloat("close");
+            for(int i=0;i<namelist.size();i++) {
+                System.out.println(i);
+                String symbol = namelist.get(i);
+                try {
+                    pstmt = (PreparedStatement) conn.prepareStatement("select close from "+symbol+"_monthly order by timestamp DESC");
+                    ResultSet rs = pstmt.executeQuery();
+                    RankObject object = new RankObject();
+                    object.setSym(symbol);
+                    float open = 0;
+                    float close = 0;
+                    int count = 0;
+                    while (rs.next()) {
+                        if(count==0){
+                            close = rs.getFloat("close");
+                            count++;
+                        }else{
+                            open = rs.getFloat("close");
+                            break;
+                        }
+                    }
                     object.setRiseAndFall((close-open)/open);
-                    break;
-                }
-                if(isInfinite(object.getRiseAndFall())){
+                    if(isInfinite(object.getRiseAndFall())){
+                        continue;
+                    }
+                    list.add(object);
+                }catch(SQLException E){
                     continue;
                 }
-                list.add(object);
             }
             pstmt.close();
             conn.close();
@@ -614,6 +628,7 @@ public class DBTools {
             }catch(SQLException E){; }
         }
         Collections.sort(list, new RiseNFallComparator());
+        System.out.println(list.size());
         return list.subList(0,20);
     }
 

@@ -13,13 +13,13 @@
     <script type="text/javascript">
         function PaintLine(sym, data){
             var cv = document.getElementById(sym);
-            cv.width = 150;
-            cv.height = 30;
-            cv.style.background = "#f7faff";
+            cv.width = 300;
+            cv.height = 100;
+            cv.style.background = "#fff";
             var ctx = cv.getContext("2d");
             var color_up = "green";
             var color_down = "#f00";
-            var maxNum = Math.max.apply(null, data);    //求数组中的最大值
+            var maxNum = Math.max.apply(null, data);   //求数组中的最大值
             var times = data[0]/(Math.max.apply(null, data) - Math.min.apply(null, data)),
                 xLength = cv.width,    //x轴的长度
                 yLength = cv.height,  //y轴的长度
@@ -28,15 +28,18 @@
                 yArrow_x = cv.width,  //y轴箭头处坐标x
                 yArrow_y = y0, //y轴箭头处坐标y
                 pointsWidth = xLength/(data.length + 1);    //折线上每个点之间的距离
+            if (data.length==0) {ctx.font="25px Arial";  ctx.strokeText("No Daily data", 150,20); return;}
+            ctx.globalAlpha = 0.25;
+            ctx.font="50px Arial";  ctx.strokeText("Daily data", 20,65);
             ctx.beginPath();//控制绘制的折线不受坐标轴样式属性的影响
-
             //绘制y轴
+            ctx.globalAlpha = 1;
             ctx.moveTo(x0, y0);
             ctx.lineTo(yArrow_x, yArrow_y);
             ctx.strokeStyle = "#92a0ac";
             //中断（坐标轴和折线的）连接
             ctx.stroke();
-
+            ctx.globalAlpha = 0.6;
             //绘制折线
             for (var i = 0; i < data.length; i++) {
                 var pointX =  (i + 1) * pointsWidth;
@@ -55,8 +58,66 @@
                 ctx.closePath();
                 ctx.stroke();
             }
-
+        }
+        function PaintMonthlyLine(sym, data){
+            var cv = document.getElementById(sym);
+            cv.width = 300;
+            cv.height = 100;
+            cv.style.background = "#fff";
+            var ctx = cv.getContext("2d");
+            var color_up = "green";
+            var color_down = "#f00";
+            var maxNum = Math.max.apply(null, data);   //求数组中的最大值
+            var times = data[0]/(Math.max.apply(null, data) - Math.min.apply(null, data)),
+                xLength = cv.width,    //x轴的长度
+                yLength = cv.height,  //y轴的长度
+                x0 = 0,  //原点x轴坐标
+                y0 = (1 - data[0]/maxNum) * yLength * times,  //原点y轴坐标
+                yArrow_x = cv.width,  //y轴箭头处坐标x
+                yArrow_y = y0, //y轴箭头处坐标y
+                pointsWidth = xLength/(data.length + 1);    //折线上每个点之间的距离
+            if (data.length==0) {ctx.font="25px Arial";  ctx.strokeText("No Monthly data", 50,30); return;}
+            ctx.globalAlpha = 0.25;
+            ctx.font="50px Arial";  ctx.strokeText("Monthly data", 10,65);
+            ctx.beginPath();//控制绘制的折线不受坐标轴样式属性的影响
+            //绘制y轴
+            ctx.globalAlpha = 1;
+            ctx.moveTo(x0, y0);
+            ctx.lineTo(yArrow_x, yArrow_y);
+            ctx.strokeStyle = "#92a0ac";
+            //中断（坐标轴和折线的）连接
             ctx.stroke();
+
+            ctx.globalAlpha = 0.6;
+            //绘制折线
+            for (var i = 0; i < data.length; i++) {
+                var pointX =  (i + 1) * pointsWidth;
+                var pointY = (1 - data[i]/maxNum) * yLength * times;
+
+                if (pointY > (1 - data[0]/maxNum) * yLength * times) {
+                    ctx.strokeStyle = color_down;
+                } else {
+                    ctx.strokeStyle = color_up;
+                }
+
+                ctx.lineWidth = pointsWidth - 2;
+                ctx.beginPath();
+                ctx.moveTo(pointX,(1 - data[0]/maxNum) * yLength * times);
+                ctx.lineTo(pointX,pointY);
+                ctx.closePath();
+                ctx.stroke();
+            }
+        }
+
+        function changegraph(sig, sym, data, data2){
+            ch=document.getElementById(sym + '_graph');
+            if (sig == 'M') {
+                PaintMonthlyLine(sym, data);
+                ch.innerHTML="<button onclick=\"changegraph('D','"+sym+"',["+data2+"],["+data+"])\">To Daily</button>";
+            }else {
+                PaintLine(sym, data);
+                ch.innerHTML="<button onclick=\"changegraph('M','"+sym+"',["+data2+"],["+data+"])\">To Monthly</button>";
+            }
         }
         function favorite(sym) {
             $.ajax({
@@ -66,7 +127,6 @@
                 success: function(response)
                 {
                     obj = document.getElementById(sym+"fn");
-                    alert(parseInt(obj.innerHTML));
                     if (obj != null){
                         obj.innerHTML = parseInt(obj.innerHTML)+1+"";
                     }
@@ -121,7 +181,7 @@
         margin: 0;
         padding: 0;
         height: 50px;
-        width: 1880px;
+        width: 100%;
     }
     ._1SQmm>li {
         display: inline-block;
@@ -131,11 +191,11 @@
         font-family: PingFangSC-Regular,HelveticaNeue-Light,'Helvetica Neue Light','Microsoft YaHei',sans-serif;
     }
     .Bgc {
-        background-color: black;
+        background-color: #ffffff;
     }
     .h1c {
         padding: 3.33333px;
-        color: white;
+        color: black;
     }
 
     .header1 {
@@ -156,9 +216,12 @@
         width: 450px;
         height: 26px;
         transition: color .3s,border .3s;
-        color: white;
-        border-bottom: 1px solid #aaa;
-        background: black;
+        color: black;
+        border-bottom: 1px solid #d6d6d6;
+        border-top: 1px solid #d6d6d6;
+        border-left: 1px solid #d6d6d6;
+        border-right: 1px solid #d6d6d6;
+        background: #ffffff;
     }
 
     input {
@@ -168,10 +231,11 @@
     }
 
     .btn {
-        background:url("picture/search.jpg")
-        no-repeat left top;
+        background:url("picture/search.jpg");
+        background-size: cover;
+        no-repeat:left top;
         padding-bottom:4px;
-        width: 20px;
+        width: 22px;
     }
 
     li.line {
@@ -179,41 +243,44 @@
         border-right: 1px solid #515056;
     }
 
-    .pic {
+    .pic2 {
         height: 200px;
     }
 
 
     .h2c {
-        background-color: black;
+        background-color: #ffffff;
         list-style: none;
-        font-weight: 600;
-        color: white;
+    <%--font-weight: 600; --%>
+        color: #030303;
         padding: 0 20px;
         margin: 0 auto;
-        width:1830px;
+        width:100%;
+        border-bottom: 1px solid #f1f1f1;
     }
     .h2c>li {
         -webkit-transition: opacity .3s;
         transition: opacity .3s;
         display: inline-block;
-        padding-bottom: 4px;
+
         margin-right: 30px;
     }
     .h2c a:link, .h2c a:visited {
-        color: white;
+        color: #030303;
         text-decoration: none;
         display: block;
     }
     .text1 {
+        font-family:Arial,Helvetica,sans-serif;<%--marked --%>
         display: block;
         cursor: pointer;
+        color:black;
         line-height: 36px;
     }
 
     .mainContext
     {
-        width: 1880px;
+        width: 100%;
         margin:0;
         padding: 0;
         position:relative;
@@ -237,27 +304,26 @@
         float: left;
         text-align: center;
         margin-right: auto;
-        width: 620px;
-        background-color: #f7faff;
+        width: 49%;
+        background-color: #ffffff;
     }
 
     #content_mid {
-        float: left;
-        width: 620px;
+        align: center;
+        width: 60%;
         text-align: center;
         margin-left: auto;
         margin-right: auto;
-        border-right: 3px solid darkblue;
-        border-left: 3px solid darkblue;
-        background-color: #f7faff;
+        background-color: #ffffff;
+        border-left: 2px solid #eeeaee;
     }
 
     #content_right {
         float: left;
         text-align: center;
         margin-right: auto;
-        width: 620px;
-        background-color: #f7faff;
+        width: 33.3%;
+        background-color: #ffffff;
     }
 </style>
 
@@ -267,7 +333,7 @@
     <ul class="_1SQmm Bgc">
 
         <li class=""><a class="h1c" id="home" href="index.jsp" data-rapid_p="1" data-v9y="1">
-            <svg width="18" height="18" viewBox="0 0 32 32" style="fill: white;">
+            <svg width="18" height="18" viewBox="0 0 32 32" style="fill: black;">
                 <path d="M16.153 3.224L0 16.962h4.314v11.814h9.87v-8.003h3.934v8.003h9.84V16.962H32"></path>
             </svg>
             Home
@@ -298,18 +364,19 @@
         <li class="line"></li>
 
         <li id="min-search">
-            <form id="formUrl" action="searchServlet" method="get" target="_blank" >
-                <input id="pin-input" class="pin-input" type="text" name="kw" placeholder="Search for symbols...">
+            <form id="formUrl" action="searchServlet" method="get" >
+                <input id="pin-input" class="pin-input" type="text" name="kw" placeholder="Search for stocks...">
                 <input class="btn" type="button" id="topSearchSubmit" data-eid="qd_A62" onclick="submit()">
             </form>
         </li>
     </ul>
 
-    <div style="width:1880px;   height:200px;"><img class="pic" src="picture/background3.jpg" align="right" /></div>
+    <div style="height:200px;"><img class="pic2"  style="width:100%; height:100%;" src="picture/background3.jpg"  /></div>
 
     <ul class="h2c">
         <li><a class="text1" href="/index.jsp" data-rapid_p="21" data-v9y="1">Finance Home</a></li>
         <li><a class="text1" href="rankServlet" data-rapid_p="31" data-v9y="1">Markets</a></li>
+
         <c:choose>
             <c:when test="${not empty sessionScope.user_id}">
                 <li><a class="text1" href="/user.jsp" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
@@ -318,6 +385,7 @@
                 <li><a class="text1" href="/sign_in.jsp" data-rapid_p="31" data-v9y="1">Personal Finance</a></li>
             </c:otherwise>
         </c:choose>
+
         <li><a class="text1" href="/HeadNews.jsp" data-rapid_p="31" data-v9y="1">Events</a></li>
         <li><a class="text1" href="/AboutUs.jsp" data-rapid_p="31" data-v9y="1">AboutUs</a></li>
         <li><a class="text1" href="/Contactus.jsp" data-rapid_p="31" data-v9y="1">ContactUs</a></li>
@@ -344,8 +412,7 @@
         .stock-info {
             text-align: left;
             padding: 10px 20px;
-            background-color: #f7faff;
-            border-top: #e9edf0 solid 2px;
+            background-color: #ffffff;
         }
         .stock-info .stock-bets h1 a {
             color: #333;
@@ -369,9 +436,10 @@
 
         .stock-info .bets-content {
             margin-top: 20px;
-            border-top: #e9edf0 solid 1px;
+            <%--border-top: #e9edf0 solid 1px;--%>
             padding: 14px 0;
             height: 40px;
+            border-bottom: 1px solid #f0ecf0;
         }
 
         .stock-info .bets-content .bets-col-9 dl {
@@ -408,12 +476,12 @@
             text-align: -webkit-match-parent;
         }
         .stock-info .stock-add button {
-            width: 100px;
-            height: 40px;
-            background-color: #2e85ff;
-            border: 0;
-            border-radius: 4px;
-            font-size: 16px;
+            width: 80px;
+            height: 30px;
+            background-color: #1dbf60;
+            border: 20;
+            border-radius: 5px;
+            font-size: 10px;
             color: #FFF;
             cursor: pointer;
         }
@@ -430,24 +498,45 @@
         .bets-name {
             font-family: DIN,"Microsoft YaHei",Arial,sans-serif;
         }
+        button {
+            width: 80px;
+            height: 30px;
+            background-color: #1dbf60;
+            border: 20;
+            border-radius: 5px;
+            font-size: 10px;
+            color: #FFF;
+            cursor: pointer;
+        }
+        .ranktop{
+            padding-top: 30px;
+            font-family:Arial,Helvetica,sans-serif;<%--marked --%>
+            font-size:25px;
+            font-weight:600;
+        }
 
     </style>
 
-    <div id="content_left">
+    <div id="content_mid">
         <c:choose>
-            <c:when test="${empty sessionScope.comp1}">
-                <img alt="" src="picture/noresult.png" style="vertical-align: middle" />
+            <c:when test="${empty sessionScope.user_id}">
+                <%--<img alt="" src="picture/noresult.png" style="vertical-align: middle" />--%>
+                <div class="ranktop"  text_align="center">Please sign in.</div>
             </c:when>
             <c:otherwise>
-                <img class="" src="picture/Followrank.png" />
+                <%--<img class="" src="picture/Followrank.png" />--%>
+                <div class="ranktop" text_align="center">Popularity</div>
                 <c:forEach items="${sessionScope.comp1}" var="current_comp" varStatus="status">
 
                     <div class="stock-info">
                         <div class="stock-bets">
                             <h1>
                                 <a class="bets-name" href="">${current_comp.rank_index}. ${current_comp.symbol}</a>
-                                <a class="stock-chart"><canvas width="150" height="30" id="${current_comp.symbol}"></canvas></a>
-                                <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist1.get(status.index)});</script>
+                                <a class="stock-chart"><canvas width="150" height="30" id="${current_comp.symbol}_1"></canvas></a>
+                                <script>PaintLine('${current_comp.symbol}_1', ${sessionScope.pricelist1.get(status.index)});</script>
+                                <a style="" id="${current_comp.symbol}_1_graph">
+                                    <button onclick="changegraph('M', '${current_comp.symbol}_1',${sessionScope.mpricelist1.get(status.index)},${sessionScope.pricelist1.get(status.index)} )">To Monthly</button>
+                                </a>
                             </h1>
                             <div class="price s-stop ">
 
@@ -501,7 +590,7 @@
                                     <dl><dt>Close</dt><dd>${current_comp.close}</dd></dl>
                                     <dl><dt>Volume</dt><dd>${current_comp.volume}</dd></dl>
                                     <dl><dt>&nbsp;</dt><dd>&nbsp;</dd></dl><dl><dt>&nbsp;</dt><dd>&nbsp;</dd></dl>
-                                    <i><u><b><dl><dt><font size="5" face="STLiti">Follows</font></dt><dd id=${current_comp.symbol}fn>${current_comp.rank_follows}</dd></dl></b></u></i>
+                                    <i><u><b><dl><dt><font size="5" face="STLiti">Followers</font></dt><dd id=${current_comp.symbol}fn>${current_comp.rank_follows}</dd></dl></b></u></i>
                                 </div>
                             </div>
                         </div>
@@ -511,22 +600,27 @@
             </c:otherwise>
         </c:choose>
     </div>
-
+    <%--
     <div id="content_mid">
         <c:choose>
-            <c:when test="${empty sessionScope.comp2}">
-                <img alt="" src="picture/noresult.png" style="vertical-align: middle" />
+            <c:when test="${empty sessionScope.user_id}">
+
+                <div class="ranktop" text_align="center">Please sign in.</div>
             </c:when>
             <c:otherwise>
-                <img class="" src="picture/RFrank.png" />
+
+                <div class="ranktop" text_align="center">Growth</div>
                 <c:forEach items="${sessionScope.comp2}" var="current_comp" varStatus="status">
 
                     <div class="stock-info">
                         <div class="stock-bets">
                             <h1>
                                 <a class="bets-name" href="">${current_comp.rank_index}. ${current_comp.symbol}</a>
-                                <a class="stock-chart"><canvas width="150" height="30" id="${current_comp.symbol}"></canvas></a>
-                                <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist2.get(status.index)});</script>
+                                <a class="stock-chart"><canvas width="150" height="30" id="${current_comp.symbol}_2"></canvas></a>
+                                <script>PaintLine('${current_comp.symbol}_2', ${sessionScope.pricelist2.get(status.index)});</script>
+                                <a style="" id="${current_comp.symbol}_2_graph">
+                                    <button onclick="changegraph('M', '${current_comp.symbol}_2',${sessionScope.mpricelist2.get(status.index)},${sessionScope.pricelist2.get(status.index)} )">To Monthly</button>
+                                </a>
                             </h1>
                             <div class="price s-stop ">
 
@@ -580,7 +674,7 @@
                                     <dl><dt>Close</dt><dd>${current_comp.close}</dd></dl>
                                     <dl><dt>Volume</dt><dd>${current_comp.volume}</dd></dl>
                                     <dl><dt>&nbsp;</dt><dd>&nbsp;</dd></dl><dl><dt>&nbsp;</dt><dd>&nbsp;</dd></dl>
-                                    <i><u><b><dl><dt><font size="5" face="STLiti">Rise</font></dt><dd>${current_comp.rank_RF}</dd></dl></b></u></i>
+                                    <i><u><b><dl><dt><font size="5" face="STLiti">Growth</font></dt><dd>${current_comp.rank_RF}%</dd></dl></b></u></i>
                                 </div>
                             </div>
                         </div>
@@ -590,7 +684,7 @@
             </c:otherwise>
         </c:choose>
     </div>
-
+<%--
     <div id="content_right">
         <c:choose>
             <c:when test="${empty sessionScope.comp3}">
@@ -668,7 +762,7 @@
 
             </c:otherwise>
         </c:choose>
-    </div>
+    </div><--%>
 
 </div>
 

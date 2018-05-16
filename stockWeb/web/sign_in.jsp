@@ -48,11 +48,12 @@
             font-family: PingFangSC-Regular,HelveticaNeue-Light,'Helvetica Neue Light','Microsoft YaHei',sans-serif;
         }
         .Bgc {
-            background-color: black;
+            background-color: #ffffff;
         }
         .h1c {
             padding: 3.33333px;
-            color: white;
+            color: black;
+            display: block;
         }
 
         .header1 {
@@ -73,9 +74,12 @@
             width: 450px;
             height: 26px;
             transition: color .3s,border .3s;
-            color: white;
-            border-bottom: 1px solid #aaa;
-            background: black;
+            color: black;
+            border-bottom: 1px solid #d6d6d6;
+            border-top: 1px solid #d6d6d6;
+            border-left: 1px solid #d6d6d6;
+            border-right: 1px solid #d6d6d6;
+            background: #ffffff;
         }
 
         .hide {
@@ -89,10 +93,11 @@
         }
 
         .btn {
-            background:url("picture/search.jpg")
-            no-repeat left top;
+            background:url("picture/search.jpg");
+            background-size: cover;
+            no-repeat:left top;
             padding-bottom:4px;
-            width: 20px;
+            width: 22px;
         }
 
         li.line {
@@ -105,31 +110,33 @@
         }
 
         .h2c {
-            background-color: black;
+            background-color: white;
             list-style: none;
-            font-weight: 600;
-            color: white;
+        <%--font-weight: 600; --%>
+            color: #000;
             padding: 0 20px;
             margin: 0 auto;
+            border-bottom: 1px solid #f1f1f1;
         }
         .h2c>li {
             -webkit-transition: opacity .3s;
             transition: opacity .3s;
             display: inline-block;
-            padding-bottom: 4px;
+
             margin-right: 30px;
         }
         .h2c a:link, .h2c a:visited {
-            color: white;
+            color: #030303;
             text-decoration: none;
             display: block;
         }
         .text1 {
+            font-family:Arial,Helvetica,sans-serif;<%--marked --%>
             display: block;
             cursor: pointer;
+            color:black;
             line-height: 36px;
         }
-
         .login-box {
             box-sizing: border-box;
             background-color: #fff;
@@ -190,8 +197,8 @@
         }
 
         .orko-button, input.orko-button {
-            background: #ccc;
-            background: hsla(0,0%,0%,1);
+            background: #c8c8c8;
+            background: hsl(0, 0%, 78%);
             border: 2px solid transparent;
             border-radius: .25em;
             box-sizing: border-box;
@@ -239,8 +246,8 @@
 <body>
 <header data-reactroot class="header1">
     <ul class="_1SQmm Bgc">
-        <li class=""><a class="h1c" href="index.jsp" data-rapid_p="1" data-v9y="1">
-            <svg width="18" height="18" viewBox="0 0 32 32" style="fill: white;">
+        <li class=""><a class="h1c" id="home" href="index.jsp" data-rapid_p="1" data-v9y="1">
+            <svg width="18" height="18" viewBox="0 0 32 32" style="fill: black;">
                 <path d="M16.153 3.224L0 16.962h4.314v11.814h9.87v-8.003h3.934v8.003h9.84V16.962H32"></path>
             </svg>
             Home
@@ -257,14 +264,14 @@
         <li class="line"></li>
 
         <li id="min-search">
-            <form id="formUrl" action="searchServlet" method="get" target="_blank">
-                <input id="pin-input" class="pin-input" type="text" name="kw" placeholder="Search for symbols...">
+            <form id="formUrl" action="searchServlet" method="get">
+                <input id="pin-input" class="pin-input" type="text" name="kw" placeholder="Search for stocks...">
                 <input class="btn" type="button" id="topSearchSubmit" data-eid="qd_A62" onclick="submit()">
             </form>
         </li>
     </ul>
 
-    <div style="height:200px;"><img class="pic1" src="picture/background3.jpg" align="right" /></div>
+    <div style="height:200px;"><img class="pic1" style="width:100%; height:100%;"  src="picture/background3.jpg" /></div>
 
     <ul class="h2c">
         <li><a class="text1" href="/index.jsp" data-rapid_p="21" data-v9y="1">Finance Home</a></li>

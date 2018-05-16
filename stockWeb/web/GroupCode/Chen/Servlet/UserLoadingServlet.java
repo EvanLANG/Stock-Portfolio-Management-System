@@ -116,7 +116,7 @@ public class UserLoadingServlet extends HttpServlet {
                         index++;
                         //System.out.println("index:"+index+",");
                     } else {
-                        index--;
+                        current_price.add(current.close);
                         break;
                     }
                 }

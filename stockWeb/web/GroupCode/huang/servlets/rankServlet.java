@@ -31,23 +31,23 @@ public class rankServlet extends HttpServlet {
         List<Company> companies = new ArrayList<Company>();
         List<String> symbollist = new ArrayList<String>();
         List pricelist = new ArrayList();
+        List mpricelist = new ArrayList();
         User user = (User)session.getAttribute("user_id");
         for (RankObject obj : rank) {
             String sym = obj.getSym();
             symbollist.add(sym);
         }
-        System.out.println(symbollist);
 
         int x=0;
         for (String Sym : symbollist) {
             //声明
             DataFetch intra_data = new DataFetch(Sym);
             DataFetch daily_data = new DataFetch(Sym);
+            DataFetch monthly_data = new DataFetch(Sym);
             //提取intrading day
             intra_data.Data = getIntraday(Sym);//获取全部数据列表
 
             if (intra_data.Data.isEmpty()) {
-                System.out.print("skip");
                 continue;
             }
             StockDailyRecord test = intra_data.Data.get(0);
@@ -63,12 +63,11 @@ public class rankServlet extends HttpServlet {
             //提取daily
             daily_data.Data = getDaily(Sym);//获取全部数据列表
             if (daily_data.Data.isEmpty()) {
-                System.out.print("skip");
                 continue;
             }
             StockDailyRecord test1 = daily_data.Data.get(0);
             StockDailyRecord test2 = daily_data.Data.get(1);
-
+            monthly_data.Data = getMonthly(Sym);
             float close;
             //昨日闭盘价
             if (test1.TradeDate.equals(current_day)) {
@@ -76,7 +75,6 @@ public class rankServlet extends HttpServlet {
             } else {
                 close = test1.close;
             }
-
             float change;
             float change_percent;
             boolean up_or_down;
@@ -123,14 +121,22 @@ public class rankServlet extends HttpServlet {
                     index++;
                     //System.out.println("index:"+index+",");
                 } else {
-                    index--;
+                    current_price.add(current.close);
                     break;
                 }
             }
             Collections.reverse(current_price);
             pricelist.add(current_price);
+            List monthly_price = new ArrayList();
+            if(monthly_data.Data.size()>=2) {
+                for (StockDailyRecord current : monthly_data.Data) {
+                    monthly_price.add(current.close);
+                }
+            }
+            Collections.reverse(monthly_price);
+            mpricelist.add(monthly_price);
         }
-
+        session.setAttribute("mpricelist"+num, mpricelist.subList(0,10));
         session.setAttribute("pricelist"+num, pricelist.subList(0,10));
         session.setAttribute("comp"+num, companies.subList(0,10));
         session.setAttribute("complist"+num, symbollist.subList(0,10));
@@ -155,16 +161,16 @@ public class rankServlet extends HttpServlet {
 
 
 //follows rank
-            List<RankObject> rank = getFollowsRank();
-            SessionFunction(session, rank,"1","F");
+            List<RankObject> rank1 = getFollowsRank();
+            SessionFunction(session, rank1,"1","F");
 
 //Rise and Fall rank
-            rank = getRFRank();
-            SessionFunction(session, rank,"2","RF");
+            //List<RankObject> rank2 = getRFRank();
+            //SessionFunction(session, rank2,"2","RF");
 
 //Value rank
-            rank = getValuesRank();
-            SessionFunction(session, rank,"3","V");
+            //rank = getValuesRank();
+            //SessionFunction(session, rank,"3","V");
 
             session.setAttribute("where","rank");
 

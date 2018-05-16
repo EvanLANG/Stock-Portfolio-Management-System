@@ -95,4 +95,12 @@
         <servlet-name>updatefavoServlet</servlet-name>
         <servlet-class>evan.servlets.updatefavoServlet</servlet-class>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>SignUpServlet</servlet-name>
+        <url-pattern>/SignUpServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>SignUpServlet</servlet-name>
+        <servlet-class>Chen.Servlet.SignUpServlet</servlet-class>
+    </servlet>
 </web-app>

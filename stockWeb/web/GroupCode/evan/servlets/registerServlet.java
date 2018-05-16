@@ -26,7 +26,7 @@ public class registerServlet extends HttpServlet {
             return ;
         }
         DBTools db = new DBTools();
-        db.insertusers(email,uid,uname,upasswd,risklevel,favo,birthdate,gender);
+        db.insertusers(email,uid,uname,upasswd);
         request.setAttribute("uname", uname);
         request.setAttribute("email", email);
         request.getRequestDispatcher("/registerSuccess.jsp").forward(request,response);
