@@ -43,6 +43,8 @@ public class searchServlet extends HttpServlet {
         List<String> recordllist = new ArrayList<String>();
         List pricelist = new ArrayList();
         List mpricelist = new ArrayList();
+        List datelist = new ArrayList();
+        List mdatelist = new ArrayList();
         User user = (User)session.getAttribute("user_id");
         DBTools db = new DBTools();
         Connection conn = getConn();
@@ -162,28 +164,41 @@ public class searchServlet extends HttpServlet {
             String day = first_day.TradeDate.substring(0, 10);
             int index = 0;
             List current_price = new ArrayList();
+            List current_date = new ArrayList();
             while (true) {
                 StockDailyRecord current = intra_data.Data.get(index);
                 if (current.TradeDate.substring(0, 10).equals(day)) {
                     current_price.add(current.close);
+                    current_date.add(current.TradeDate);
                     index++;
                     //System.out.println("index:"+index+",");
                 } else {
-                    index--;
+                    current_price.add(current.close);
+                    current_date.add(current.TradeDate);
                     break;
                 }
             }
             Collections.reverse(current_price);
+            Collections.reverse(current_date);
+            String c_date =  org.apache.commons.lang.StringUtils.join(current_date.toArray(),",");
             pricelist.add(current_price);
+            datelist.add(c_date);
             List monthly_price = new ArrayList();
+            List monthly_date = new ArrayList();
             if(monthly_data.Data.size()>=2) {
                 for (StockDailyRecord current : monthly_data.Data) {
                     monthly_price.add(current.close);
+                    monthly_date.add(current.TradeDate);
                 }
             }
             Collections.reverse(monthly_price);
+            Collections.reverse(monthly_date);
+            String c_mdate =  org.apache.commons.lang.StringUtils.join(monthly_date.toArray(),",");
             mpricelist.add(monthly_price);
+            mdatelist.add(c_mdate);
         }
+        session.setAttribute("mdatelist", mdatelist);
+        session.setAttribute("datelist", datelist);
         session.setAttribute("mpricelist", mpricelist);
         session.setAttribute("pricelist", pricelist);
         session.setAttribute("comp", companies);

@@ -11,6 +11,8 @@
 <html>
 <head>
     <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/Chart.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/Chart.js"></script>
     <script type="text/javascript" src="${pageContext.request.contextPath}/resource/layer-v3.1.1/layer/layer.js"></script>
     <script type="text/javascript">
         function PaintLine(sym, data){
@@ -311,6 +313,19 @@
                 }
             });
     }
+    function display_detail(sym,index,f){
+        layer.open({
+            type: 2,
+            shade: 0,
+            resize:false,
+            offset: ['50px', ''],
+            title:  ['Detail Chart', 'font-size:15px;font-family:Arial,Helvetica,sans-serif;'],
+            moveType: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['600px', '450px'], //宽高
+            content: '/DetailServlet?sym='+sym+'&index='+index+'&flag='+f
+        });
+    }
     function display_news(company) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -553,13 +568,17 @@
             font-size:25px;
             font-weight:600;
         }
+        .notshow{
+            display:none;
+        }
 
     </style>
 
     <div id="content_mid" class="mainContext" >
         <c:choose>
             <c:when test="${empty sessionScope.index_comp || sessionScope.where!='user'}">
-                <img alt="" src="picture/loading.gif" style="vertical-align: middle" />
+                <%--<img alt="" src="picture/loading.gif" style="vertical-align: middle" />--%>
+                <div class="ranktop">Chooce some stocks to follow : )</div>
             </c:when>
             <c:otherwise>
 
@@ -595,6 +614,7 @@
                                     </a>
                                 </a>
                                 <a class="stock-add"><button  onclick="display_news('${current_comp.comname}')">News</button></a>
+                                <button  onclick="display_detail('${current_comp.symbol}',${status.index},'u')">Detail</button>
                             </div>
 
 

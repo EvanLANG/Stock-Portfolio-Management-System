@@ -103,4 +103,12 @@
         <servlet-name>SignUpServlet</servlet-name>
         <servlet-class>Chen.Servlet.SignUpServlet</servlet-class>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>DetailServlet</servlet-name>
+        <url-pattern>/DetailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>DetailServlet</servlet-name>
+        <servlet-class>Chen.Servlet.DetailServlet</servlet-class>
+    </servlet>
 </web-app>

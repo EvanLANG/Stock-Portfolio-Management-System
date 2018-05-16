@@ -293,6 +293,19 @@
                 })
             }
     }
+    function display_detail(sym,index,f){
+        layer.open({
+            type: 2,
+            shade: 0,
+            resize:false,
+            offset: ['50px', ''],
+            title:  ['Detail Chart', 'font-size:15px;font-family:Arial,Helvetica,sans-serif;'],
+            moveType: 1,
+            skin: 'layui-layer-rim', //加上边框
+            area: ['600px', '450px'], //宽高
+            content: '/DetailServlet?sym='+sym+'&index='+index+'&flag='+f
+        });
+    }
     function favorite(sym) {
         $.ajax({
             type: 'post',
@@ -563,6 +576,7 @@
                                 <a style="" id="${current_comp.symbol}_graph">
                                     <button onclick="changegraph('M', '${current_comp.symbol}',${sessionScope.mpricelist.get(status.index)},${sessionScope.pricelist.get(status.index)} )">To Monthly</button>
                                 </a>
+                                <button  onclick="display_detail('${current_comp.symbol}',${status.index},'s')">Detail</button>
                                 <c:choose>
                                 <c:when test="${current_comp.followed == 1}">
                                     <a class="stock-add" id=${current_comp.symbol}f><button class="" onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>

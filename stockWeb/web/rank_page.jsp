@@ -10,6 +10,7 @@
 <html>
 <head>
     <script type="text/javascript" src="${pageContext.request.contextPath}/jquery/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/resource/layer-v3.1.1/layer/layer.js"></script>
     <script type="text/javascript">
         function PaintLine(sym, data){
             var cv = document.getElementById(sym);
@@ -118,6 +119,19 @@
                 PaintLine(sym, data);
                 ch.innerHTML="<button onclick=\"changegraph('M','"+sym+"',["+data2+"],["+data+"])\">To Monthly</button>";
             }
+        }
+        function display_detail(sym,index,f){
+            layer.open({
+                type: 2,
+                shade: 0,
+                resize:false,
+                offset: ['50px', ''],
+                title:  ['Detail Chart', 'font-size:15px;font-family:Arial,Helvetica,sans-serif;'],
+                moveType: 1,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['600px', '450px'], //宽高
+                content: '/DetailServlet?sym='+sym+'&index='+index+'&flag='+f
+            });
         }
         function favorite(sym) {
             $.ajax({
@@ -287,6 +301,7 @@
         margin-left: auto;
         margin-right: auto;
         background-color: #f7faff;
+        background-image: url(picture/background.jpg)
     }
 
 
@@ -315,7 +330,6 @@
         margin-left: auto;
         margin-right: auto;
         background-color: #ffffff;
-        border-left: 2px solid #eeeaee;
     }
 
     #content_right {
@@ -537,6 +551,7 @@
                                 <a style="" id="${current_comp.symbol}_1_graph">
                                     <button onclick="changegraph('M', '${current_comp.symbol}_1',${sessionScope.mpricelist1.get(status.index)},${sessionScope.pricelist1.get(status.index)} )">To Monthly</button>
                                 </a>
+                                <button  onclick="display_detail('${current_comp.symbol}',${status.index},'r')">Detail</button>
                             </h1>
                             <div class="price s-stop ">
 

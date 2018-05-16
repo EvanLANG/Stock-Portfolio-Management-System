@@ -400,7 +400,7 @@
     <div id="content_right" class="">
         <c:choose>
             <c:when test="${empty sessionScope.comp}">
-                <img alt="" src="picture/loading.gif" style="vertical-align: middle" />
+                <%--<img alt="" src="picture/loading.gif" style="vertical-align: middle" />--%>
             </c:when>
             <c:otherwise>
 

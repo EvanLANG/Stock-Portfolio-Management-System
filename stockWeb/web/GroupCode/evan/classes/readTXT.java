@@ -79,10 +79,7 @@ public class readTXT {
 
         int count = 0;
         for(String s : namelist){
-            if(count == 5){
-                break;
-            }
-            System.out.println(s);
+            System.out.print(s+" ");
             /*if (!db.validateTableExist(s+"_intraday")) {
                 db.createTable(s+"_intraday");
                 db.createTable(s+"_daily");
@@ -116,12 +113,13 @@ public class readTXT {
             }
             monthly_map.put(s,monthly_data.Data);
             //db.insertStock(monthly_data.Data,s.trim()+"_monthly");
-            count += 1;
         }
         Connection conn = getConn();
         try {
             for (int i = 0; i < namelist.size(); i++) {
                 String s = namelist.get(i);
+                System.out.println(s);
+
                 if (intra_map.get(s)!=null&&intra_map.get(s).size() > 2) {
                     insert(s,"_intraday",conn,intra_map);
                 }
