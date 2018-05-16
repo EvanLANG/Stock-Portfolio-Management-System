@@ -18,7 +18,7 @@
         function PaintLine(sym, data){
             var cv = document.getElementById(sym);
             cv.width = 300;
-            cv.height = 80;
+            cv.height = 100;
             cv.style.background = "#f7faff";
             var ctx = cv.getContext("2d");
             var color_up = "green";
@@ -32,15 +32,18 @@
                 yArrow_x = cv.width,  //y轴箭头处坐标x
                 yArrow_y = y0, //y轴箭头处坐标y
                 pointsWidth = xLength/(data.length + 1);    //折线上每个点之间的距离
+            if (data.length==0) {ctx.font="25px Arial";  ctx.strokeText("No Daily data", 150,20); return;}
+            ctx.globalAlpha = 0.25;
+            ctx.font="50px Arial";  ctx.strokeText("Daily data", 20,65);
             ctx.beginPath();//控制绘制的折线不受坐标轴样式属性的影响
-
             //绘制y轴
+            ctx.globalAlpha = 1;
             ctx.moveTo(x0, y0);
             ctx.lineTo(yArrow_x, yArrow_y);
             ctx.strokeStyle = "#92a0ac";
             //中断（坐标轴和折线的）连接
             ctx.stroke();
-
+            ctx.globalAlpha = 0.6;
             //绘制折线
             for (var i = 0; i < data.length; i++) {
                 var pointX =  (i + 1) * pointsWidth;
@@ -59,13 +62,11 @@
                 ctx.closePath();
                 ctx.stroke();
             }
-
-            ctx.stroke();
         }
         function PaintMonthlyLine(sym, data){
             var cv = document.getElementById(sym);
             cv.width = 300;
-            cv.height = 80;
+            cv.height = 100;
             cv.style.background = "#f7faff";
             var ctx = cv.getContext("2d");
             var color_up = "green";
@@ -79,15 +80,19 @@
                 yArrow_x = cv.width,  //y轴箭头处坐标x
                 yArrow_y = y0, //y轴箭头处坐标y
                 pointsWidth = xLength/(data.length + 1);    //折线上每个点之间的距离
+            if (data.length==0) {ctx.font="25px Arial";  ctx.strokeText("No Monthly data", 50,30); return;}
+            ctx.globalAlpha = 0.25;
+            ctx.font="50px Arial";  ctx.strokeText("Monthly data", 10,65);
             ctx.beginPath();//控制绘制的折线不受坐标轴样式属性的影响
-
             //绘制y轴
+            ctx.globalAlpha = 1;
             ctx.moveTo(x0, y0);
             ctx.lineTo(yArrow_x, yArrow_y);
             ctx.strokeStyle = "#92a0ac";
             //中断（坐标轴和折线的）连接
             ctx.stroke();
 
+            ctx.globalAlpha = 0.6;
             //绘制折线
             for (var i = 0; i < data.length; i++) {
                 var pointX =  (i + 1) * pointsWidth;
@@ -106,10 +111,21 @@
                 ctx.closePath();
                 ctx.stroke();
             }
+        }
 
-            ctx.stroke();
+        function changegraph(sig, sym, data, data2){
+            ch=document.getElementById(sym + '_graph');
+            if (sig == 'M') {
+                PaintMonthlyLine(sym, data);
+                ch.innerHTML="<button onclick=\"changegraph('D','"+sym+"',["+data2+"],["+data+"])\">To Daily</button>";
+            }else {
+                PaintLine(sym, data);
+                ch.innerHTML="<button onclick=\"changegraph('M','"+sym+"',["+data2+"],["+data+"])\">To Monthly</button>";
+            }
         }
     </script>
+
+
 </head>
 <style type="text/css">
   ._1SQmm {
@@ -481,6 +497,16 @@
         border-left-color: transparent;
         border-right-color: transparent;
     }
+    button {
+        width: 80px;
+        height: 30px;
+        background-color: #1dbf60;
+        border: 20;
+        border-radius: 5px;
+        font-size: 10px;
+        color: #FFF;
+        cursor: pointer;
+    }
 </style>
 
 
@@ -507,31 +533,27 @@
                                     <span class = s-up>&#9650; ${current_comp.change}</span>
                                     <span class = s-up>&#9650; ${current_comp.change_percent}%</span>
                                     <span class = s-up></span>
-                                    <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
-                                    <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(status.index)});</script>
                                 </c:when>
                                 <c:otherwise>
                                     <strong class="_close s-down">${current_comp.current}</strong>
                                     <span class = s-down>&#9660; ${current_comp.change}</span>
                                     <span class = s-down>&#9660; ${current_comp.change_percent}%</span>
                                     <span class = s-down></span>
-                                    <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}"></canvas></a>
-                                    <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(status.index)});</script>
                                 </c:otherwise>
                                 </c:choose>
-                            </div><br>
-                            <div class="price s-month " align="center">
-                            <c:choose>
-                            <c:when test="${fn:length(sessionScope.mpricelist.get(status.index))>0}">
-                                    <a class="stock-chart"><canvas width="300" height="100" id="${current_comp.symbol}_monthly"></canvas></a>
-                                    <script>PaintMonthlyLine('${current_comp.symbol}_monthly', ${sessionScope.mpricelist.get(status.index)});</script>
-                            </c:when>
-                                <c:otherwise>
-                                    No Monthly Data.
-                                </c:otherwise>
-                            </c:choose>
+
+
+                            <a class="stock-chart">
+                                <canvas width="300" height="100" id="${current_comp.symbol}"></canvas>
+                                <script>PaintLine('${current_comp.symbol}', ${sessionScope.pricelist.get(status.index)});</script>
+                                <a style="" id="${current_comp.symbol}_graph">
+                                    <button onclick="changegraph('M', '${current_comp.symbol}',${sessionScope.mpricelist.get(status.index)},${sessionScope.pricelist.get(status.index)} )">To Monthly</button>
+                                </a>
+                            </a>
+
                             </div>
-                            <br>
+
+
 
 
 
