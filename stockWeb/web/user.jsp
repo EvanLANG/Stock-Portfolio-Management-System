@@ -413,7 +413,7 @@
             </c:choose>
         </li>
 
-        <li class="line"></li>
+        <li id="" class="line"></li>
 
         <li id="min-search">
             <form id="formUrl" action="searchServlet" method="get" >
@@ -577,10 +577,11 @@
     <div id="content_mid" class="mainContext" >
         <c:choose>
             <c:when test="${empty sessionScope.index_comp || sessionScope.where!='user'}">
-                <%--<img alt="" src="picture/loading.gif" style="vertical-align: middle" />--%>
-                <div class="ranktop">Chooce some stocks to follow : )</div>
+
             </c:when>
             <c:otherwise>
+
+
 
                 <c:forEach items="${sessionScope.user_comp}" var="current_comp" varStatus="status">
 
