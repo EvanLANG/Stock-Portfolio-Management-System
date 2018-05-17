@@ -518,6 +518,7 @@
                 <c:forEach items="${sessionScope.index_comp}" var="current_comp" varStatus="status">
 
 
+
                     <div class="stock-info">
                         <div class="stock-bets">
                             <h1>
