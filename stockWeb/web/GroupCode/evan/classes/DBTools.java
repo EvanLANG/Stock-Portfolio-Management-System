@@ -73,11 +73,11 @@ public class DBTools {
         return i;
     }
 
-    public static int insertsymbols(String symbol, String sname, String ipoyear, String quote) {
+    public static int insertsymbols(String symbol, String sname, String ipoyear,String sector,String industry, String quote) {
         Connection conn = getConn();
         //String id = null;
         int i = 0;
-        String sql = "insert into symbols" + "(symbol,sname,ipoyear,quote) values(?,?,?,?)";
+        String sql = "insert into symbols" + "(symbol,sname,ipoyear,quote,sector,industry) values(?,?,?,?,?,?)";
         PreparedStatement pstmt;
         try {
             pstmt = (PreparedStatement) conn.prepareStatement(sql);
@@ -86,7 +86,8 @@ public class DBTools {
             pstmt.setString(2, sname);
             pstmt.setString(3, ipoyear);
             pstmt.setString(4, quote);
-
+            pstmt.setString(5, sector);
+            pstmt.setString(6, industry);
             i = pstmt.executeUpdate();
             pstmt.close();
             conn.close();
@@ -140,6 +141,51 @@ public class DBTools {
             pstmt.close();
             conn.close();
         } catch (SQLException e) {
+            try{
+                conn.close();
+            }catch(SQLException E){; }
+        }
+        return i;
+    }
+    public static int createUserHistory(String username) {
+        Connection conn = getConn();
+        int i = 0;
+        String id = null;
+        id = username+"_history";
+        String sql = "CREATE TABLE " + id + "\n" +
+                "(\n" +
+                "timestamp VARCHAR(20) not null PRIMARY KEY ,\n" +
+                "keyword    VARCHAR(300) \n" +
+                ")";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement) conn.prepareStatement(sql);
+            i = pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            try{
+                conn.close();
+            }catch(SQLException E){; }
+        }
+        return i;
+    }
+    public static int inserthistory(String username, String keyword, String date) {
+        Connection conn = getConn();
+        //String id = null;
+        int i = 0;
+        String sql = "insert into "+username+"_history" + "(timestamp,keyword) values(?,?)";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement) conn.prepareStatement(sql);
+            //pstmt.setString(1, comp.getId());
+            pstmt.setString(1, date);
+            pstmt.setString(2, keyword);
+            i = pstmt.executeUpdate();
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
             try{
                 conn.close();
             }catch(SQLException E){; }
@@ -470,43 +516,50 @@ public class DBTools {
         }
         return i;
     }
-    public static String getFollows(String[] list){
+    public static String getFollows(String[] list) {
         Connection conn = getConn();
         String output = "";
         PreparedStatement pstmt;
         try {
-            for (String sym : list) {
-                String sql = "select sname from symbols where symbol ='" + sym + "'";
-                pstmt = (PreparedStatement) conn.prepareStatement(sql);
-                //DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                ResultSet rs = pstmt.executeQuery();
-                while (rs.next()) {
-                    String sname = rs.getString("sname");
-                    sname = sname.replace(",", "");
-                    sname = sname.replace(".com", "");
-                    String[] tuple = sname.split(" ");
-                    String finals = "";
-                    int len = 0;
-                    if (tuple.length > 1) {
-                        len = tuple.length - 1;
-                    } else {
-                        len = tuple.length;
+            if (list != null) {
+                for (String sym : list) {
+                    String sql = "select sname from symbols where symbol ='" + sym + "'";
+                    pstmt = (PreparedStatement) conn.prepareStatement(sql);
+                    //DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    ResultSet rs = pstmt.executeQuery();
+                    while (rs.next()) {
+                        String sname = rs.getString("sname");
+                        sname = sname.replace(",", "");
+                        sname = sname.replace(".com", "");
+                        String[] tuple = sname.split(" ");
+                        String finals = "";
+                        int len = 0;
+                        if (tuple.length > 1) {
+                            len = tuple.length - 1;
+                        } else {
+                            len = tuple.length;
+                        }
+                        for (int i = 0; i < len; i++) {
+                            finals += tuple[i] + " ";
+                        }
+                        output += finals.substring(0, finals.length() - 1).trim() + "#";
                     }
-                    for (int i = 0; i < len; i++) {
-                        finals += tuple[i] + " ";
-                    }
-                    output += finals.substring(0, finals.length() - 1).trim() + "#";
                 }
             }
             conn.close();
-        }catch (SQLException e) {
-                try {
-                    conn.close();
-                } catch (SQLException E) {
-                    System.out.println('1');
-                }
+        } catch (SQLException e) {
+            try {
+                conn.close();
+            } catch (SQLException E) {
+                System.out.println('1');
+            }
         }
-        return output.substring(0,output.length()-1);
+        if (output == ""){
+            return output;
+        }else
+        {
+            return output.substring(0, output.length() - 1);
+        }
     }
     public static ArrayList<String> getSymbols(){
         Connection conn = getConn();
@@ -541,6 +594,8 @@ public class DBTools {
             while (rs.next()&&count > 0) {
                 RankObject object = new RankObject();
                 object.setSym(rs.getString("symbol"));
+                object.setSector(rs.getString("sector"));
+                object.setIndustry(rs.getString("industry"));
                 object.setFollowNum(rs.getInt("follows"));
                 list.add(object);
                 count--;
@@ -630,6 +685,95 @@ public class DBTools {
         Collections.sort(list, new RiseNFallComparator());
         System.out.println(list.size());
         return list.subList(0,20);
+    }
+    public static Company getSymbols(Company comp){
+        Connection conn = getConn();
+        String sql = "select sector,industry from symbols where symbol ='"+comp.getSymbol()+"'";
+        PreparedStatement pstmt;
+        try {
+            pstmt = (PreparedStatement)conn.prepareStatement(sql);
+            //DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                comp.setSector(rs.getString(1));
+                comp.setIndustry(rs.getString(2));
+            }
+            conn.close();
+        } catch (SQLException e) {
+            try{
+                conn.close();
+            }catch(SQLException E){; }
+        }
+        return comp;
+    }
+    public static List<RankObject> getSimilarStock(Company comp){
+        Connection conn = getConn();
+        ArrayList<RankObject> list = new ArrayList<RankObject>();
+        String sql = "select * from symbols order by follows DESC";
+        PreparedStatement pstmt;
+        int count = 30;
+        try {
+            pstmt = (PreparedStatement)conn.prepareStatement(sql);
+            //DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()&&count > 0) {
+                RankObject object = new RankObject();
+                String newsym = rs.getString("symbol");
+                String newsector = rs.getString("sector");
+                String newsname = rs.getString("sname");
+                String newindustry = rs.getString("industry");
+                if(!(newsym.equals(comp.getSymbol()))&&newsector.equals(comp.getSector())&&newindustry.equals(comp.getIndustry())) {
+                    object.setSym(newsym);
+                    object.setSector(newsector);
+                    object.setName(newsname);
+                    object.setIndustry(newindustry);
+                    object.setFollowNum(rs.getInt("follows"));
+                    list.add(object);
+                    count--;
+                }
+            }
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            try{
+                conn.close();
+            }catch(SQLException E){; }
+        }
+        return list.subList(0,Math.min(3,list.size()));
+    }
+    public static List<RankObject> getSimilarStock2(Company comp,List<RankObject> list){
+        Connection conn = getConn();
+        String sql = "select * from symbols order by follows DESC";
+        PreparedStatement pstmt;
+        int count = 30;
+        try {
+            pstmt = (PreparedStatement)conn.prepareStatement(sql);
+            //DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()&&count > 0) {
+                RankObject object = new RankObject();
+                String newsym = rs.getString("symbol");
+                String newsname = rs.getString("sname");
+                String newsector = rs.getString("sector");
+                String newindustry = rs.getString("industry");
+                if(!(newsym.equals(comp.getSymbol()))&&newsector.equals(comp.getSector())) {
+                    object.setSym(newsym);
+                    object.setSector(newsector);
+                    object.setName(newsname);
+                    object.setIndustry(newindustry);
+                    object.setFollowNum(rs.getInt("follows"));
+                    list.add(object);
+                    count--;
+                }
+            }
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            try{
+                conn.close();
+            }catch(SQLException E){; }
+        }
+        return list.subList(0,Math.min(6,list.size()));
     }
 
 }

@@ -36,8 +36,8 @@ public class DataFetch {
             if(urlConnection instanceof HttpURLConnection)
             {
                 connection = (HttpURLConnection) urlConnection;
-                connection.setConnectTimeout(20000);
-                connection.setReadTimeout(20000);
+                connection.setConnectTimeout(2000);
+                connection.setReadTimeout(2000);
             }
             else
             {

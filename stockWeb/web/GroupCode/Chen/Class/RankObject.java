@@ -3,6 +3,8 @@ package Chen.Class;
 public class RankObject {
     private String sym;
     private String name;
+    private String sector;
+    private String industry;
     private float value;
     private double sim;
     private int followNum;
@@ -63,5 +65,15 @@ public class RankObject {
 
     public void setUrl(String value) {
         url = value;
+    }
+
+    public String getIndustry() { return industry; }
+    public void setIndustry(String value) {
+        industry = value;
+    }
+
+    public String getSector() { return sector; }
+    public void setSector(String value) {
+        sector = value;
     }
 }

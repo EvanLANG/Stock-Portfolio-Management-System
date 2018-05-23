@@ -109,7 +109,7 @@ public class rankServlet extends HttpServlet {
                 new_com.setFollowed(0);
             }
 
-            companies.add(new_com);
+            companies.add(getSymbols(new_com));
 
             //当天所有价格（15min）
             StockDailyRecord first_day = intra_data.Data.get(0);

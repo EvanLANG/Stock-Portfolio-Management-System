@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static evan.classes.DBTools.createUserHistory;
 import static evan.classes.DBTools.insertusers;
 
 @WebServlet(name = "SignUpServlet")
@@ -22,11 +23,12 @@ public class SignUpServlet extends HttpServlet {
         String id = request.getParameter("id") ;
         String email = request.getParameter("email") ;
         insertusers(email,id,username,password);
+        createUserHistory(username);
         response.setHeader("Pragma", "No-cache");
         response.setHeader("Cache-Control", "no-cache");
         response.setDateHeader("Expires", 0);
-        PrintWriter writer = response.getWriter();
-        writer.print("true");
-        writer.flush();
+        PrintWriter printWriter=response.getWriter();
+        printWriter.println('T');
+        printWriter.flush();
     }
 }

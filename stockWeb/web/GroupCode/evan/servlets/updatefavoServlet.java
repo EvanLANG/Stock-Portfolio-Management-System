@@ -28,10 +28,12 @@ public class updatefavoServlet extends HttpServlet {
 
         User user = (User)session.getAttribute("user_id");
         DBTools db = new DBTools();
-        if(type.equals("f")) {
-            db.updatefavo(user, sym);
-        }else{
-            db.cancelfavo(user, sym);
+        if(type!=null){
+            if(type.equals("f")) {
+                db.updatefavo(user, sym);
+            }else{
+                db.cancelfavo(user, sym);
+            }
         }
         String name = user.getUsername();
         user = new User();

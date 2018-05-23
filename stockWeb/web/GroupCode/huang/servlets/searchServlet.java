@@ -15,7 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 import java.util.regex.*;
 import info.debatty.java.stringsimilarity.*;
 
@@ -283,6 +285,12 @@ public class searchServlet extends HttpServlet {
             urllist.add(simlist.get(i).getUrl());
         }
         HttpSession session = request.getSession();
+        if(session.getAttribute("user_id")!=null){
+            User user = (User)session.getAttribute("user_id");
+            Date date = new Date();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            inserthistory(user.getUsername(),keyword,df.format(date));
+        }
         if (symbollist.size()>0) { SearchFunction(session,symbollist,snamelist,urllist); }
         else {session.setAttribute("comp",null);}
         response.sendRedirect("/search_result.jsp");

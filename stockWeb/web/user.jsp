@@ -326,6 +326,27 @@
             content: '/DetailServlet?sym='+sym+'&index='+index+'&flag='+f
         });
     }
+    function similar_stocks(index){
+        $.ajax({
+            type: 'post',
+            url: 'SimilarStockServlet',
+            data: {index:index},
+            success: function(response)
+            {
+                layer.open({
+                    type: 1,
+                    shade: 0,
+                    resize:false,
+                    offset: ['50px', ''],
+                    title:  ['Similar Stocks', 'font-size:15px;font-family:Arial,Helvetica,sans-serif;'],
+                    moveType: 1,
+                    skin: 'layui-layer-rim', //加上边框
+                    area: ['400px', '200px'], //宽高
+                    content: '<div style="padding:20px;">'+response+'</div>'
+                });
+            }
+        });
+    }
     function display_news(company) {
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function () {
@@ -615,6 +636,7 @@
                                     </a>
                                 </a>
                                 <a class="stock-add"><button  onclick="display_news('${current_comp.comname}')">News</button></a>
+                                <button  onclick="similar_stocks(${status.index})">Similar</button>
                                 <button  onclick="display_detail('${current_comp.symbol}',${status.index},'u')">Detail</button>
                             </div>
 
@@ -644,6 +666,7 @@
                                     <dl><dt>Volume</dt><dd>${current_comp.volume}</dd></dl>
                                     <a class="stock-add"><button  onclick="cancel('${current_comp.symbol}')">- Cancel</button></a>
                                 </div>
+
                             </div>
                         </div>
                     </div>

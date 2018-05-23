@@ -61,8 +61,18 @@ public class UpdateMonthlyTask extends TimerTask {
             monthly_data.Dataerror = true;
             //intraday_data.Dataerror = true;
             //monthly_data.Dataerror = true;
-            while(monthly_data.Dataerror){
+            int counts=0;
+            while(monthly_data.Dataerror&&counts<3){
                 monthly_data.MonthlyData("https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=" + s.trim() + "&apikey=BBWCXYKPHWWLCBZ4");
+                if(monthly_data.Data.size()>0){
+                    break;
+                }
+                try {
+                    Thread.sleep(2000);
+                }catch(InterruptedException e){
+                    ;
+                }
+                counts++;
             }
             /*
             while(intraday_data.Dataerror){
@@ -78,8 +88,10 @@ public class UpdateMonthlyTask extends TimerTask {
                 }
             }
             */
-            monthly_data.Data.remove(0);
-            db.insertStock(monthly_data.Data,s.trim()+"_monthly");
+            if(monthly_data.Data.size()>1) {
+                monthly_data.Data.remove(0);
+                db.insertStock(monthly_data.Data, s.trim() + "_monthly");
+            }
             /*
             for (StockDailyRecord record: monthly_data.Data){
                 if(db.insertStock(record,s+"_monthly")==0){

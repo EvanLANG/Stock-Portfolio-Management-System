@@ -59,6 +59,14 @@ public class UpdateDailyTask extends TimerTask {
             int counts = 0;
             while(daily_data.Dataerror&&counts<3){
                 daily_data.DailyData("https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=" + s.trim() + "&apikey=BBWCXYKPHWWLCBZ4");
+                if(daily_data.Data.size()>0){
+                    break;
+                }
+                try {
+                    Thread.sleep(2000);
+                }catch(InterruptedException e){
+                    ;
+                }
                 counts++;
             }
             /*
@@ -75,7 +83,9 @@ public class UpdateDailyTask extends TimerTask {
                 }
             }
             */
-            db.insertStock(daily_data.Data,s.trim()+"_daily");
+            if(daily_data.Data.size()>0) {
+                db.insertStock(daily_data.Data, s.trim() + "_daily");
+            }
             /*
             for (StockDailyRecord record: monthly_data.Data){
                 if(db.insertStock(record,s+"_monthly")==0){

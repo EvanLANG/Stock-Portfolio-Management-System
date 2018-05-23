@@ -6,7 +6,7 @@
   Time: 20:25
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 
 <html>
 <head>
@@ -19,18 +19,11 @@
             var id = document.getElementById("new-id").value;
             var email = document.getElementById("new-email").value;
             $.ajax({
-                type: "GET",
-                url: "SignUpServlet",
+                type:"GET",
+                url:"SignUpServlet",
                 data: {username:uname,password:psw,id:id,email:email},
                 success: function(response){
-                    if (response=="false") {
-                        document.getElementById("error").innerHTML = "Erorr, try again.";
-                    } else if(response=="true"){
-                        window.location.href = "sign_in.jsp";
-                    }else if(response=="ban"){
-                        document.getElementById("error").innerHTML = "This user is disabled by Administer, \n" +
-                            "please contact us to unlock it.";
-                    }
+                    window.navigate("sign_in.jsp");
                 }
             });
         }

@@ -12,6 +12,8 @@ public class Company {
     private float close;//昨日闭盘
     private long volume;//今日开盘到目前累积的交易量
     private String change;//今日增长（减少）量
+    private String sector;
+    private String industry;
     private String change_percent;//今日增长（减少）百分比
     private boolean sig;//今日增长（减少）标志
     private String url;
@@ -99,6 +101,16 @@ public class Company {
         return followed;
     }
     public void setFollowed(int value) { followed = value; }
+
+    public String getIndustry() { return industry; }
+    public void setIndustry(String value) {
+        industry = value;
+    }
+
+    public String getSector() { return sector; }
+    public void setSector(String value) {
+        sector = value;
+    }
 
     public int getRank_index() {
         return rank_index;

@@ -94,16 +94,8 @@ public class UserLoadingServlet extends HttpServlet {
                 new_com.setChange_percent(change_percent);
                 new_com.setSig(up_or_down);
 
-                /*if(user!=null) {
-                    String favo = user.getFollowString();
-                    if(favo!=null&&favo.contains(new_com.getSymbol())){
-                        new_com.setFollowed(1);
-                    }else{new_com.setFollowed(0);}
-                }else{
-                    new_com.setFollowed(0);
-                }*/
 
-                companies.add(new_com);
+                companies.add(getSymbols(new_com));
 
 
                 //当天所有价格（15min）

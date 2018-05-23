@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 
 public class company {
     private String id;
+    private String comname;
     private Timestamp timestamp;
     private int open;
     private int high;
@@ -25,9 +26,7 @@ public class company {
     public void setId(String i){
         id = i;
     }
-    public String getId(){
-        return id;
-    }
+    public String getId(){ return id; }
     public void setTimestamp(Timestamp t){
         timestamp = t;
     }

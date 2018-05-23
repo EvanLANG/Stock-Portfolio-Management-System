@@ -111,4 +111,16 @@
         <servlet-name>DetailServlet</servlet-name>
         <servlet-class>Chen.Servlet.DetailServlet</servlet-class>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>SimilarStockServlet</servlet-name>
+        <url-pattern>/SimilarStockServlet</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>SimilarStockServlet</servlet-name>
+        <servlet-class>Chen.Servlet.SimilarStockServlet</servlet-class>
+    </servlet>
+
+    <listener>
+        <listener-class>Chen.Listener.DailyDBListener</listener-class>
+    </listener>
 </web-app>
