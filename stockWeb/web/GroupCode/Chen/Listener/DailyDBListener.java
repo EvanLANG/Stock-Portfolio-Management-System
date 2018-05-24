@@ -44,12 +44,11 @@ public class DailyDBListener implements ServletContextListener {
         if (date_m.before(new Date())) {
             date_m = this.addMonth(date_m, 1);
         }
-        timer.schedule(new UpdateDailyTask(), date_d, PERIOD_DAY);// 隔一天执行一次
-        timer.schedule(new UpdateMonthlyTask(), date_m, PERIOD_DAY);// 隔一天执行一次，但每个月第一天才成功
+        timer.schedule(new UpdateDailyTask(), date_d, PERIOD_DAY);// execute everyday
+        timer.schedule(new UpdateMonthlyTask(), date_m, PERIOD_DAY);// execute the first day of each month
 
     }
 
-    // 增加或减少天数
     private Date addDay(Date date, int num) {
         Calendar startDT = Calendar.getInstance();
         startDT.setTime(date);

@@ -52,9 +52,9 @@ public class UpdateDailyTask extends TimerTask {
             }
             DataFetch daily_data = new DataFetch();
             //DataFetch monthly_data = new DataFetch();
-            //DataFetch intraday_data = new DataFetch();
+            DataFetch intraday_data = new DataFetch();
             daily_data.Dataerror = true;
-            //intraday_data.Dataerror = true;
+            intraday_data.Dataerror = true;
             //monthly_data.Dataerror = true;
             int counts = 0;
             while(daily_data.Dataerror&&counts<3){
@@ -69,11 +69,21 @@ public class UpdateDailyTask extends TimerTask {
                 }
                 counts++;
             }
-            /*
-            while(intraday_data.Dataerror){
+            counts = 0;
+            while(intraday_data.Dataerror&&counts<3){
                 intraday_data.IntraData("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + s + "&interval=15min&apikey=BBWCXYKPHWWLCBZ4","15min");
+                if(daily_data.Data.size()>0){
+                    break;
+                }
+                try {
+                    Thread.sleep(2000);
+                }catch(InterruptedException e){
+                    ;
+                }
+                counts++;
             }
-            System.out.print(intraday_data.Data.get(0).TradeDate);
+
+            /*
             while(monthly_data.Dataerror){
                 monthly_data.MonthlyData("https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=" + s + "&apikey=BBWCXYKPHWWLCBZ4");
             }
@@ -85,6 +95,9 @@ public class UpdateDailyTask extends TimerTask {
             */
             if(daily_data.Data.size()>0) {
                 db.insertStock(daily_data.Data, s.trim() + "_daily");
+            }
+            if(intraday_data.Data.size()>0) {
+                db.insertStock(intraday_data.Data, s.trim() + "_intraday");
             }
             /*
             for (StockDailyRecord record: monthly_data.Data){
